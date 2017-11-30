@@ -80,6 +80,12 @@ public class ControlTest {
         Pointer<clingo_part> parts = Pointer.allocate(clingo_part.class);
         parts.set(p);
 
+        Pointer<Integer> major = Pointer.allocateInt();
+        Pointer<Integer> minor = Pointer.allocateInt();
+        Pointer<Integer> revision = Pointer.allocateInt();
+        lib.clingo_version(major, minor, revision);
+        System.out.println("Clingo library version: " + major.getInt() + "." + minor.getInt() + "." + revision.getInt());
+        
         // create a control object and pass command line arguments
         Pointer<Pointer<clingo_control>> control = Pointer.allocatePointer(clingo_control.class);
         if (!lib.clingo_control_new(null, 0, null, null, 20, control)) {
@@ -102,10 +108,10 @@ public class ControlTest {
             error(control, "Error solving the program");
         }
 
-        lib.clingo_control_free(control.get());
-
         float endTime = (System.currentTimeMillis() - startTime) / 1000f;
-        System.out.println(String.format(TIME_FORMAT, endTime));
+        System.out.println("Time:" + String.format(TIME_FORMAT, endTime) + "s");
+        
+        lib.clingo_control_free(control.get());
     }
 
     private static boolean solve(Pointer<Pointer<clingo_control>> ctrl) {
@@ -164,7 +170,7 @@ public class ControlTest {
             error(ctrl, "Error create symbol symbols");
         }
 
-        System.out.println("ModelX: ");
+        System.out.println("Model: ");
 
         for (int i = 0; i < atoms_n.getLong(); i++) {
 
@@ -190,9 +196,9 @@ public class ControlTest {
 
             Pointer<Pointer<Byte>> name = Pointer.allocatePointer(Byte.class);
             lib.clingo_symbol_name(atom, name);
-            System.out.print(name.get().getCString());
+            System.out.print("name=" + name.get().getCString());
 
-            System.out.print(" (");
+            System.out.print(",args=[");
             Pointer<Integer> t = Pointer.allocateInt();
             for (int a = 0; a < arguments_size.getLong(); a++) {
                 if (a > 0) {
@@ -201,12 +207,10 @@ public class ControlTest {
                 lib.clingo_symbol_number(arguments.get().get(a), t);
                 System.out.print(t.get());
             }
-            System.out.print(")");
+            System.out.print("]");
 
             System.out.println();
         }
-
-        System.out.println();
     }
 
     private static void error(Pointer<Pointer<clingo_control>> ctrl, String details) {
