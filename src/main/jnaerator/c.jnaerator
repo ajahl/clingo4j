@@ -1,0 +1,31 @@
+-library clingo 
+
+-arch linux_x64
+
+-mode Directory
+
+-package org.lorislab.clingo4j.c.api
+
+-runtime BridJ
+
+-o src/main/java
+
+-skipDeprecated
+
+-noLibBundle
+
+-noStaticInit
+
+-f
+
+-reification
+
+-forceNames
+
+-noStringReturns
+
+-noPrimitiveArrays
+
+src/main/clingo/lib/c/*.h
+
+src/main/clingo/*.so
