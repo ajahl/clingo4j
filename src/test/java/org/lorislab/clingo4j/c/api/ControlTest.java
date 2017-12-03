@@ -34,7 +34,7 @@ public class ControlTest {
 
     static {
         // add the native library directory
-        BridJ.addLibraryPath("src/main/clingo/lib");        
+        BridJ.addLibraryPath("src/main/clingo");        
         
         // initialize the native library
         BridJ.register(ClingoLibrary.class);
