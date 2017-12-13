@@ -15,24 +15,58 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_all;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_atoms;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_complement;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_csp;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_extra;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_shown;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_terms;
+
+
 /**
  *
  * @author andrej
  */
 public enum ShowType {
     
-    CSP,
+    CSP(clingo_show_type_csp),
             
-    SHOWN,
+    SHOWN(clingo_show_type_shown),
           
-    ATOMS,
+    ATOMS(clingo_show_type_atoms),
     
-    TERMS,
+    TERMS(clingo_show_type_terms),
     
-    THEORY,
+    THEORY(clingo_show_type_extra),
     
-    ALL,
+    ALL(clingo_show_type_all),
     
-    COMPLEMENT;
+    COMPLEMENT(clingo_show_type_complement);
         
+    private clingo_show_type type;
+
+    private ShowType(clingo_show_type type) {
+        this.type = type;
+    }
+
+    public clingo_show_type getType() {
+        return type;
+    }
+    
+    public long getValue() {
+        return type.value;
+    }
+    
+    public static ShowType createSymbolType(long value) {
+        ShowType result = null;
+        ShowType[] types = ShowType.values();
+        for (int i=0; i<types.length && result == null; i++) {
+            if (types[i].getValue() == value) {
+                result = types[i];
+            }
+        }
+        return result;
+    }        
 }

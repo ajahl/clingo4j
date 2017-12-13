@@ -15,15 +15,44 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model_type;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model_type.clingo_model_type_brave_consequences;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model_type.clingo_model_type_cautious_consequences;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model_type.clingo_model_type_stable_model;
+
 /**
  *
  * @author andrej
  */
 public enum ModelType {
 
-    STABLE_MODEL,
-    
-    BRAVE_CONSEQUENCES,
-    
-    CAUTIOUS_CONSEQUENCES;
+    STABLE_MODEL(clingo_model_type_stable_model),
+    BRAVE_CONSEQUENCES(clingo_model_type_brave_consequences),
+    CAUTIOUS_CONSEQUENCES(clingo_model_type_cautious_consequences);
+
+    private clingo_model_type type;
+
+    private ModelType(clingo_model_type type) {
+        this.type = type;
+    }
+
+    public clingo_model_type getType() {
+        return type;
+    }
+
+    public long getValue() {
+        return type.value;
+    }
+
+    public static ModelType createModelType(long value) {
+        ModelType result = null;
+        ModelType[] types = ModelType.values();
+        for (int i = 0; i < types.length && result == null; i++) {
+            if (types[i].getValue() == value) {
+                result = types[i];
+            }
+        }
+        return result;
+    }
+
 }

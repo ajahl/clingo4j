@@ -17,6 +17,10 @@ package org.lorislab.clingo4j.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.bridj.Pointer;
+import org.bridj.SizeT;
+import static org.lorislab.clingo4j.api.Clingo.LIB;
+import static org.lorislab.clingo4j.api.Clingo.throwError;
 
 /**
  *
@@ -24,113 +28,87 @@ import java.util.List;
  */
 public class Symbol {
 
-    private Integer number;
+    private Pointer<Long> pointer;
 
-    private String name;
-
-    private String string;
-
-    private boolean positive;
-
-    private boolean negative;
-
-    private int hash;
-
-    private SymbolType type;
-
-    private List<Symbol> arguments;
-
-    public Symbol(SymbolType type) {
-        this.type = type;
+    public Symbol(Pointer<Long> pointer) {
+        this.pointer = pointer;
     }
 
-    public Symbol(String name, SymbolType type) {
-        this(name, type, null, true);
-    }
-
-    public Symbol(String name, SymbolType type, List<Symbol> arguments, boolean positive) {
-        this.name = name;
-        this.type = type;
-        this.arguments = arguments;
-        this.positive = positive;
-        this.negative = false;
+    public Pointer<Long> getPointer() {
+        return pointer;
     }
 
     public SymbolType getType() {
-        return type;
-    }
-
-    
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getNumber() {
-        return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
-    }
-
-    public String getString() {
-        return string;
-    }
-
-    public void setString(String string) {
-        this.string = string;
-    }
-
-    public List<Symbol> getArguments() {
-        return arguments;
-    }
-
-    public void addArgument(Symbol symbol) {
-        if (arguments == null) {
-            arguments = new ArrayList<>();
-        }
-        arguments.add(symbol);
+        int type = LIB.clingo_symbol_type(pointer.get());
+        return SymbolType.createSymbolType(type);
     }
 
     public boolean isNegative() {
-        return negative;
-    }
-
-    public void setNegative(boolean negative) {
-        this.negative = negative;
+        Pointer<Boolean> negative = Pointer.allocateBoolean();
+        if (!LIB.clingo_symbol_is_negative(pointer.get(), negative)) {
+            throwError("Error reading the symbol negative!");
+        }
+        return negative.get();
     }
 
     public boolean isPositive() {
-        return positive;
-    }
-
-    public void setPositive(boolean positive) {
-        this.positive = positive;
-    }
-
-    public int getHash() {
-        return hash;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(name).append(",type:").append(type);
-        switch (type) {
-            case NUMBER: sb.append(",number:").append(number); break;
-            case STRING: sb.append(",string:").append(string); break;
+        Pointer<Boolean> positive = Pointer.allocateBoolean();
+        if (!LIB.clingo_symbol_is_positive(pointer.get(), positive)) {
+            throwError("Error reading the symbol positive!");
         }
-        if (arguments != null) {
-            sb.append(",arguments:");
-            for (Symbol arg : arguments) {
-                sb.append("\n\t").append(arg.toString());
+        return positive.get();
+    }
+
+    public int getNumber() {
+        Pointer<Integer> number = Pointer.allocateInt();
+        if (!LIB.clingo_symbol_number(pointer.get(), number)) {
+            throwError("Error reading the symbol number!");
+        }
+        return number.get();
+    }
+
+    public String getName() {
+        Pointer<Pointer<Byte>> name = Pointer.allocatePointer(Byte.class);
+        if (!LIB.clingo_symbol_name(pointer.get(), name)) {
+            throwError("Error reading the symbol name!");
+        }
+        return name.get().getCString();
+    }
+
+    public List<Symbol> getArguments() {
+        List<Symbol> result = null;
+
+        Pointer<Pointer<Long>> args = Pointer.allocatePointer(Long.class);
+        Pointer<SizeT> args_size = Pointer.allocateSizeT();
+        if (!LIB.clingo_symbol_arguments(pointer.get(), args, args_size)) {
+            throwError("Error reading the symbol arguments!");
+        }
+
+        if (0 < args_size.getLong()) {
+            result = new ArrayList<>((int) args_size.getLong());
+            for (int i = 0; i < args_size.getLong(); i++) {
+                result.add(new Symbol(args.get(i)));
             }
         }
-        return sb.toString();
+        return result;
     }
-
+    
+    public long getHash() {
+        return LIB.clingo_symbol_hash(pointer.get());
+    }
+    
+    @Override
+    public String toString() {
+        Pointer<SizeT> size = Pointer.allocateSizeT();
+        if (!LIB.clingo_symbol_to_string_size(pointer.get(), size)) {
+            throwError("Error reading the symbol string size!");
+        }
+        
+        Pointer<Byte> string = Pointer.allocateBytes(size.getLong());
+        if (!LIB.clingo_symbol_to_string(pointer.get(), string, size.getLong())) {
+            throwError("Error reading the symbol string value!");
+        }
+        
+        return string.getCString();
+    }    
 }

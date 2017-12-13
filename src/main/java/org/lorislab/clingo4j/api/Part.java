@@ -16,33 +16,47 @@
 package org.lorislab.clingo4j.api;
 
 import java.util.List;
+import org.bridj.Pointer;
+import org.lorislab.clingo4j.c.api.clingo_part;
 
 /**
  *
  * @author andrej
  */
 public class Part {
+    
+    private clingo_part part;
 
-    private String name;
-
-    private List<Symbol> parameters;
+    public Part(clingo_part part) {
+        this.part = part;
+    }
 
     public Part(String name) {
-        this.name = name;
+        part = new clingo_part();        
+        part.name(Pointer.pointerToCString(name));
+        part.params(null);
+        part.size(0);        
+    }
+
+    public Part(String name, List<Symbol> symbols) {
+        this(name);
+        if (symbols != null && !symbols.isEmpty()) {
+            Pointer<Long> tmp = Clingo.createPointerToSymbols(symbols);
+            part.params(tmp);
+            part.size(symbols.size());
+        }
+    }
+
+    public clingo_part getPart() {
+        return part;
+    }
+        
+    public String getName() {
+        return part.name().getCString();
     }
     
-    public Part(String name, List<Symbol> parameters) {
-        this.name = name;
-        this.parameters = parameters;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public List<Symbol> getParameters() {
-        return parameters;
+        return Clingo.createListOfSymbols(part.params(), part.size());
     }
-
     
 }

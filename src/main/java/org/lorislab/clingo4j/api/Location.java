@@ -15,57 +15,47 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.bridj.Pointer;
+import org.lorislab.clingo4j.c.api.clingo_location;
+
 /**
  *
  * @author andrej
  */
 public class Location {
     
-    private final long beginColumn;
-    
-    private final String beginFile;
-    
-    private final long beginLine;
-    
-    private final long endColumn;
-    
-    private final String endFile;
-    
-    private final long endLine;
+    private Pointer<clingo_location> pointer;
 
-    public Location(long beginColumn, String beginFile, long beginLine, long endColumn, String endFile, long endLine) {
-        this.beginColumn = beginColumn;
-        this.beginFile = beginFile;
-        this.beginLine = beginLine;
-        this.endColumn = endColumn;
-        this.endFile = endFile;
-        this.endLine = endLine;
+    public Location(Pointer<clingo_location> pointer) {
+        this.pointer = pointer;
     }
-
+    
+    public Pointer<clingo_location> getPointer() {
+        return pointer;
+    }
+    
     public long getBeginColumn() {
-        return beginColumn;
+        return pointer.get().begin_column();
     }
-
+    
     public String getBeginFile() {
-        return beginFile;
+        return pointer.get().begin_file().getCString();
     }
-
+    
     public long getBeginLine() {
-        return beginLine;
+        return pointer.get().begin_line();
     }
-
+    
     public long getEndColumn() {
-        return endColumn;
+        return pointer.get().end_column();
     }
-
+    
     public String getEndFile() {
-        return endFile;
+        return pointer.get().end_file().getCString();
     }
-
+    
     public long getEndLine() {
-        return endLine;
+        return pointer.get().end_line();
     }
-
-
     
 }

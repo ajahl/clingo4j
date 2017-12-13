@@ -13,18 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lorislab.clingo4j.api2;
+package org.lorislab.clingo4j.api;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import org.junit.Test;
 
 /**
  *
  * @author andrej
  */
-public class ClingoInjectTermsTest {
+public class CingloSolveIterativelyTest {
+    
+    private static final String PROGRAM = "#const n = 10.\n"
+            + "n(1..n).\n"
+            + "\n"
+            + "q(X,Y) :- n(X), n(Y), not not q(X,Y).\n"
+            + "\n"
+            + "        c(r,X; c,Y) :- q(X,Y).\n"
+            + "not not c(r,N; c,N) :- n(N).\n"
+            + "\n"
+            + "n(r,X,Y-1,X,Y; c,X-1,Y,X,Y; d1,X-1,Y-1,X,Y;     d2,X-1,Y+1,X,Y      ) :- n(X), n(Y).\n"
+            + "c(r,N,0;       c,0,N;       d1,N-1,0; d1,0,N-1; d2,N-1,n+1; d2,0,N+1) :- n(N).\n"
+            + "\n"
+            + "c(C,XX,YY) :-     c(C,X,Y), n(C,X,Y,XX,YY), not q(XX,YY).\n"
+            + "           :- not c(C,X,Y), n(C,X,Y,XX,YY),     q(XX,YY).\n"
+            + "\n"
+            + "#show q/2.";
     
     @Test
     public void controlTest() {
@@ -33,27 +47,10 @@ public class ClingoInjectTermsTest {
         
         try (Clingo control = new Clingo()) {
             
-            // define a constant in string form
-            Symbol number = Clingo.createNumber(23);
-            control.add("base", "#const d=" + number);
+            System.out.println(control.getVersion());
             
-        // define a constant via the AST
-//        ctl.with_builder([](ProgramBuilder &b) {
-//            Location loc{"<generated>", "<generated>", 1, 1, 1, 1};
-//            b.add({loc, AST::Definition{"e", {loc, Number(24)}, false}});
-//        });
-        
-            control.add("base", "p(@c()). p(d). p(e).");            
-            // inject terms via a callback
-            control.ground("base", (Location loc, String name, List<Symbol> symbols, GroundCallback.GroundSymbolCallback callback) -> {
-                if ("c".equals(name) && ( symbols == null || symbols.isEmpty())) {                    
-                    List<Symbol> tmp = new ArrayList<>(2);
-                    tmp.add(Clingo.createNumber(42));
-                    tmp.add(Clingo.createNumber(43));
-                    callback.apply(tmp);
-                }
-            });
-            
+            control.add("base", PROGRAM);
+            control.ground("base");
             Iterator<Model> iter = control.solve();
             while (iter.hasNext()) {
                 Model model = iter.next();
@@ -62,9 +59,9 @@ public class ClingoInjectTermsTest {
                     System.out.println(atom);
                 }
             }
-        
+            
         } catch (ClingoException ex) {
            System.err.println(ex.getMessage());
-        }        
-    }    
+        }
+    }
 }

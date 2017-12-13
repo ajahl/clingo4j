@@ -21,33 +21,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.bridj.BridJ;
-import org.bridj.IntValuedEnum;
 import org.bridj.Pointer;
-import org.bridj.SizeT;
 import org.lorislab.clingo4j.c.api.ClingoLibrary;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_control;
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ground_callback_t;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model;
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model_type;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model_type.clingo_model_type_stable_model;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_event_callback_t;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_handle;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_mode;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_result.clingo_solve_result_exhausted;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_result.clingo_solve_result_interrupted;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_result.clingo_solve_result_satisfiable;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_result.clingo_solve_result_unsatisfiable;
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_statistic;
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_symbol_callback_t;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_symbol_type.clingo_symbol_type_function;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_symbol_type.clingo_symbol_type_infimum;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_symbol_type.clingo_symbol_type_number;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_symbol_type.clingo_symbol_type_string;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_symbol_type.clingo_symbol_type_supremum;
 import org.lorislab.clingo4j.c.api.clingo_location;
 import org.lorislab.clingo4j.c.api.clingo_part;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -55,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Clingo implements AutoCloseable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Clingo.class);
+    public static final ClingoLibrary LIB = new ClingoLibrary();
 
     public static final int MESSAGE_LIMIT = 20;
 
@@ -75,8 +57,6 @@ public class Clingo implements AutoCloseable {
 
     }
 
-    private final ClingoLibrary library;
-
     private final Pointer<Pointer<clingo_control>> control;
 
     public Clingo() throws ClingoException {
@@ -84,11 +64,10 @@ public class Clingo implements AutoCloseable {
     }
 
     public Clingo(int messageLimit, String... parameters) throws ClingoException {
-        library = new ClingoLibrary();
 
         // create a control object and pass command line arguments
         control = Pointer.allocatePointer(clingo_control.class);
-        if (!library.clingo_control_new(null, 0, null, null, messageLimit, control)) {
+        if (!LIB.clingo_control_new(null, 0, null, null, messageLimit, control)) {
             throwError("Could not create clingo controller");
         }
     }
@@ -97,36 +76,28 @@ public class Clingo implements AutoCloseable {
         this(MESSAGE_LIMIT, parameters);
     }
 
-    public String getVersion() throws ClingoException {
+    @Override
+    public void close() {
+        if (control != null) {
+            LIB.clingo_control_free(control.get());
+        }
+    }
+    
+    public String getVersion() {
         Pointer<Integer> major = Pointer.allocateInt();
         Pointer<Integer> minor = Pointer.allocateInt();
         Pointer<Integer> revision = Pointer.allocateInt();
-        library.clingo_version(major, minor, revision);
+        LIB.clingo_version(major, minor, revision);
         return "" + major.getInt() + "." + minor.getInt() + "." + revision.getInt();
     }
-
-    public void getStatistics() {
-        Pointer<Pointer<clingo_statistic>> statistics = Pointer.allocatePointer(clingo_statistic.class);;
-
-        if (!library.clingo_control_statistics(control.get(), statistics)) {
-            throwError("Error reading the clingo statistics!");
-        }
-
-        Pointer<Long> root = Pointer.allocateLong();
-        if (!library.clingo_statistics_root(statistics.get(), root)) {
-            throwError("Error reading the clingo statistics root!");
-        }
-
-        //TODO: implementation
-    }
-
+    
     public void add(String name, String program) throws ClingoException {
         add(name, null, program);
     }
-
+    
     public void add(String name, List<String> parameters, String program) throws ClingoException {
 
-        Pointer<Byte> tmp_name = Pointer.pointerToCString("base");
+        Pointer<Byte> tmp_name = Pointer.pointerToCString(name);
         Pointer<Byte> tmp_program = Pointer.pointerToCString(program);
 
         Pointer<Pointer<Byte>> tmp_params = null;
@@ -137,7 +108,7 @@ public class Clingo implements AutoCloseable {
         }
 
         // add a logic program to the base part
-        if (!library.clingo_control_add(control.get(), tmp_name, tmp_params, tmp_size, tmp_program)) {
+        if (!LIB.clingo_control_add(control.get(), tmp_name, tmp_params, tmp_size, tmp_program)) {
             throwError("Error add the program to controller");
         }
     }
@@ -155,57 +126,26 @@ public class Clingo implements AutoCloseable {
         Pointer<clingo_part> p_parts = null;
         int partsSize = 0;
 
-        if (parts != null) {
+        if (parts != null && !parts.isEmpty()) {
             partsSize = parts.size();
             clingo_part[] ps = new clingo_part[partsSize];
-            for (int i = 0; i < parts.size(); i++) {
-
-                Part part = parts.get(i);
-
-                clingo_part p = new clingo_part();
-                p.name(Pointer.pointerToCString(part.getName()));
-
-                List<Symbol> parameters = part.getParameters();
-                if (parameters != null && !parameters.isEmpty()) {
-                    p.params(createSymbols(parameters));
-                    p.size(parameters.size());
-                } else {
-                    p.params(null);
-                    p.size(0);
-                }
-                ps[i] = p;
+            for (int i = 0; i < partsSize; i++) {
+                ps[i] = parts.get(i).getPart();
             }
             p_parts = Pointer.pointerToArray(ps);
         }
 
-        Pointer<clingo_ground_callback_t> p_ground_callback = null;
+        Pointer<ClingoLibrary.clingo_ground_callback_t> p_ground_callback = null;
         if (callback != null) {
-            clingo_ground_callback_t ground_callback = new ClingoLibrary.clingo_ground_callback_t() {
+            ClingoLibrary.clingo_ground_callback_t ground_callback = new ClingoLibrary.clingo_ground_callback_t() {
                 @Override
-                public boolean apply(Pointer<clingo_location> clocation, Pointer<Byte> cname, Pointer<Long> carguments, long carguments_size, Pointer<?> cdata, Pointer<clingo_symbol_callback_t> csymbol_callback, Pointer<?> csymbol_callback_data) {
+                public boolean apply(Pointer<clingo_location> clocation, Pointer<Byte> cname, Pointer<Long> carguments, long carguments_size, Pointer<?> cdata, Pointer<ClingoLibrary.clingo_symbol_callback_t> csymbol_callback, Pointer<?> csymbol_callback_data) {
 
                     String name = cname.getCString();
-
-                    clingo_location cl = clocation.get();
-                    Location loc = new Location(
-                            cl.begin_column(),
-                            cl.begin_file().getCString(),
-                            cl.begin_line(),
-                            cl.end_column(),
-                            cl.end_file().getCString(),
-                            cl.end_line());
-
-                    List<Symbol> symbols = null;
-                    if (carguments_size > 0) {
-                        symbols = new ArrayList<>();
-                        Pointer<Long> iter = carguments;
-                        for (int i = 0; i < carguments_size; i++, iter = iter.next()) {
-                            symbols.add(loadSymbol(iter.get()));
-                        }
-                    }
+                    Location loc = new Location(clocation);
+                    List<Symbol> symbols = createListOfSymbols(carguments, carguments_size);
 
                     boolean result = true;
-
                     try {
                         callback.groundCallback(loc, name, symbols, (List<Symbol> symbols1) -> {
 
@@ -213,8 +153,12 @@ public class Clingo implements AutoCloseable {
                                 return;
                             }
 
-                            Pointer<Long> v_symbols = createSymbols(symbols1);
+                            if (symbols1.isEmpty()) {
+                                return;
+                            }
+
                             long v_size = symbols1.size();
+                            Pointer<Long> v_symbols = createPointerToSymbols(symbols1);
 
                             if (!(csymbol_callback.get().apply(v_symbols, v_size, null))) {
                                 throw new ClingoException();
@@ -227,38 +171,22 @@ public class Clingo implements AutoCloseable {
                 }
 
             };
-            p_ground_callback = Pointer.allocate(clingo_ground_callback_t.class);
+            p_ground_callback = Pointer.allocate(ClingoLibrary.clingo_ground_callback_t.class);
             p_ground_callback.set(ground_callback);
         }
 
         // ground the base part
-        if (!library.clingo_control_ground(control.get(), p_parts, partsSize, p_ground_callback, null)) {
+        if (!LIB.clingo_control_ground(control.get(), p_parts, partsSize, p_ground_callback, null)) {
             throwError("Error ground the program");
         }
 
     }
-    
-    public String symbolToString(Symbol symbol) {
-        Pointer<Long> tmp = createSymbol(symbol);
-        
-        Pointer<SizeT> size = Pointer.allocateSizeT();
-        library.clingo_symbol_to_string_size(tmp.get(), size);
-        
-        Pointer<Byte> text = Pointer.allocateBytes(size.getLong());
-        library.clingo_symbol_to_string(MESSAGE_LIMIT, text, size.getLong());
-        
-        return text.getCString();
-    }
 
     public Iterator<Model> solve() throws ClingoException {
-        return solve(ShowType.SHOWN);
-    }
-
-    public Iterator<Model> solve(ShowType showType) throws ClingoException {
-        return solve(null, false, true, showType);
+        return solve(null, false, true);
     }
     
-    public Iterator<Model> solve(SolveEventHandler handler, boolean asynchronous, boolean yield, final ShowType showType) throws ClingoException {
+    public Iterator<Model> solve(SolveEventHandler handler, boolean asynchronous, boolean yield) throws ClingoException {
 
         int mode = 0;
         if (asynchronous) {
@@ -268,7 +196,7 @@ public class Clingo implements AutoCloseable {
             mode |= (int) clingo_solve_mode.clingo_solve_mode_yield.value;
         }
 
-        final Pointer<Pointer<clingo_solve_handle>> handle = Pointer.allocatePointer(clingo_solve_handle.class);
+        final Pointer<Pointer<clingo_solve_handle>> handle = Pointer.allocatePointer(ClingoLibrary.clingo_solve_handle.class);
 
         Pointer<clingo_solve_event_callback_t> p_event = null;
         if (handler != null) {
@@ -279,34 +207,26 @@ public class Clingo implements AutoCloseable {
                     switch (type) {
                         //clingo_solve_event_type_model
                         case 0:
-                            Pointer<clingo_model> p_model = (Pointer<clingo_model>) event;
-                            Model model = createModel(p_model, ShowType.SHOWN);
+                            Model model = new Model((Pointer<clingo_model>) event);
                             boolean tmp = handler.onModel(model);
                             goon.set(tmp);
                             break;
                         //clingo_solve_event_type_finish
                         case 1:
                             Pointer<Integer> p_event = (Pointer<Integer>) event;
-                            int eventValue = p_event.get();
-                            handler.onFinish(new SolveResult(
-                                    (eventValue & ((int) clingo_solve_result_satisfiable.value)) > 0,
-                                    (eventValue & ((int) clingo_solve_result_unsatisfiable.value)) != 0,
-                                    (eventValue & 3) == 0,
-                                    (eventValue & ((int) clingo_solve_result_exhausted.value)) != 0,
-                                    (eventValue & ((int) clingo_solve_result_interrupted.value)) != 0
-                            ));
+                            handler.onFinish(new SolveResult(p_event.get()));
                             goon.set(true);
                             return true;
                     }
                     return apply(type, Pointer.getPeer(event), Pointer.getPeer(data), Pointer.getPeer(goon));
                 }
             };
-            p_event = Pointer.allocate(clingo_solve_event_callback_t.class);
+            p_event = Pointer.allocate(ClingoLibrary.clingo_solve_event_callback_t.class);
             p_event.set(event);
         }
 
         // get a solve handle        
-        if (!library.clingo_control_solve(control.get(), mode, null, 0, p_event, null, handle)) {
+        if (!LIB.clingo_control_solve(control.get(), mode, null, 0, p_event, null, handle)) {
             throwError("Error execute control solve");
         }
 
@@ -319,7 +239,7 @@ public class Clingo implements AutoCloseable {
                 current = getModel();
                 // close the solve handle
                 if (current == null) {
-                    if (!library.clingo_solve_handle_close(handle.get())) {
+                    if (!LIB.clingo_solve_handle_close(handle.get())) {
                         throwError("Error close the handle.");
                     }
                 }
@@ -338,246 +258,102 @@ public class Clingo implements AutoCloseable {
 
             private Model getModel() {
 
-                Pointer<Pointer<clingo_model>> model = Pointer.allocatePointer(clingo_model.class);
+                Pointer<Pointer<ClingoLibrary.clingo_model>> model = Pointer.allocatePointer(ClingoLibrary.clingo_model.class);
 
-                if (!library.clingo_solve_handle_resume(handle.get())) {
+                if (!LIB.clingo_solve_handle_resume(handle.get())) {
                     throwError("Error solve handle resume");
                 }
-                if (!library.clingo_solve_handle_model(handle.get(), model)) {
+                if (!LIB.clingo_solve_handle_model(handle.get(), model)) {
                     throwError("Error solve handle model");
                 }
 
                 if (model.get() != null) {
-                    return createModel(model.get(), showType);
+                    return new Model(model.get());
                 }
                 return null;
             }
         };
         return iter;
     }
-
-    @Override
-    public void close() throws ClingoException {
-        if (control != null) {
-            library.clingo_control_free(control.get());
-        }
-    }
-
-    private void throwError(String message) throws ClingoException {
-        Pointer<Byte> msg = library.clingo_error_message();
-        int error = library.clingo_error_code();
+    
+    public static void throwError(String message) throws ClingoException {
+        Pointer<Byte> msg = LIB.clingo_error_message();
+        int error = LIB.clingo_error_code();
         throw new ClingoException(error, msg.getCString(), message);
     }
 
-    private Model createModel(Pointer<clingo_model> model, ShowType showType) {
-                
-        int show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_shown.value);
-        if (showType != null) {
-            switch (showType) {
-                case CSP:
-                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_csp.value);
-                    break;
-                case SHOWN:
-                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_shown.value);
-                    break;
-                case ATOMS:
-                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_atoms.value);
-                    break;
-                case TERMS:
-                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_terms.value);
-                    break;
-                case THEORY:
-                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_extra.value);
-                    break;
-                case ALL:
-                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_all.value);
-                    break;
-                case COMPLEMENT:
-                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_complement.value);
-                    break;
-            }
+    public static Symbol createId(String name, boolean positive) {
+        Pointer<Long> pointer = Pointer.allocateLong();
+        if (!LIB.clingo_symbol_create_id(Pointer.pointerToCString(name), positive, pointer)) {
+            throwError("Error creating the ID!"); 
+        }
+        return new Symbol(pointer);
+    }
+
+    public static Symbol createString(String string) {
+        Pointer<Long> pointer = Pointer.allocateLong();
+        if (!LIB.clingo_symbol_create_string(Pointer.pointerToCString(string), pointer)) {
+            throwError("Error creating the string!"); 
+        }
+        return new Symbol(pointer);
+    }
+
+    public static Symbol createNumber(int number) {
+        Pointer<Long> pointer = Pointer.allocateLong();
+        LIB.clingo_symbol_create_number(number, pointer);
+        return new Symbol(pointer);
+    }
+
+    public static Symbol createInfimum() {
+        Pointer<Long> pointer = Pointer.allocateLong();
+        LIB.clingo_symbol_create_infimum(pointer);
+        return new Symbol(pointer);
+    }
+
+    public static Symbol createSupremum() {
+        Pointer<Long> pointer = Pointer.allocateLong();
+        LIB.clingo_symbol_create_supremum(pointer);
+        return new Symbol(pointer);
+    }
+    
+    public static Symbol createFunction(String name, List<Symbol> symbols, boolean positive) {
+        Pointer<Long> pointer = Pointer.allocateLong();
+        
+        int size = 0;
+        Pointer<Long> arguments = createPointerToSymbols(symbols);
+        if (symbols != null && !symbols.isEmpty()) {
+            size = symbols.size();
         }
         
-        Pointer<SizeT> atoms_n = Pointer.allocateSizeT();
-
-        Model result = new Model();
-
-        Pointer<Integer> type = Pointer.allocateInt();
-        if (!library.clingo_model_type(model, type)) {
-            throwError("Error reading the model type");
+        if (!LIB.clingo_symbol_create_function(Pointer.pointerToCString(name), arguments, size, positive, pointer)) {
+            throwError("Error creating the function!");            
         }
-        if (type != null && type.get() != null) {
-            switch (type.get()) {
-                //clingo_model_type_stable_model
-                case 0:
-                    result.setType(ModelType.STABLE_MODEL);
-                    break;
-                //clingo_model_type_brave_consequences
-                case 1:
-                    result.setType(ModelType.BRAVE_CONSEQUENCES);
-                    break;
-                //clingo_model_type_cautious_consequences
-                case 2:
-                    result.setType(ModelType.CAUTIOUS_CONSEQUENCES);
-                    break;
-            }
-        }        
-
-        // determine the number of (shown) symbols in the model                
-        if (!library.clingo_model_symbols_size(model, show, atoms_n)) {
-            throwError("Error reading the model size of symbols");
-        }
-
-        // allocate required memory to hold all the symbols
-        Pointer<Long> atoms = Pointer.allocateLongs(atoms_n.getLong());
-
-        // retrieve the symbols in the model
-        if (!library.clingo_model_symbols(model, show, atoms, atoms_n.getLong())) {
-            throwError("Error create symbol symbols");
-        }
-
-        List<Symbol> atomsList = new ArrayList<>((int) atoms_n.getLong());
-        result.setAtoms(atomsList);
-
-        for (int i = 0; i < atoms_n.getLong(); i++) {
-            Long atom = atoms.get(i);
-            atomsList.add(loadSymbol(atom));
-        }
-        return result;
+        
+        return new Symbol(pointer);
     }
 
-    private Pointer<Long> createSymbols(List<Symbol> symbols) {
+    public static Pointer<Long> createPointerToSymbols(List<Symbol> symbols) {
         Pointer<Long> result = null;
         if (symbols != null && !symbols.isEmpty()) {
-
-            result = Pointer.allocateLongs(symbols.size());
-            Pointer<Long> item = result;
-            for (int i = 0; i < symbols.size(); i++) {
-                createSymbol(symbols.get(i), item);
-                item = item.next();
+            int size = symbols.size();
+            Pointer<Long> v_symbols = Pointer.allocateLongs(size);
+            Pointer<Long> item = v_symbols;
+            for (int i = 0; i < size; i++, item = item.next()) {
+                item.set(symbols.get(i).getPointer().get());
             }
         }
         return result;
     }
 
-    private Pointer<Long> createSymbol(Symbol symbol) {
-        Pointer<Long> result = Pointer.allocateLong();
-        return createSymbol(symbol, result);
-    }
-
-    private Pointer<Long> createSymbol(Symbol symbol, Pointer<Long> result) {
-        switch (symbol.getType()) {
-            case NUMBER:
-                library.clingo_symbol_create_number(symbol.getNumber(), result);
-                break;
-            case STRING:
-                library.clingo_symbol_create_string(Pointer.pointerToCString(symbol.getString()), result);
-                break;
-            case FUNCTION:
-                Pointer<Byte> name = Pointer.pointerToCString(symbol.getName());
-                Pointer<Long> args = null;
-                int size = 0;
-                if (symbol.getArguments() != null && !symbol.getArguments().isEmpty()) {
-                    args = createSymbols(symbol.getArguments());
-                    size = symbol.getArguments().size();
-                }
-                library.clingo_symbol_create_function(name, args, size, symbol.isPositive(), result);
-                break;
-            case INFIMUM:
-                library.clingo_symbol_create_infimum(result);
-                break;
-            case SUPREMUM:
-                library.clingo_symbol_create_supremum(result);
-                break;
-        }
-
-        return result;
-    }
-
-    private Symbol loadSymbol(long atom) {
-        SymbolType type = createSymbolType(atom);
-        Symbol result = new Symbol(type);
-
-        if (null != type) {
-            switch (type) {
-                case NUMBER:
-                    Pointer<Integer> number = Pointer.allocateInt();
-                    if (!library.clingo_symbol_number(atom, number)) {
-                        throwError("Error reading the symbol number value!");
-                    }
-                    result.setNumber(number.get());
-                    break;
-                case STRING:
-                    Pointer<Pointer<Byte>> name_s = Pointer.allocatePointer(Byte.class);
-                    if (!library.clingo_symbol_name(atom, name_s)) {
-                        throwError("Error reading the symbol name!");
-                    }
-                    result.setName(name_s.get().getCString());
-
-                    Pointer<Pointer<Byte>> value = Pointer.allocatePointer(Byte.class);
-                    if (!library.clingo_symbol_string(atom, value)) {
-                        throwError("Error reading the symbol string!");
-                    }
-                    result.setString(value.get().getCString());
-                    break;
-                case FUNCTION:
-                    Pointer<Pointer<Byte>> name = Pointer.allocatePointer(Byte.class);
-                    if (!library.clingo_symbol_name(atom, name)) {
-                        throwError("Error reading the symbol name!");
-                    }
-                    result.setName(name.get().getCString());
-
-                    Pointer<Boolean> negative = Pointer.allocateBoolean();
-                    if (!library.clingo_symbol_is_negative(atom, negative)) {
-                        throwError("Error reading the symbol negative!");
-                    }
-                    result.setNegative(negative.get());
-
-                    Pointer<Boolean> positive = Pointer.allocateBoolean();
-                    if (!library.clingo_symbol_is_positive(atom, positive)) {
-                        throwError("Error reading the symbol positive!");
-                    }
-                    result.setPositive(positive.get());
-
-                    Pointer<Pointer<Long>> args = Pointer.allocatePointer(Long.class);
-                    Pointer<SizeT> args_size = Pointer.allocateSizeT();
-                    if (!library.clingo_symbol_arguments(atom, args, args_size)) {
-                        throwError("Error reading the symbol arguments!");
-                    }
-                    for (int i = 0; i < args_size.getLong(); i++) {
-                        Long arg = args.get().get(i);
-                        Symbol s = loadSymbol(arg);
-                        result.addArgument(s);
-                    }
-                    break;
-                case INFIMUM:
-                    break;
-                case SUPREMUM:
-                    break;
-                default:
-                    break;
+    public static List<Symbol> createListOfSymbols(final Pointer<Long> symbols, final long size) {
+        List<Symbol> result = null;
+        if (0 < size) {
+            result = new ArrayList<>((int) size);
+            Pointer<Long> iter = symbols;
+            for (int i = 0; i < size; i++, iter = iter.next()) {
+                result.add(new Symbol(iter));
             }
         }
-
         return result;
     }
-
-    private SymbolType createSymbolType(long symbol) {
-        SymbolType result = null;
-        int type = library.clingo_symbol_type(symbol);
-
-        if (type == clingo_symbol_type_number.value) {
-            result = SymbolType.NUMBER;
-        } else if (type == clingo_symbol_type_function.value) {
-            result = SymbolType.FUNCTION;
-        } else if (type == clingo_symbol_type_infimum.value) {
-            result = SymbolType.INFIMUM;
-        } else if (type == clingo_symbol_type_string.value) {
-            result = SymbolType.STRING;
-        } else if (type == clingo_symbol_type_supremum.value) {
-            result = SymbolType.SUPREMUM;
-        }
-        return result;
-    }
-
 }

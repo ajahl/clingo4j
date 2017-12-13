@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 package org.lorislab.clingo4j.api;
-
-import static jdk.nashorn.internal.objects.NativeJava.type;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_symbol_type;
 import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_symbol_type.clingo_symbol_type_function;
 import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_symbol_type.clingo_symbol_type_infimum;

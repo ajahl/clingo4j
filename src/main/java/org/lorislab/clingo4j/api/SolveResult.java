@@ -15,50 +15,46 @@
  */
 package org.lorislab.clingo4j.api;
 
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_result.clingo_solve_result_exhausted;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_result.clingo_solve_result_interrupted;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_result.clingo_solve_result_satisfiable;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_result.clingo_solve_result_unsatisfiable;
+
 /**
  *
  * @author andrej
  */
 public class SolveResult {
     
-    private final boolean satisfiable;
+    private final long value;
     
-    private final boolean unsatisfiable;
-    
-    private final boolean unknown;
-    
-    private final boolean exhausted;
-    
-    private final boolean interrupted;
-
-    public SolveResult(boolean satisfiable, boolean unsatisfiable, boolean unknown, boolean exhausted, boolean interrupted) {
-        this.satisfiable = satisfiable;
-        this.unsatisfiable = unsatisfiable;
-        this.unknown = unknown;
-        this.exhausted = exhausted;
-        this.interrupted = interrupted;
+    public SolveResult(long value) {
+        this.value = value;
     }
 
+    public long getValue() {
+        return value;
+    }
+    
     public boolean isExhausted() {
-        return exhausted;
+        return (value & clingo_solve_result_exhausted.value) != 0;
     }
 
     public boolean isInterrupted() {
-        return interrupted;
+        return (value & clingo_solve_result_interrupted.value) != 0;
     }
 
     public boolean isSatisfiable() {
-        return satisfiable;
+        return (value & clingo_solve_result_satisfiable.value) > 0;
     }
 
     public boolean isUnknown() {
-        return unknown;
+        return (value & 3) == 0;
     }
 
     public boolean isUnsatisfiable() {
-        return unsatisfiable;
+        return (value & clingo_solve_result_unsatisfiable.value) != 0;
     }
-    
     
     @Override
     public String toString() {
