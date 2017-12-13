@@ -15,39 +15,24 @@
  */
 package org.lorislab.clingo4j.api;
 
-import java.util.List;
-
 /**
  *
  * @author andrej
  */
-public class Model {
+public enum ShowType {
     
-    private ModelType type;
+    CSP,
+            
+    SHOWN,
+          
+    ATOMS,
     
-    private List<Symbol> symbols;
-
-    public Model() {
-    }
+    TERMS,
     
-    public Model(List<Symbol> symbols) {
-        this.symbols = symbols;
-    }
-
-    public void setAtoms(List<Symbol> symbols) {
-        this.symbols = symbols;
-    }
+    THEORY,
     
-    public List<Symbol> getAtoms() {
-        return symbols;
-    }
-
-    public ModelType getType() {
-        return type;
-    }
-
-    public void setType(ModelType type) {
-        this.type = type;
-    }
+    ALL,
     
+    COMPLEMENT;
+        
 }

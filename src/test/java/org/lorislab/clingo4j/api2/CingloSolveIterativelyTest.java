@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lorislab.clingo4j.api;
+package org.lorislab.clingo4j.api2;
 
 import java.util.Iterator;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import org.junit.Test;
  *
  * @author andrej
  */
-public class CingloTest {
+public class CingloSolveIterativelyTest {
     
     private static final String PROGRAM = "#const n = 10.\n"
             + "n(1..n).\n"
@@ -51,11 +51,11 @@ public class CingloTest {
             
             control.add("base", PROGRAM);
             control.ground("base");
-//            control.solve();
             Iterator<Model> iter = control.solve();
             while (iter.hasNext()) {
                 Model model = iter.next();
-                for (Symbol atom : model.getAtoms()) {
+                System.out.println("Model type: " + model.getType());
+                for (Symbol atom : model.getSymbols()) {
                     System.out.println(atom);
                 }
             }

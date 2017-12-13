@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lorislab.clingo4j.api;
+package org.lorislab.clingo4j.api2;
 
 import java.util.List;
 
@@ -21,33 +21,12 @@ import java.util.List;
  *
  * @author andrej
  */
-public class Model {
+public interface GroundCallback {
     
-    private ModelType type;
+    public void groundCallback(Location loc, String name, List<Symbol> symbols, GroundSymbolCallback callback);
     
-    private List<Symbol> symbols;
-
-    public Model() {
+    public interface GroundSymbolCallback {
+        
+        public void apply(List<Symbol> symbols);
     }
-    
-    public Model(List<Symbol> symbols) {
-        this.symbols = symbols;
-    }
-
-    public void setAtoms(List<Symbol> symbols) {
-        this.symbols = symbols;
-    }
-    
-    public List<Symbol> getAtoms() {
-        return symbols;
-    }
-
-    public ModelType getType() {
-        return type;
-    }
-
-    public void setType(ModelType type) {
-        this.type = type;
-    }
-    
 }

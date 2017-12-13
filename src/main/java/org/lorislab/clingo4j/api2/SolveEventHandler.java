@@ -13,41 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lorislab.clingo4j.api;
-
-import java.util.List;
+package org.lorislab.clingo4j.api2;
 
 /**
  *
  * @author andrej
  */
-public class Model {
+public interface SolveEventHandler {
+ 
+    public boolean onModel(Model model);
     
-    private ModelType type;
-    
-    private List<Symbol> symbols;
-
-    public Model() {
-    }
-    
-    public Model(List<Symbol> symbols) {
-        this.symbols = symbols;
-    }
-
-    public void setAtoms(List<Symbol> symbols) {
-        this.symbols = symbols;
-    }
-    
-    public List<Symbol> getAtoms() {
-        return symbols;
-    }
-
-    public ModelType getType() {
-        return type;
-    }
-
-    public void setType(ModelType type) {
-        this.type = type;
-    }
-    
+    public void onFinish(SolveResult result);
 }

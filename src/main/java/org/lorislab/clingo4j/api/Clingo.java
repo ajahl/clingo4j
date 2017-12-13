@@ -21,12 +21,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.bridj.BridJ;
+import org.bridj.IntValuedEnum;
 import org.bridj.Pointer;
 import org.bridj.SizeT;
 import org.lorislab.clingo4j.c.api.ClingoLibrary;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_control;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ground_callback_t;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model;
+import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model_type;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model_type.clingo_model_type_stable_model;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_event_callback_t;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_handle;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_mode;
@@ -104,19 +107,19 @@ public class Clingo implements AutoCloseable {
 
     public void getStatistics() {
         Pointer<Pointer<clingo_statistic>> statistics = Pointer.allocatePointer(clingo_statistic.class);;
-        
+
         if (!library.clingo_control_statistics(control.get(), statistics)) {
             throwError("Error reading the clingo statistics!");
         }
-        
+
         Pointer<Long> root = Pointer.allocateLong();
         if (!library.clingo_statistics_root(statistics.get(), root)) {
             throwError("Error reading the clingo statistics root!");
         }
-        
+
         //TODO: implementation
     }
-    
+
     public void add(String name, String program) throws ClingoException {
         add(name, null, program);
     }
@@ -205,14 +208,14 @@ public class Clingo implements AutoCloseable {
 
                     try {
                         callback.groundCallback(loc, name, symbols, (List<Symbol> symbols1) -> {
-                            
+
                             if (symbols1 == null) {
                                 return;
                             }
-                            
+
                             Pointer<Long> v_symbols = createSymbols(symbols1);
                             long v_size = symbols1.size();
-                            
+
                             if (!(csymbol_callback.get().apply(v_symbols, v_size, null))) {
                                 throw new ClingoException();
                             }
@@ -234,12 +237,28 @@ public class Clingo implements AutoCloseable {
         }
 
     }
-
-    public Iterator<Model> solve() throws ClingoException {
-        return solve(null, false, true);
+    
+    public String symbolToString(Symbol symbol) {
+        Pointer<Long> tmp = createSymbol(symbol);
+        
+        Pointer<SizeT> size = Pointer.allocateSizeT();
+        library.clingo_symbol_to_string_size(tmp.get(), size);
+        
+        Pointer<Byte> text = Pointer.allocateBytes(size.getLong());
+        library.clingo_symbol_to_string(MESSAGE_LIMIT, text, size.getLong());
+        
+        return text.getCString();
     }
 
-    public Iterator<Model> solve(SolveEventHandler handler, boolean asynchronous, boolean yield) throws ClingoException {
+    public Iterator<Model> solve() throws ClingoException {
+        return solve(ShowType.SHOWN);
+    }
+
+    public Iterator<Model> solve(ShowType showType) throws ClingoException {
+        return solve(null, false, true, showType);
+    }
+    
+    public Iterator<Model> solve(SolveEventHandler handler, boolean asynchronous, boolean yield, final ShowType showType) throws ClingoException {
 
         int mode = 0;
         if (asynchronous) {
@@ -261,7 +280,7 @@ public class Clingo implements AutoCloseable {
                         //clingo_solve_event_type_model
                         case 0:
                             Pointer<clingo_model> p_model = (Pointer<clingo_model>) event;
-                            Model model = createModel(p_model);
+                            Model model = createModel(p_model, ShowType.SHOWN);
                             boolean tmp = handler.onModel(model);
                             goon.set(tmp);
                             break;
@@ -321,8 +340,6 @@ public class Clingo implements AutoCloseable {
 
                 Pointer<Pointer<clingo_model>> model = Pointer.allocatePointer(clingo_model.class);
 
-                Model result = null;
-
                 if (!library.clingo_solve_handle_resume(handle.get())) {
                     throwError("Error solve handle resume");
                 }
@@ -331,32 +348,9 @@ public class Clingo implements AutoCloseable {
                 }
 
                 if (model.get() != null) {
-
-                    int show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_shown.value);
-                    Pointer<SizeT> atoms_n = Pointer.allocateSizeT();
-
-                    // determine the number of (shown) symbols in the model                
-                    if (!library.clingo_model_symbols_size(model.get(), show, atoms_n)) {
-                        throwError("Error create symbol size");
-                    }
-
-                    // allocate required memory to hold all the symbols
-                    Pointer<Long> atoms = Pointer.allocateLongs(atoms_n.getLong());
-
-                    // retrieve the symbols in the model
-                    if (!library.clingo_model_symbols(model.get(), show, atoms, atoms_n.getLong())) {
-                        throwError("Error create symbol symbols");
-                    }
-
-                    List<Symbol> atomsList = new ArrayList<>((int) atoms_n.getLong());
-                    result = new Model(atomsList);
-
-                    for (int i = 0; i < atoms_n.getLong(); i++) {
-                        Long atom = atoms.get(i);
-                        atomsList.add(loadSymbol(atom));
-                    }
+                    return createModel(model.get(), showType);
                 }
-                return result;
+                return null;
             }
         };
         return iter;
@@ -375,33 +369,104 @@ public class Clingo implements AutoCloseable {
         throw new ClingoException(error, msg.getCString(), message);
     }
 
-    private Model createModel(Pointer<clingo_model> model) {
-        Model result = null;
-        // TODO: missing implementation
+    private Model createModel(Pointer<clingo_model> model, ShowType showType) {
+                
+        int show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_shown.value);
+        if (showType != null) {
+            switch (showType) {
+                case CSP:
+                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_csp.value);
+                    break;
+                case SHOWN:
+                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_shown.value);
+                    break;
+                case ATOMS:
+                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_atoms.value);
+                    break;
+                case TERMS:
+                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_terms.value);
+                    break;
+                case THEORY:
+                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_extra.value);
+                    break;
+                case ALL:
+                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_all.value);
+                    break;
+                case COMPLEMENT:
+                    show = (int) (ClingoLibrary.clingo_show_type.clingo_show_type_complement.value);
+                    break;
+            }
+        }
+        
+        Pointer<SizeT> atoms_n = Pointer.allocateSizeT();
+
+        Model result = new Model();
+
+        Pointer<Integer> type = Pointer.allocateInt();
+        if (!library.clingo_model_type(model, type)) {
+            throwError("Error reading the model type");
+        }
+        if (type != null && type.get() != null) {
+            switch (type.get()) {
+                //clingo_model_type_stable_model
+                case 0:
+                    result.setType(ModelType.STABLE_MODEL);
+                    break;
+                //clingo_model_type_brave_consequences
+                case 1:
+                    result.setType(ModelType.BRAVE_CONSEQUENCES);
+                    break;
+                //clingo_model_type_cautious_consequences
+                case 2:
+                    result.setType(ModelType.CAUTIOUS_CONSEQUENCES);
+                    break;
+            }
+        }        
+
+        // determine the number of (shown) symbols in the model                
+        if (!library.clingo_model_symbols_size(model, show, atoms_n)) {
+            throwError("Error reading the model size of symbols");
+        }
+
+        // allocate required memory to hold all the symbols
+        Pointer<Long> atoms = Pointer.allocateLongs(atoms_n.getLong());
+
+        // retrieve the symbols in the model
+        if (!library.clingo_model_symbols(model, show, atoms, atoms_n.getLong())) {
+            throwError("Error create symbol symbols");
+        }
+
+        List<Symbol> atomsList = new ArrayList<>((int) atoms_n.getLong());
+        result.setAtoms(atomsList);
+
+        for (int i = 0; i < atoms_n.getLong(); i++) {
+            Long atom = atoms.get(i);
+            atomsList.add(loadSymbol(atom));
+        }
         return result;
     }
-    
+
     private Pointer<Long> createSymbols(List<Symbol> symbols) {
         Pointer<Long> result = null;
         if (symbols != null && !symbols.isEmpty()) {
-            
+
             result = Pointer.allocateLongs(symbols.size());
             Pointer<Long> item = result;
-            for (int i=0; i<symbols.size(); i++) {
+            for (int i = 0; i < symbols.size(); i++) {
                 createSymbol(symbols.get(i), item);
                 item = item.next();
             }
         }
         return result;
     }
-    
+
     private Pointer<Long> createSymbol(Symbol symbol) {
         Pointer<Long> result = Pointer.allocateLong();
         return createSymbol(symbol, result);
     }
-    
+
     private Pointer<Long> createSymbol(Symbol symbol, Pointer<Long> result) {
-        switch(symbol.getType()) {
+        switch (symbol.getType()) {
             case NUMBER:
                 library.clingo_symbol_create_number(symbol.getNumber(), result);
                 break;
@@ -425,11 +490,10 @@ public class Clingo implements AutoCloseable {
                 library.clingo_symbol_create_supremum(result);
                 break;
         }
-        
-        
+
         return result;
     }
-    
+
     private Symbol loadSymbol(long atom) {
         SymbolType type = createSymbolType(atom);
         Symbol result = new Symbol(type);
