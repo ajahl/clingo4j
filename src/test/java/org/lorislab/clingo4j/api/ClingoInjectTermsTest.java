@@ -25,35 +25,38 @@ import org.junit.Test;
  * @author andrej
  */
 public class ClingoInjectTermsTest {
-    
+
     @Test
     public void controlTest() {
-        
+
         Clingo.init("src/main/clingo");
-        
+
         try (Clingo control = new Clingo()) {
-            
+
             // define a constant in string form
             Symbol number = Clingo.createNumber(23);
             control.add("base", "#const d=" + number);
-            
-        // define a constant via the AST
-//        ctl.with_builder([](ProgramBuilder &b) {
+
+            // define a constant via the AST
+            control.withBuilder((builder) -> {
 //            Location loc{"<generated>", "<generated>", 1, 1, 1, 1};
-//            b.add({loc, AST::Definition{"e", {loc, Number(24)}, false}});
-//        });
-        
-            control.add("base", "p(@c()). p(d). p(e).");            
+
+//            b.add({loc, AST::Definition{"e", {loc, Number(24)}, false}});             
+                builder.add();
+            });
+
+            control.add("base", "p(@c()). p(d). p(e).");
+
             // inject terms via a callback
             control.ground("base", (Location loc, String name, List<Symbol> symbols, GroundCallback.GroundSymbolCallback callback) -> {
-                if ("c".equals(name) && ( symbols == null || symbols.isEmpty())) {                    
+                if ("c".equals(name) && (symbols == null || symbols.isEmpty())) {
                     List<Symbol> tmp = new ArrayList<>(2);
                     tmp.add(Clingo.createNumber(42));
                     tmp.add(Clingo.createNumber(43));
                     callback.apply(tmp);
                 }
             });
-            
+
             Iterator<Model> iter = control.solve();
             while (iter.hasNext()) {
                 Model model = iter.next();
@@ -62,9 +65,9 @@ public class ClingoInjectTermsTest {
                     System.out.println(atom);
                 }
             }
-        
+
         } catch (ClingoException ex) {
-           System.err.println(ex.getMessage());
-        }        
-    }    
+            System.err.println(ex.getMessage());
+        }
+    }
 }

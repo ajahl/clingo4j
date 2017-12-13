@@ -25,6 +25,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.c.api.ClingoLibrary;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_control;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model;
+import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_program_builder;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_event_callback_t;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_handle;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_mode;
@@ -82,7 +83,7 @@ public class Clingo implements AutoCloseable {
             LIB.clingo_control_free(control.get());
         }
     }
-    
+
     public String getVersion() {
         Pointer<Integer> major = Pointer.allocateInt();
         Pointer<Integer> minor = Pointer.allocateInt();
@@ -90,11 +91,11 @@ public class Clingo implements AutoCloseable {
         LIB.clingo_version(major, minor, revision);
         return "" + major.getInt() + "." + minor.getInt() + "." + revision.getInt();
     }
-    
+
     public void add(String name, String program) throws ClingoException {
         add(name, null, program);
     }
-    
+
     public void add(String name, List<String> parameters, String program) throws ClingoException {
 
         Pointer<Byte> tmp_name = Pointer.pointerToCString(name);
@@ -182,10 +183,27 @@ public class Clingo implements AutoCloseable {
 
     }
 
+    public void withBuilder(ProgramBuilderCallback callback) {
+        if (callback != null) {
+            ProgramBuilder builder = builer();
+            builder.begin();
+            callback.run(builder);
+            builder.end();
+        }
+    }
+
+    public ProgramBuilder builer() {
+        Pointer<Pointer<clingo_program_builder>> tmp = Pointer.allocatePointer(clingo_program_builder.class);;
+        if (!LIB.clingo_control_program_builder(control.get(), tmp)) {
+            throwError("Error creating the program builder!");
+        }
+        return new ProgramBuilder(tmp.get());
+    }
+
     public Iterator<Model> solve() throws ClingoException {
         return solve(null, false, true);
     }
-    
+
     public Iterator<Model> solve(SolveEventHandler handler, boolean asynchronous, boolean yield) throws ClingoException {
 
         int mode = 0;
@@ -275,7 +293,7 @@ public class Clingo implements AutoCloseable {
         };
         return iter;
     }
-    
+
     public static void throwError(String message) throws ClingoException {
         Pointer<Byte> msg = LIB.clingo_error_message();
         int error = LIB.clingo_error_code();
@@ -285,7 +303,7 @@ public class Clingo implements AutoCloseable {
     public static Symbol createId(String name, boolean positive) {
         Pointer<Long> pointer = Pointer.allocateLong();
         if (!LIB.clingo_symbol_create_id(Pointer.pointerToCString(name), positive, pointer)) {
-            throwError("Error creating the ID!"); 
+            throwError("Error creating the ID!");
         }
         return new Symbol(pointer);
     }
@@ -293,7 +311,7 @@ public class Clingo implements AutoCloseable {
     public static Symbol createString(String string) {
         Pointer<Long> pointer = Pointer.allocateLong();
         if (!LIB.clingo_symbol_create_string(Pointer.pointerToCString(string), pointer)) {
-            throwError("Error creating the string!"); 
+            throwError("Error creating the string!");
         }
         return new Symbol(pointer);
     }
@@ -315,20 +333,20 @@ public class Clingo implements AutoCloseable {
         LIB.clingo_symbol_create_supremum(pointer);
         return new Symbol(pointer);
     }
-    
+
     public static Symbol createFunction(String name, List<Symbol> symbols, boolean positive) {
         Pointer<Long> pointer = Pointer.allocateLong();
-        
+
         int size = 0;
         Pointer<Long> arguments = createPointerToSymbols(symbols);
         if (symbols != null && !symbols.isEmpty()) {
             size = symbols.size();
         }
-        
+
         if (!LIB.clingo_symbol_create_function(Pointer.pointerToCString(name), arguments, size, positive, pointer)) {
-            throwError("Error creating the function!");            
+            throwError("Error creating the function!");
         }
-        
+
         return new Symbol(pointer);
     }
 
