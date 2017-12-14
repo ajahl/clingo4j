@@ -18,7 +18,9 @@ package org.lorislab.clingo4j.api;
 import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.throwError;
+import org.lorislab.clingo4j.api.ast.Statement;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_program_builder;
+import org.lorislab.clingo4j.c.api.clingo_ast_statement;
 
 /**
  *
@@ -41,11 +43,12 @@ public class ProgramBuilder {
             throwError("Error program builder begin!");
         }
     }
-    
-//    void add(AST::Statement const &stm);
-    
-    public void add() {
-        if (!LIB.clingo_program_builder_add(pointer, null)) {
+
+    public void add(Statement statment) {
+        Pointer<clingo_ast_statement> p_statement = Pointer.allocate(clingo_ast_statement.class);        
+//        p_statement.set(statment.getStatement());
+        
+        if (!LIB.clingo_program_builder_add(pointer, p_statement)) {
             throwError("Error program builder add!");            
         }
     }

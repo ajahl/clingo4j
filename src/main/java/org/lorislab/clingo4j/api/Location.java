@@ -22,40 +22,44 @@ import org.lorislab.clingo4j.c.api.clingo_location;
  *
  * @author andrej
  */
-public class Location {
+public class Location extends clingo_location {
     
-    private Pointer<clingo_location> pointer;
-
-    public Location(Pointer<clingo_location> pointer) {
-        this.pointer = pointer;
+    public Location(Pointer<clingo_location> location) {
+        super(location);
     }
     
-    public Pointer<clingo_location> getPointer() {
-        return pointer;
+    @SuppressWarnings("OverridableMethodCallInConstructor")
+    public Location(String beginFile, String endFile, long beginLine, long endLine, long beginColumn, long endColumn) {
+        begin_file(Pointer.pointerToCString(beginFile));
+        end_file(Pointer.pointerToCString(endFile));
+        begin_line(beginLine);
+        end_line(endLine);
+        begin_column(beginColumn);
+        end_column(endColumn);
     }
     
     public long getBeginColumn() {
-        return pointer.get().begin_column();
+        return this.begin_column();
     }
     
     public String getBeginFile() {
-        return pointer.get().begin_file().getCString();
+        return this.begin_file().getCString();
     }
     
     public long getBeginLine() {
-        return pointer.get().begin_line();
+        return this.begin_line();
     }
     
     public long getEndColumn() {
-        return pointer.get().end_column();
+        return this.end_column();
     }
     
     public String getEndFile() {
-        return pointer.get().end_file().getCString();
+        return this.end_file().getCString();
     }
     
     public long getEndLine() {
-        return pointer.get().end_line();
+        return this.end_line();
     }
     
 }
