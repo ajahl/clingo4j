@@ -18,16 +18,17 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Literal.LiteralData;
 import org.lorislab.clingo4j.c.api.clingo_ast_literal;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
 public class CSPLiteral implements LiteralData {
-    
+
     private CSPSum term;
-    
-    private List<CSPGuard> guards;    
+
+    private List<CSPGuard> guards;
 
     public List<CSPGuard> getGuards() {
         return guards;
@@ -41,5 +42,13 @@ public class CSPLiteral implements LiteralData {
     public clingo_ast_literal createLiteral() {
         return ASTToC.visit(this);
     }
-        
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(term);
+        sb.append(ClingoUtil.print(guards, "", "", "", false));
+        return sb.toString();
+    }
+
 }

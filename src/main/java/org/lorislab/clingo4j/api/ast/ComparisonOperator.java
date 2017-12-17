@@ -57,5 +57,10 @@ public enum ComparisonOperator {
     public int getValue() {
         return (int) operator.value;
     }
+
+    @Override
+    public String toString() {
+        return string;
+    }
     
 }

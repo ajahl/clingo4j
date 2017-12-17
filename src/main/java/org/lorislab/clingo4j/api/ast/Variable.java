@@ -41,6 +41,11 @@ public class Variable implements TermData, TheoryTermData {
     public clingo_ast_theory_term createTheoryTerm() {
         return ASTToC.visitTheoryTerm(this);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
             
     
 }

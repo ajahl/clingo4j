@@ -50,4 +50,11 @@ public class BodyLiteral {
         public clingo_ast_body_literal createBodyLiteral();
 
     }
+
+    @Override
+    public String toString() {
+        return "" + sign + data;
+    }
+    
+    
 }

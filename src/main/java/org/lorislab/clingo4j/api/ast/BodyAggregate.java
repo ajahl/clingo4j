@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.c.api.clingo_ast_body_literal;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -50,6 +51,19 @@ public class BodyAggregate implements BodyLiteralData {
     @Override
     public clingo_ast_body_literal createBodyLiteral() {
         return ASTToC.visitBodyLiteral(this);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (leftGuard.isPresent()) {
+            sb.append(leftGuard.get().getTerm()).append(" ").append(leftGuard.get().getComparison()).append(" ");
+        }
+        sb.append(" { ").append(ClingoUtil.print(elements, "", "; ", "", false)).append(" }");
+        if (rightGuard.isPresent()) {
+           sb.append(" ").append(rightGuard.get().getComparison()).append(" ").append(rightGuard.get().getTerm());
+        }
+        return sb.toString();
     }
     
     

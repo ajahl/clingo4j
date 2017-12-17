@@ -17,6 +17,7 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -34,6 +35,15 @@ public class CSPSum {
 
     public List<CSPProduct> getTerms() {
         return terms;
+    }
+
+    @Override
+    public String toString() {
+        if (terms == null || terms.isEmpty()) {
+            return "0";
+        } else {
+            return ClingoUtil.print(terms, "", "$+", "", false);
+        }
     }
     
     

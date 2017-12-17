@@ -50,6 +50,10 @@ public enum AggregateFunction {
     public int getValue() {
         return (int) function.value;
     }
-    
+
+    @Override
+    public String toString() {
+        return string;
+    }
     
 }

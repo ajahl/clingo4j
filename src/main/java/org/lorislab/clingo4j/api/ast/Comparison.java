@@ -44,6 +44,11 @@ public class Comparison implements LiteralData {
     public clingo_ast_literal createLiteral() {
         return ASTToC.visit(this);
     }
+
+    @Override
+    public String toString() {
+        return "" + left + comparison  + right;
+    }
     
     
 }

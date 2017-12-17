@@ -48,6 +48,12 @@ public enum Sign {
     public int getValue() {
         return (int) sign.value;
     }
+
+    @Override
+    public String toString() {
+        return string;
+    }
+    
     
 
 }

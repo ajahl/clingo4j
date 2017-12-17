@@ -26,19 +26,19 @@ public final class ClingoUtil {
 
     private ClingoUtil() {
     }
-    
+
     public static int arraySize(List data) {
         if (data != null) {
             return data.size();
         }
         return 0;
     }
-    
+
     public interface Convertor<T, E> {
 
         public T convert(E object);
 
-    }    
+    }
 
     public static <T, E> Pointer<T> createArray(List<E> data, Class<T> clazz, Convertor<T, E> convertor) {
         Pointer<T> result = null;
@@ -59,5 +59,21 @@ public final class ClingoUtil {
             result = Pointer.pointerToCStrings(data.toArray(new String[data.size()]));
         }
         return result;
-    }    
+    }
+
+    public static String print(List list, String prefix, String separator, String suffix, boolean empty) {
+        StringBuilder sb = new StringBuilder();
+        if (list != null && !list.isEmpty()) {
+            sb.append(prefix);
+            sb.append(list.get(0));
+            for (int i = 1; i < list.size(); i++) {
+                sb.append(separator);
+                sb.append(list.get(i));
+            }
+            sb.append(suffix);
+        } else if (empty) {
+            sb.append(prefix).append(suffix);
+        }
+        return sb.toString();
+    }
 }

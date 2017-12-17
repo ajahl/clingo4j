@@ -39,6 +39,13 @@ public class CSPProduct {
     public Optional<Term> getVariable() {
         return variable;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        if (variable.isPresent()) {
+            return "" + coefficient + "$*$" + variable.get();
+        }
+        return "" + coefficient;
+    }
+
 }

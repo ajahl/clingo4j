@@ -32,5 +32,11 @@ public class CSPGuard {
     public CSPSum getTerm() {
         return term;
     }
+
+    @Override
+    public String toString() {
+        return "$" + comparison + term;
+    }
         
+    
 }
