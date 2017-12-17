@@ -42,4 +42,7 @@ public enum TheoryOperatorType {
         return string;
     }
 
+    public int getValue() {
+        return (int) type.value;
+    }
 }

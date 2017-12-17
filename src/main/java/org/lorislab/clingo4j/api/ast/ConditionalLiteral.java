@@ -24,4 +24,14 @@ import java.util.List;
 public class ConditionalLiteral {
     private Literal literal;
     private List<Literal> condition;    
+
+    public List<Literal> getCondition() {
+        return condition;
+    }
+
+    public Literal getLiteral() {
+        return literal;
+    }
+    
+    
 }

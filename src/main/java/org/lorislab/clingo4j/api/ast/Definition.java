@@ -29,6 +29,19 @@ public class Definition {
         this.value = value;
         this.isDefault = isDefault;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public Term getValue() {
+        return value;
+    }
+
+    public boolean isIsDefault() {
+        return isDefault;
+    }
+    
     
     
 }

@@ -49,12 +49,12 @@ public class clingo_ast_body_literal extends StructObject {
 	}
 	/** C type : field1_union */
 	@Field(3) 
-	public org.lorislab.clingo4j.c.api.clingo_ast_term.field1_union field1() {
+	public clingo_ast_body_literal.field1_union field1() {
 		return this.io.getNativeObjectField(this, 3);
 	}
 	/** C type : field1_union */
 	@Field(3) 
-	public clingo_ast_body_literal field1(org.lorislab.clingo4j.c.api.clingo_ast_term.field1_union field1) {
+	public clingo_ast_body_literal field1(clingo_ast_body_literal.field1_union field1) {
 		this.io.setNativeObjectField(this, 3, field1);
 		return this;
 	}

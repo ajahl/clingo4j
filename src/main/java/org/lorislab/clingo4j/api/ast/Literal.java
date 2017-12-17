@@ -27,5 +27,15 @@ public class Literal {
     private Sign sign;
 //    private Variant<Boolean, Term, Comparison, CSPLiteral> data;
     private Object data;
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Sign getSign() {
+        return sign;
+    }
+    
+    
     
 }

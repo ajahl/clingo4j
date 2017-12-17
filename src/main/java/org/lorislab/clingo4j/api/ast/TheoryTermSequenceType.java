@@ -15,30 +15,43 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_term_type;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_list;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_set;
+import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_tuple;
+
 /**
  *
  * @author andrej
  */
 public enum TheoryTermSequenceType {
 
-    TUPLE(0,"(",")"),
-    LIST(1, "[","]"),
-    SET(2, "{","}");
+    TUPLE(0,"(",")", clingo_ast_theory_term_type_tuple),
+    LIST(1, "[","]", clingo_ast_theory_term_type_list),
+    SET(2, "{","}", clingo_ast_theory_term_type_set);
 
     private int value;
 
+    private clingo_ast_theory_term_type type;
+    
     private String left;
     
     private String right;
     
-    private TheoryTermSequenceType(int value, String left, String right) {
+    private TheoryTermSequenceType(int value, String left, String right, clingo_ast_theory_term_type type) {
         this.value = value;
         this.left = left;
         this.right = right;
+        this.type = type;
     }
 
     public int getValue() {
         return value;
     }
 
+    public clingo_ast_theory_term_type getType() {
+        return type;
+    }
+
+    
 }

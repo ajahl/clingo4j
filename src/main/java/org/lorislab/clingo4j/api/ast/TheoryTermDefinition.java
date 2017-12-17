@@ -26,4 +26,18 @@ public class TheoryTermDefinition {
     private Location location;
     private String name;
     private List<TheoryOperatorDefinition> operators;    
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<TheoryOperatorDefinition> getOperators() {
+        return operators;
+    }
+    
+    
 }

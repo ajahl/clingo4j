@@ -26,5 +26,18 @@ public class TheoryDefinition {
     private String name;
     private List<TheoryTermDefinition> terms;
     private List<TheoryAtomDefinition> atoms;
+
+    public List<TheoryAtomDefinition> getAtoms() {
+        return atoms;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<TheoryTermDefinition> getTerms() {
+        return terms;
+    }
+    
     
 }

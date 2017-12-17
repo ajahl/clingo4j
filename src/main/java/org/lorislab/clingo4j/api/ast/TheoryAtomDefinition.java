@@ -29,4 +29,30 @@ public class TheoryAtomDefinition {
     private int arity;
     private String elements;
     private Optional<TheoryGuardDefinition> guard;    
+
+    public int getArity() {
+        return arity;
+    }
+
+    public String getElements() {
+        return elements;
+    }
+
+    public Optional<TheoryGuardDefinition> getGuard() {
+        return guard;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public TheoryAtomDefinitionType getType() {
+        return type;
+    }
+    
+    
 }

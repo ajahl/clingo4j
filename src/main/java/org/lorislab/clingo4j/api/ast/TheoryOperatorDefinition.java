@@ -27,5 +27,22 @@ public class TheoryOperatorDefinition {
     private String name;
     private int priority;
     private TheoryOperatorType type;
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public TheoryOperatorType getType() {
+        return type;
+    }
+    
     
 }

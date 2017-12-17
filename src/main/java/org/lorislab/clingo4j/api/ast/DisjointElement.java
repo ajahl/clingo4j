@@ -27,4 +27,22 @@ public class DisjointElement {
     private List<Term> tuple;
     private CSPSum term;
     private List<Literal> condition;    
+
+    public List<Literal> getCondition() {
+        return condition;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public CSPSum getTerm() {
+        return term;
+    }
+
+    public List<Term> getTuple() {
+        return tuple;
+    }
+    
+    
 }

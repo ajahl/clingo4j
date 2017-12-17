@@ -24,4 +24,18 @@ public class Comparison {
     private ComparisonOperator comparison;
     private Term left;
     private Term right;
+
+    public ComparisonOperator getComparison() {
+        return comparison;
+    }
+
+    public Term getLeft() {
+        return left;
+    }
+
+    public Term getRight() {
+        return right;
+    }
+    
+    
 }

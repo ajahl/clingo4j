@@ -25,4 +25,13 @@ public class TheoryUnparsedTermElement {
     
     private List<String> operators;
     private TheoryTerm term;    
+
+    public List<String> getOperators() {
+        return operators;
+    }
+
+    public TheoryTerm getTerm() {
+        return term;
+    }
+        
 }

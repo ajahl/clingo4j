@@ -28,4 +28,22 @@ public class Minimize {
     private List<Term> tuple;
     private List<BodyLiteral> body;
 
+    public List<BodyLiteral> getBody() {
+        return body;
+    }
+
+    public Term getPriority() {
+        return priority;
+    }
+
+    public List<Term> getTuple() {
+        return tuple;
+    }
+
+    public Term getWeight() {
+        return weight;
+    }
+    
+    
+
 }

@@ -24,4 +24,14 @@ import java.util.List;
 public class Program {
     private String name;
     private List<Id> parameters;    
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Id> getParameters() {
+        return parameters;
+    }
+    
+    
 }

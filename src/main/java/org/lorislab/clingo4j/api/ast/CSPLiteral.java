@@ -26,4 +26,13 @@ public class CSPLiteral {
     private CSPSum term;
     
     private List<CSPGuard> guards;    
+
+    public List<CSPGuard> getGuards() {
+        return guards;
+    }
+
+    public CSPSum getTerm() {
+        return term;
+    }
+        
 }

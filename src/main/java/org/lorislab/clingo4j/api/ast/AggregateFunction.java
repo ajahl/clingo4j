@@ -46,6 +46,10 @@ public enum AggregateFunction {
     public clingo_ast_aggregate_function getFunction() {
         return function;
     }
+
+    public int getValue() {
+        return (int) function.value;
+    }
     
     
 }

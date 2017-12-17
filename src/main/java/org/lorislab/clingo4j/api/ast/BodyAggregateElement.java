@@ -25,4 +25,14 @@ public class BodyAggregateElement {
     
     private List<Term> tuple;
     private List<Literal> condition;    
+
+    public List<Literal> getCondition() {
+        return condition;
+    }
+
+    public List<Term> getTuple() {
+        return tuple;
+    }
+    
+    
 }

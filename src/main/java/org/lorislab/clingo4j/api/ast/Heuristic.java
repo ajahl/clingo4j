@@ -28,4 +28,26 @@ public class Heuristic {
     private Term bias;
     private Term priority;
     private Term modifier;    
+
+    public Term getAtom() {
+        return atom;
+    }
+
+    public Term getBias() {
+        return bias;
+    }
+
+    public List<BodyLiteral> getBody() {
+        return body;
+    }
+
+    public Term getModifier() {
+        return modifier;
+    }
+
+    public Term getPriority() {
+        return priority;
+    }
+    
+    
 }

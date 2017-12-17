@@ -23,4 +23,14 @@ public class TheoryGuard {
     
     private  String operatorName;
     private TheoryTerm term;    
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public TheoryTerm getTerm() {
+        return term;
+    }
+    
+    
 }

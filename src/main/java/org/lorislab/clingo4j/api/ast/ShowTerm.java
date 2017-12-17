@@ -26,4 +26,18 @@ public class ShowTerm {
     private Term term;
     private List<BodyLiteral> body;
     private boolean csp;
+
+    public List<BodyLiteral> getBody() {
+        return body;
+    }
+
+    public Term getTerm() {
+        return term;
+    }
+
+    public boolean isCsp() {
+        return csp;
+    }
+    
+    
 }

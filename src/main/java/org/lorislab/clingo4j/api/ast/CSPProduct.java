@@ -27,4 +27,18 @@ public class CSPProduct {
     private Location location;
     private Term coefficient;
     private Optional<Term> variable;
+
+    public Term getCoefficient() {
+        return coefficient;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Optional<Term> getVariable() {
+        return variable;
+    }
+    
+    
 }

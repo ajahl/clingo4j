@@ -25,6 +25,24 @@ import java.util.Optional;
 public class HeadAggregate {
     private AggregateFunction function;
     private List<HeadAggregateElement> elements;
-    private Optional<AggregateGuard> left_guard;
-    private Optional<AggregateGuard> right_guard;    
+    private Optional<AggregateGuard> leftGuard;
+    private Optional<AggregateGuard> rightGuard;    
+
+    public List<HeadAggregateElement> getElements() {
+        return elements;
+    }
+
+    public AggregateFunction getFunction() {
+        return function;
+    }
+
+    public Optional<AggregateGuard> getLeftGuard() {
+        return leftGuard;
+    }
+
+    public Optional<AggregateGuard> getRightGuard() {
+        return rightGuard;
+    }
+    
+    
 }

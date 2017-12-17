@@ -24,5 +24,19 @@ import java.util.List;
 public class Edge {
     private Term u;
     private Term v;
-    private List<BodyLiteral> body;    
+    private List<BodyLiteral> body; 
+
+    public List<BodyLiteral> getBody() {
+        return body;
+    }
+
+    public Term getU() {
+        return u;
+    }
+
+    public Term getV() {
+        return v;
+    }
+    
+    
 }

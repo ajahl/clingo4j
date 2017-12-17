@@ -27,5 +27,19 @@ public class TheoryAtom {
     private Term term;
     private List<TheoryAtomElement> elements;
     private Optional<TheoryGuard> guard;
+
+    public List<TheoryAtomElement> getElements() {
+        return elements;
+    }
+
+    public Optional<TheoryGuard> getGuard() {
+        return guard;
+    }
+
+    public Term getTerm() {
+        return term;
+    }
+    
+    
     
 }

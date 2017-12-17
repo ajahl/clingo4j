@@ -22,4 +22,14 @@ package org.lorislab.clingo4j.api.ast;
 public class ShowSignature {
     private Signature signature;
     private boolean csp;    
+
+    public Signature getSignature() {
+        return signature;
+    }
+
+    public boolean isCsp() {
+        return csp;
+    }
+    
+    
 }

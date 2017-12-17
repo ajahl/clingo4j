@@ -25,4 +25,14 @@ public class External {
 
     private Term atom;
     private List<BodyLiteral> body;
+
+    public Term getAtom() {
+        return atom;
+    }
+
+    public List<BodyLiteral> getBody() {
+        return body;
+    }
+    
+    
 }

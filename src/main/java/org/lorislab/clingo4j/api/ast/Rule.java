@@ -24,4 +24,14 @@ import java.util.List;
 public class Rule {
     private HeadLiteral head;
     private List<BodyLiteral> body;    
+
+    public List<BodyLiteral> getBody() {
+        return body;
+    }
+
+    public HeadLiteral getHead() {
+        return head;
+    }
+    
+    
 }

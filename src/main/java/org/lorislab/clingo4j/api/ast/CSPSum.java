@@ -27,5 +27,14 @@ public class CSPSum {
     private Location location;
     
     private List<CSPProduct> terms;
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public List<CSPProduct> getTerms() {
+        return terms;
+    }
+    
     
 }

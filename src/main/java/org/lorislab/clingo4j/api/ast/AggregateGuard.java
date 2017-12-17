@@ -22,4 +22,14 @@ package org.lorislab.clingo4j.api.ast;
 public class AggregateGuard {
     private ComparisonOperator comparison;
     private Term term;    
+
+    public ComparisonOperator getComparison() {
+        return comparison;
+    }
+
+    public Term getTerm() {
+        return term;
+    }
+    
+    
 }

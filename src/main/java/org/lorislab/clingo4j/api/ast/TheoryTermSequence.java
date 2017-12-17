@@ -24,4 +24,14 @@ import java.util.List;
 public class TheoryTermSequence {
     private TheoryTermSequenceType type;
     private List<TheoryTerm> terms;    
+
+    public List<TheoryTerm> getTerms() {
+        return terms;
+    }
+
+    public TheoryTermSequenceType getType() {
+        return type;
+    }
+    
+    
 }

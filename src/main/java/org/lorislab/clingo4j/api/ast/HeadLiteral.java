@@ -26,4 +26,10 @@ public class HeadLiteral {
     private Location location;
     //Variant<Literal, Disjunction, Aggregate, HeadAggregate, TheoryAtom> data;    
     private Object data;
+
+    public Location getLocation() {
+        return location;
+    }
+    
+     
 }

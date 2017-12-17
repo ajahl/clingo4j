@@ -24,4 +24,14 @@ import java.util.List;
 public class HeadAggregateElement {
     private List<Term> tuple;
     private ConditionalLiteral condition;    
+
+    public ConditionalLiteral getCondition() {
+        return condition;
+    }
+
+    public List<Term> getTuple() {
+        return tuple;
+    }
+    
+    
 }

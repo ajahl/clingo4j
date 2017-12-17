@@ -42,5 +42,9 @@ public enum ScriptType {
         return type;
     }
     
+    public int getValue() {
+        return (int) type.value;
+    }
+    
     
 }

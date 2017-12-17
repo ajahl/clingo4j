@@ -24,4 +24,10 @@ import java.util.List;
 public class TheoryUnparsedTerm {
     
     private List<TheoryUnparsedTermElement> elements;
+
+    public List<TheoryUnparsedTermElement> getElements() {
+        return elements;
+    }
+    
+    
 }

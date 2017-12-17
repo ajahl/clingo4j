@@ -24,4 +24,10 @@ import java.util.List;
 public class Disjunction {
     
     private List<ConditionalLiteral> elements;
+
+    public List<ConditionalLiteral> getElements() {
+        return elements;
+    }
+    
+    
 }

@@ -24,5 +24,9 @@ import java.util.List;
 public class Pool {
  
     private List<Term> arguments;
-    
+
+    public List<Term> getArguments() {
+        return arguments;
+    }
+        
 }

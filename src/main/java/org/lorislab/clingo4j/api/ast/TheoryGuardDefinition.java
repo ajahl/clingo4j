@@ -25,4 +25,14 @@ public class TheoryGuardDefinition {
     
     private String term;
     private List<String> operators;    
+
+    public List<String> getOperators() {
+        return operators;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+    
+    
 }

@@ -24,5 +24,15 @@ import java.util.List;
 public class TheoryAtomElement {
     
     private List<TheoryTerm> tuple;
-    private List<Literal> condition;    
+    private List<Literal> condition; 
+
+    public List<Literal> getCondition() {
+        return condition;
+    }
+
+    public List<TheoryTerm> getTuple() {
+        return tuple;
+    }
+    
+    
 }

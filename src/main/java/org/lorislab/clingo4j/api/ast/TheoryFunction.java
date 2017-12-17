@@ -24,4 +24,14 @@ import java.util.List;
 public class TheoryFunction {
     private String name;
     private List<TheoryTerm> arguments;    
+
+    public List<TheoryTerm> getArguments() {
+        return arguments;
+    }
+
+    public String getName() {
+        return name;
+    }
+    
+    
 }

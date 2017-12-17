@@ -25,6 +25,20 @@ import java.util.Optional;
 public class Aggregate {
     
     private List<ConditionalLiteral> elements;
-    private Optional<AggregateGuard> left_guard;
-    private Optional<AggregateGuard> right_guard;    
+    private Optional<AggregateGuard> leftGuard;
+    private Optional<AggregateGuard> rightGuard; 
+
+    public List<ConditionalLiteral> getElements() {
+        return elements;
+    }
+
+    public Optional<AggregateGuard> getLeftGuard() {
+        return leftGuard;
+    }
+
+    public Optional<AggregateGuard> getRightGuard() {
+        return rightGuard;
+    }
+    
+    
 }

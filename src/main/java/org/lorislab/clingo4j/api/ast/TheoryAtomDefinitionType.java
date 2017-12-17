@@ -45,5 +45,7 @@ public enum TheoryAtomDefinitionType {
         return type;
     }
     
-    
+    public int getValue() {
+        return (int) type.value;
+    }
 }

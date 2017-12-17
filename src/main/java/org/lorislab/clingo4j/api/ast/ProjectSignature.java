@@ -22,4 +22,10 @@ package org.lorislab.clingo4j.api.ast;
 public class ProjectSignature {
     
     private Signature signature;
+
+    public Signature getSignature() {
+        return signature;
+    }
+    
+    
 }

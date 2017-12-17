@@ -24,4 +24,10 @@ import java.util.List;
 public class Disjoint {
     
     private List<DisjointElement> elements;
+
+    public List<DisjointElement> getElements() {
+        return elements;
+    }
+    
+    
 }

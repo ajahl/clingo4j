@@ -24,5 +24,15 @@ public class Interval {
     private Term left;
     
     private Term right;
+
+    public Term getLeft() {
+        return left;
+    }
+
+    public Term getRight() {
+        return right;
+    }
+    
+    
     
 }

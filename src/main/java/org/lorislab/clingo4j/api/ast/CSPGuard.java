@@ -24,4 +24,13 @@ public class CSPGuard {
     private ComparisonOperator comparison;
     
     private CSPSum term;    
+
+    public ComparisonOperator getComparison() {
+        return comparison;
+    }
+
+    public CSPSum getTerm() {
+        return term;
+    }
+        
 }

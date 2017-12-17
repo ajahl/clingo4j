@@ -53,5 +53,9 @@ public enum ComparisonOperator {
     public clingo_ast_comparison_operator getOperator() {
         return operator;
     }
+
+    public int getValue() {
+        return (int) operator.value;
+    }
     
 }

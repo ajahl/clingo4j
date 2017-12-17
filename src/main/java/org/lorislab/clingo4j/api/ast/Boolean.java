@@ -22,4 +22,10 @@ package org.lorislab.clingo4j.api.ast;
 public class Boolean {
     
     private boolean value;
+
+    public boolean isValue() {
+        return value;
+    }
+    
+    
 }

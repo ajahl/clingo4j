@@ -28,5 +28,17 @@ public class Function {
     private List<Term> arguments;
     
     private boolean external;
-    
+
+    public List<Term> getArguments() {
+        return arguments;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isExternal() {
+        return external;
+    }
+        
 }

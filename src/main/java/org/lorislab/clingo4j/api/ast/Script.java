@@ -23,4 +23,14 @@ public class Script {
 
     private ScriptType type;
     private String code;
+
+    public String getCode() {
+        return code;
+    }
+
+    public ScriptType getType() {
+        return type;
+    }
+    
+    
 }
