@@ -114,6 +114,7 @@ import org.lorislab.clingo4j.c.api.clingo_ast_theory_term_definition;
 import org.lorislab.clingo4j.c.api.clingo_ast_theory_unparsed_term;
 import org.lorislab.clingo4j.c.api.clingo_ast_theory_unparsed_term_element;
 import org.lorislab.clingo4j.c.api.clingo_ast_unary_operation;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -180,8 +181,8 @@ public class ASTToC {
     static clingo_ast_term visit(final Function x, TermTag t) {
         clingo_ast_function fn = new clingo_ast_function();
         fn.name(Pointer.pointerToCString(x.getName()));
-        fn.arguments(createArray(x.getArguments(), clingo_ast_term.class, ASTToC::convTerm));
-        fn.size(arraySize(x.getArguments()));
+        fn.arguments(ClingoUtil.createArray(x.getArguments(), clingo_ast_term.class, ASTToC::convTerm));
+        fn.size(ClingoUtil.arraySize(x.getArguments()));
         clingo_ast_term ret = createAstTerm(x.isExternal() ? clingo_ast_term_type_external_function : clingo_ast_term_type_function);
         ret.field1().function(Pointer.getPointer(fn));
         return ret;
@@ -189,8 +190,8 @@ public class ASTToC {
 
     static clingo_ast_term visit(final Pool x, TermTag t) {
         clingo_ast_pool pool = new clingo_ast_pool();
-        pool.arguments(createArray(x.getArguments(), clingo_ast_term.class, ASTToC::convTerm));
-        pool.size(arraySize(x.getArguments()));
+        pool.arguments(ClingoUtil.createArray(x.getArguments(), clingo_ast_term.class, ASTToC::convTerm));
+        pool.size(ClingoUtil.arraySize(x.getArguments()));
         clingo_ast_term ret = createAstTerm(clingo_ast_term_type_pool);
         ret.field1().pool(Pointer.getPointer(pool));
         return ret;
@@ -219,29 +220,16 @@ public class ASTToC {
     static clingo_ast_csp_sum_term convCSPAdd(CSPSum x) {
         clingo_ast_csp_sum_term ret = new clingo_ast_csp_sum_term();
         ret.location(x.getLocation());
-
-        int size = 0;
-        Pointer<clingo_ast_csp_product_term> result = null;
-        if (x.getTerms() != null) {
-            size = x.getTerms().size();
-
-            result = Pointer.allocateArray(clingo_ast_csp_product_term.class, size);
-            Pointer<clingo_ast_csp_product_term> iter = result;
-            for (CSPProduct term : x.getTerms()) {
-                iter.set(convCSPProduct(term));
-                iter = iter.next();
-            }
-        }
-        ret.terms(result);
-        ret.size(size);
+        ret.terms(ClingoUtil.createArray(x.getTerms(), clingo_ast_csp_product_term.class, ASTToC::convCSPProduct));
+        ret.size(ClingoUtil.arraySize(x.getTerms()));
         return ret;
     }
 
     static clingo_ast_theory_unparsed_term_element convTheoryUnparsedTermElement(TheoryUnparsedTermElement x) {
         clingo_ast_theory_unparsed_term_element ret = new clingo_ast_theory_unparsed_term_element();
         ret.term(convTheoryTerm(x.getTerm()));
-        ret.size(arraySize(x.getOperators()));
-        ret.operators(createListArray(x.getOperators()));
+        ret.size(ClingoUtil.arraySize(x.getOperators()));
+        ret.operators(ClingoUtil.createListArray(x.getOperators()));
         return ret;
     }
 
@@ -268,8 +256,8 @@ public class ASTToC {
 
     static clingo_ast_theory_term visit(TheoryTermSequence term, TheoryTermTag t) {
         clingo_ast_theory_term_array a = new clingo_ast_theory_term_array();
-        a.terms(createArray(term.getTerms(), clingo_ast_theory_term.class, ASTToC::convTheoryTerm));
-        a.size(arraySize(term.getTerms()));
+        a.terms(ClingoUtil.createArray(term.getTerms(), clingo_ast_theory_term.class, ASTToC::convTheoryTerm));
+        a.size(ClingoUtil.arraySize(term.getTerms()));
         clingo_ast_theory_term ret = createTheoryTerm(term.getType().getType());
         ret.field1().set(Pointer.getPointer(a));
         return ret;
@@ -278,8 +266,8 @@ public class ASTToC {
     static clingo_ast_theory_term visit(TheoryFunction term, TheoryTermTag t) {
         clingo_ast_theory_function fun = new clingo_ast_theory_function();
         fun.name(Pointer.pointerToCString(term.getName()));
-        fun.arguments(createArray(term.getArguments(), clingo_ast_theory_term.class, ASTToC::convTheoryTerm));
-        fun.size(arraySize(term.getArguments()));
+        fun.arguments(ClingoUtil.createArray(term.getArguments(), clingo_ast_theory_term.class, ASTToC::convTheoryTerm));
+        fun.size(ClingoUtil.arraySize(term.getArguments()));
         clingo_ast_theory_term ret = createTheoryTerm(clingo_ast_theory_term_type_function);
         ret.field1().function(Pointer.getPointer(fun));
         return ret;
@@ -287,8 +275,8 @@ public class ASTToC {
 
     static clingo_ast_theory_term visit(TheoryUnparsedTerm term, TheoryTermTag t) {
         clingo_ast_theory_unparsed_term result = new clingo_ast_theory_unparsed_term();
-        result.elements(createArray(term.getElements(), clingo_ast_theory_unparsed_term_element.class, ASTToC::convTheoryUnparsedTermElement));
-        result.size(arraySize(term.getElements()));
+        result.elements(ClingoUtil.createArray(term.getElements(), clingo_ast_theory_unparsed_term_element.class, ASTToC::convTheoryUnparsedTermElement));
+        result.size(ClingoUtil.arraySize(term.getElements()));
         clingo_ast_theory_term ret = createTheoryTerm(clingo_ast_theory_term_type_unparsed_term);
         ret.field1().unparsed_term(Pointer.getPointer(result));
         return ret;
@@ -299,19 +287,6 @@ public class ASTToC {
 //        auto ret = x.data.accept(*this, TheoryTermTag t{});
 //        ret.location = x.location;
         return null;
-    }
-
-    private static Pointer<clingo_ast_theory_term> convTheoryTermVec(List<TheoryTerm> x) {
-        Pointer<clingo_ast_theory_term> result = null;
-        if (x != null && !x.isEmpty()) {
-            result = Pointer.allocateArray(clingo_ast_theory_term.class, x.size());
-            Pointer<clingo_ast_theory_term> iter = result;
-            for (TheoryTerm item : x) {
-                iter.set(convTheoryTerm(item));
-                iter = iter.next();
-            }
-        }
-        return result;
     }
 
     static clingo_ast_csp_guard convCSPGuard(CSPGuard x) {
@@ -353,8 +328,8 @@ public class ASTToC {
     static clingo_ast_literal visit(CSPLiteral x) {
         clingo_ast_csp_literal csp = new clingo_ast_csp_literal();
         csp.term(convCSPAdd(x.getTerm()));
-        csp.guards(createArray(x.getGuards(), clingo_ast_csp_guard.class, ASTToC::convCSPGuard));
-        csp.size(arraySize(x.getGuards()));
+        csp.guards(ClingoUtil.createArray(x.getGuards(), clingo_ast_csp_guard.class, ASTToC::convCSPGuard));
+        csp.size(ClingoUtil.arraySize(x.getGuards()));
         clingo_ast_literal ret = createLiteral(clingo_ast_literal_type_csp);
         ret.field1().csp_literal(Pointer.getPointer(csp));
         return ret;
@@ -383,8 +358,8 @@ public class ASTToC {
     static clingo_ast_conditional_literal convConditionalLiteral(ConditionalLiteral x) {
         clingo_ast_conditional_literal ret = new clingo_ast_conditional_literal();
         ret.literal(convLiteral(x.getLiteral()));
-        ret.condition(createArray(x.getCondition(), clingo_ast_literal.class, ASTToC::convLiteral));
-        ret.size(arraySize(x.getCondition()));
+        ret.condition(ClingoUtil.createArray(x.getCondition(), clingo_ast_literal.class, ASTToC::convLiteral));
+        ret.size(ClingoUtil.arraySize(x.getCondition()));
         return ret;
     }
 
@@ -401,26 +376,26 @@ public class ASTToC {
 
     static clingo_ast_theory_atom_element convTheoryAtomElement(TheoryAtomElement x) {
         clingo_ast_theory_atom_element ret = new clingo_ast_theory_atom_element();
-        ret.tuple(createArray(x.getTuple(), clingo_ast_theory_term.class, ASTToC::convTheoryTerm));
-        ret.tuple_size(arraySize(x.getTuple()));
-        ret.condition(createArray(x.getCondition(), clingo_ast_literal.class, ASTToC::convLiteral));
-        ret.condition_size(arraySize(x.getCondition()));
+        ret.tuple(ClingoUtil.createArray(x.getTuple(), clingo_ast_theory_term.class, ASTToC::convTheoryTerm));
+        ret.tuple_size(ClingoUtil.arraySize(x.getTuple()));
+        ret.condition(ClingoUtil.createArray(x.getCondition(), clingo_ast_literal.class, ASTToC::convLiteral));
+        ret.condition_size(ClingoUtil.arraySize(x.getCondition()));
         return ret;
     }
 
     static clingo_ast_body_aggregate_element convBodyAggregateElement(BodyAggregateElement x) {
         clingo_ast_body_aggregate_element ret = new clingo_ast_body_aggregate_element();
-        ret.tuple(createArray(x.getTuple(), clingo_ast_term.class, ASTToC::convTerm));
-        ret.tuple_size(arraySize(x.getTuple()));
-        ret.condition(createArray(x.getCondition(), clingo_ast_literal.class, ASTToC::convLiteral));
-        ret.condition_size(arraySize(x.getCondition()));
+        ret.tuple(ClingoUtil.createArray(x.getTuple(), clingo_ast_term.class, ASTToC::convTerm));
+        ret.tuple_size(ClingoUtil.arraySize(x.getTuple()));
+        ret.condition(ClingoUtil.createArray(x.getCondition(), clingo_ast_literal.class, ASTToC::convLiteral));
+        ret.condition_size(ClingoUtil.arraySize(x.getCondition()));
         return ret;
     }
 
     static clingo_ast_head_aggregate_element convHeadAggregateElement(HeadAggregateElement x) {
         clingo_ast_head_aggregate_element ret = new clingo_ast_head_aggregate_element();
-        ret.tuple(createArray(x.getTuple(), clingo_ast_term.class, ASTToC::convTerm));
-        ret.tuple_size(arraySize(x.getTuple()));
+        ret.tuple(ClingoUtil.createArray(x.getTuple(), clingo_ast_term.class, ASTToC::convTerm));
+        ret.tuple_size(ClingoUtil.arraySize(x.getTuple()));
         ret.conditional_literal(convConditionalLiteral(x.getCondition()));
         return ret;
     }
@@ -429,22 +404,8 @@ public class ASTToC {
         clingo_ast_aggregate ret = new clingo_ast_aggregate();
         ret.left_guard(convAggregateGuard(x.getLeftGuard()));
         ret.right_guard(convAggregateGuard(x.getRightGuard()));
-
-        int size = 0;
-        Pointer<clingo_ast_conditional_literal> result = null;
-        if (x.getElements() != null) {
-            size = x.getElements().size();
-
-            result = Pointer.allocateArray(clingo_ast_conditional_literal.class, size);
-            Pointer<clingo_ast_conditional_literal> iter = result;
-            for (ConditionalLiteral literal : x.getElements()) {
-                iter.set(convConditionalLiteral(literal));
-                iter = iter.next();
-            }
-        }
-        ret.elements(result);
-        ret.size(size);
-
+        ret.elements(ClingoUtil.createArray(x.getElements(), clingo_ast_conditional_literal.class, ASTToC::convConditionalLiteral));
+        ret.size(ClingoUtil.arraySize(x.getElements()));
         return ret;
     }
 
@@ -452,37 +413,19 @@ public class ASTToC {
         clingo_ast_theory_atom ret = new clingo_ast_theory_atom();
         ret.term(convTerm(x.getTerm()));
         ret.guard(convTheoryGuard(x.getGuard()));
-
-        int size = 0;
-        Pointer<clingo_ast_theory_atom_element> result = null;
-        if (x.getElements() != null) {
-            size = x.getElements().size();
-
-            result = Pointer.allocateArray(clingo_ast_theory_atom_element.class, size);
-            Pointer<clingo_ast_theory_atom_element> iter = result;
-            for (TheoryAtomElement element : x.getElements()) {
-                iter.set(convTheoryAtomElement(element));
-                iter = iter.next();
-            }
-        }
-        ret.elements(result);
-        ret.size(size);
-
+        ret.elements(ClingoUtil.createArray(x.getElements(), clingo_ast_theory_atom_element.class, ASTToC::convTheoryAtomElement));
+        ret.size(ClingoUtil.arraySize(x.getElements()));
         return ret;
     }
 
     static clingo_ast_disjoint_element convDisjointElement(DisjointElement x) {
         clingo_ast_disjoint_element ret = new clingo_ast_disjoint_element();
         ret.location(x.getLocation());
-
-        ret.tuple(createArray(x.getTuple(), clingo_ast_term.class, ASTToC::convTerm));
-        ret.tuple_size(arraySize(x.getTuple()));
-
+        ret.tuple(ClingoUtil.createArray(x.getTuple(), clingo_ast_term.class, ASTToC::convTerm));
+        ret.tuple_size(ClingoUtil.arraySize(x.getTuple()));
         ret.term(convCSPAdd(x.getTerm()));
-
-        ret.condition(createArray(x.getCondition(), clingo_ast_literal.class, ASTToC::convLiteral));
-        ret.condition_size(arraySize(x.getCondition()));
-
+        ret.condition(ClingoUtil.createArray(x.getCondition(), clingo_ast_literal.class, ASTToC::convLiteral));
+        ret.condition_size(ClingoUtil.arraySize(x.getCondition()));
         return ret;
     }
 
@@ -503,9 +446,8 @@ public class ASTToC {
 
     static clingo_ast_head_literal visit(Disjunction x, HeadLiteralTag t) {
         clingo_ast_disjunction disjunction = new clingo_ast_disjunction();
-        disjunction.elements(createArray(x.getElements(), clingo_ast_conditional_literal.class, ASTToC::convConditionalLiteral));
-        disjunction.size(arraySize(x.getElements()));
-
+        disjunction.elements(ClingoUtil.createArray(x.getElements(), clingo_ast_conditional_literal.class, ASTToC::convConditionalLiteral));
+        disjunction.size(ClingoUtil.arraySize(x.getElements()));
         clingo_ast_head_literal ret = createAstHeadLiteral(clingo_ast_head_literal_type_disjunction);
         ret.field1().disjunction(Pointer.getPointer(disjunction));
         return ret;
@@ -522,10 +464,8 @@ public class ASTToC {
         head_aggregate.left_guard(convAggregateGuard(x.getLeftGuard()));
         head_aggregate.right_guard(convAggregateGuard(x.getRightGuard()));
         head_aggregate.function(x.getFunction().getValue());
-
-        head_aggregate.elements(createArray(x.getElements(), clingo_ast_head_aggregate_element.class, ASTToC::convHeadAggregateElement));
-        head_aggregate.size(arraySize(x.getElements()));
-
+        head_aggregate.elements(ClingoUtil.createArray(x.getElements(), clingo_ast_head_aggregate_element.class, ASTToC::convHeadAggregateElement));
+        head_aggregate.size(ClingoUtil.arraySize(x.getElements()));
         clingo_ast_head_literal ret = createAstHeadLiteral(clingo_ast_head_literal_type_head_aggregate);
         ret.field1().head_aggregate(Pointer.getPointer(head_aggregate));
         return ret;
@@ -577,8 +517,8 @@ public class ASTToC {
         body_aggregate.left_guard(convAggregateGuard(x.getLeftGuard()));
         body_aggregate.right_guard(convAggregateGuard(x.getRightGuard()));
         body_aggregate.function(x.getFunction().getValue());
-        body_aggregate.size(arraySize(x.getElements()));
-        body_aggregate.elements(createArray(x.getElements(), clingo_ast_body_aggregate_element.class, ASTToC::convBodyAggregateElement));
+        body_aggregate.size(ClingoUtil.arraySize(x.getElements()));
+        body_aggregate.elements(ClingoUtil.createArray(x.getElements(), clingo_ast_body_aggregate_element.class, ASTToC::convBodyAggregateElement));
         clingo_ast_body_literal ret = createAstBodyLiteral(clingo_ast_body_literal_type_disjoint);
         ret.field1().body_aggregate(Pointer.getPointer(body_aggregate));
         return ret;
@@ -593,7 +533,7 @@ public class ASTToC {
     static clingo_ast_body_literal visit(Disjoint x, BodyLiteralTag t) {
         clingo_ast_disjoint disjoint = new clingo_ast_disjoint();
         disjoint.size(x.getElements().size());
-        disjoint.elements(createArray(x.getElements(), clingo_ast_disjoint_element.class, ASTToC::convDisjointElement));
+        disjoint.elements(ClingoUtil.createArray(x.getElements(), clingo_ast_disjoint_element.class, ASTToC::convDisjointElement));
         clingo_ast_body_literal ret = createAstBodyLiteral(clingo_ast_body_literal_type_disjoint);
         ret.field1().disjoint(Pointer.getPointer(disjoint));
         return ret;
@@ -621,16 +561,16 @@ public class ASTToC {
         clingo_ast_theory_term_definition ret = new clingo_ast_theory_term_definition();
         ret.location(x.getLocation());
         ret.name(Pointer.pointerToCString(x.getName()));
-        ret.operators(createArray(x.getOperators(), clingo_ast_theory_operator_definition.class, ASTToC::convTheoryOperatorDefinition));
-        ret.size(arraySize(x.getOperators()));
+        ret.operators(ClingoUtil.createArray(x.getOperators(), clingo_ast_theory_operator_definition.class, ASTToC::convTheoryOperatorDefinition));
+        ret.size(ClingoUtil.arraySize(x.getOperators()));
         return ret;
     }
 
     static clingo_ast_theory_guard_definition convTheoryGuardDefinition(TheoryGuardDefinition x) {
         clingo_ast_theory_guard_definition ret = new clingo_ast_theory_guard_definition();
         ret.term(Pointer.pointerToCString(x.getTerm()));
-        ret.operators(createListArray(x.getOperators()));
-        ret.size(arraySize(x.getOperators()));
+        ret.operators(ClingoUtil.createListArray(x.getOperators()));
+        ret.size(ClingoUtil.arraySize(x.getOperators()));
         return ret;
     }
 
@@ -656,8 +596,8 @@ public class ASTToC {
     static clingo_ast_statement visit(Rule x) {
         clingo_ast_rule rule = new clingo_ast_rule();
         rule.head(convHeadLiteral(x.getHead()));
-        rule.size(arraySize(x.getBody()));
-        rule.body(createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
+        rule.size(ClingoUtil.arraySize(x.getBody()));
+        rule.body(ClingoUtil.createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_rule);
         ret.field1().rule(Pointer.getPointer(rule));
         return ret;
@@ -686,8 +626,8 @@ public class ASTToC {
         clingo_ast_show_term term = new clingo_ast_show_term();
         term.csp(x.isCsp());
         term.term(convTerm(x.getTerm()));
-        term.body(createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
-        term.size(arraySize(x.getBody()));
+        term.body(ClingoUtil.createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
+        term.size(ClingoUtil.arraySize(x.getBody()));
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_show_term);
         ret.field1().show_term(Pointer.getPointer(term));
         return ret;
@@ -697,10 +637,10 @@ public class ASTToC {
         clingo_ast_minimize minimize = new clingo_ast_minimize();
         minimize.weight(convTerm(x.getWeight()));
         minimize.priority(convTerm(x.getPriority()));
-        minimize.tuple(createArray(x.getTuple(), clingo_ast_term.class, ASTToC::convTerm));
-        minimize.tuple_size(arraySize(x.getTuple()));
-        minimize.body(createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
-        minimize.body_size(arraySize(x.getBody()));
+        minimize.tuple(ClingoUtil.createArray(x.getTuple(), clingo_ast_term.class, ASTToC::convTerm));
+        minimize.tuple_size(ClingoUtil.arraySize(x.getTuple()));
+        minimize.body(ClingoUtil.createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
+        minimize.body_size(ClingoUtil.arraySize(x.getBody()));
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_minimize);
         ret.field1().minimize(Pointer.getPointer(minimize));
         return ret;
@@ -718,8 +658,8 @@ public class ASTToC {
     static clingo_ast_statement visit(Program x) {
         clingo_ast_program program = new  clingo_ast_program();
         program.name(Pointer.pointerToCString(x.getName()));
-        program.parameters(createArray(x.getParameters(), clingo_ast_id.class ,ASTToC::convId));
-        program.size(arraySize(x.getParameters()));
+        program.parameters(ClingoUtil.createArray(x.getParameters(), clingo_ast_id.class ,ASTToC::convId));
+        program.size(ClingoUtil.arraySize(x.getParameters()));
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_program);
         ret.field1().program(Pointer.getPointer(program));
         return ret;
@@ -728,8 +668,8 @@ public class ASTToC {
     static clingo_ast_statement visit(External x) {
         clingo_ast_external external = new clingo_ast_external();
         external.atom(convTerm(x.getAtom()));
-        external.body(createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
-        external.size(arraySize(x.getBody()));
+        external.body(ClingoUtil.createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
+        external.size(ClingoUtil.arraySize(x.getBody()));
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_external);
         ret.field1().external(Pointer.getPointer(external));
         return ret;
@@ -739,8 +679,8 @@ public class ASTToC {
         clingo_ast_edge edge = new clingo_ast_edge();
         edge.u(convTerm(x.getU()));
         edge.v(convTerm(x.getV()));
-        edge.body(createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
-        edge.size(arraySize(x.getBody()));
+        edge.body(ClingoUtil.createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
+        edge.size(ClingoUtil.arraySize(x.getBody()));
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_edge);
         ret.field1().edge(Pointer.getPointer(edge));
         return ret;
@@ -752,8 +692,8 @@ public class ASTToC {
         heuristic.bias(convTerm(x.getBias()));
         heuristic.priority(convTerm(x.getPriority()));
         heuristic.modifier(convTerm(x.getModifier()));
-        heuristic.body(createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
-        heuristic.size(arraySize(x.getBody()));
+        heuristic.body(ClingoUtil.createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
+        heuristic.size(ClingoUtil.arraySize(x.getBody()));
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_heuristic);
         ret.field1().heuristic(Pointer.getPointer(heuristic));
         return ret;
@@ -762,8 +702,8 @@ public class ASTToC {
     static clingo_ast_statement visit(ProjectAtom x) {
         clingo_ast_project project = new clingo_ast_project();
         project.atom(convTerm(x.getAtom()));
-        project.body(createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
-        project.size(arraySize(x.getBody()));
+        project.body(ClingoUtil.createArray(x.getBody(), clingo_ast_body_literal.class, ASTToC::convBodyLiteral));
+        project.size(ClingoUtil.arraySize(x.getBody()));
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_project_atom);
         ret.field1().project_atom(Pointer.getPointer(project));
         return ret;
@@ -778,47 +718,13 @@ public class ASTToC {
     static clingo_ast_statement visit(TheoryDefinition x) {
         clingo_ast_theory_definition theory_definition = new clingo_ast_theory_definition();
         theory_definition.name(Pointer.pointerToCString(x.getName()));
-        theory_definition.terms(createArray(x.getTerms(), clingo_ast_theory_term_definition.class ,ASTToC::convTheoryTermDefinition));
-        theory_definition.terms_size(arraySize(x.getTerms()));
-        theory_definition.atoms(createArray(x.getAtoms(), clingo_ast_theory_atom_definition.class ,ASTToC::convTheoryAtomDefinition));
-        theory_definition.atoms_size(arraySize(x.getAtoms()));
+        theory_definition.terms(ClingoUtil.createArray(x.getTerms(), clingo_ast_theory_term_definition.class ,ASTToC::convTheoryTermDefinition));
+        theory_definition.terms_size(ClingoUtil.arraySize(x.getTerms()));
+        theory_definition.atoms(ClingoUtil.createArray(x.getAtoms(), clingo_ast_theory_atom_definition.class ,ASTToC::convTheoryAtomDefinition));
+        theory_definition.atoms_size(ClingoUtil.arraySize(x.getAtoms()));
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_theory_definition);
         ret.field1().theory_definition(Pointer.getPointer(theory_definition));
         return ret;
-    }
-
-    private interface Convertor<T, E> {
-
-        public T convert(E object);
-
-    }
-
-    private static int arraySize(List data) {
-        if (data != null) {
-            return data.size();
-        }
-        return 0;
-    }
-
-    private static <T, E> Pointer<T> createArray(List<E> data, Class<T> clazz, Convertor<T, E> convertor) {
-        Pointer<T> result = null;
-        if (data != null && !data.isEmpty()) {
-            result = Pointer.allocateArray(clazz, data.size());
-            Pointer<T> iter = result;
-            for (E item : data) {
-                iter.set(convertor.convert(item));
-                iter = iter.next();
-            }
-        }
-        return result;
-    }
-
-    private static Pointer<Pointer<Byte>> createListArray(List<String> data) {
-        Pointer<Pointer<Byte>> result = null;
-        if (data != null && !data.isEmpty()) {
-            result = Pointer.pointerToCStrings(data.toArray(new String[data.size()]));
-        }
-        return result;
     }
 
 }

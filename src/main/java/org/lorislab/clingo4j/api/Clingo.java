@@ -31,6 +31,7 @@ import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_handle;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_mode;
 import org.lorislab.clingo4j.c.api.clingo_location;
 import org.lorislab.clingo4j.c.api.clingo_part;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -100,13 +101,9 @@ public class Clingo implements AutoCloseable {
 
         Pointer<Byte> tmp_name = Pointer.pointerToCString(name);
         Pointer<Byte> tmp_program = Pointer.pointerToCString(program);
-
-        Pointer<Pointer<Byte>> tmp_params = null;
-        int tmp_size = 0;
-        if (parameters != null && !parameters.isEmpty()) {
-            tmp_params = Pointer.pointerToCStrings(parameters.toArray(new String[parameters.size()]));
-            tmp_size = parameters.size();
-        }
+        
+        Pointer<Pointer<Byte>> tmp_params = ClingoUtil.createListArray(parameters);        
+        int tmp_size = ClingoUtil.arraySize(parameters);
 
         // add a logic program to the base part
         if (!LIB.clingo_control_add(control.get(), tmp_name, tmp_params, tmp_size, tmp_program)) {
@@ -121,21 +118,10 @@ public class Clingo implements AutoCloseable {
     public void ground(String name, GroundCallback callback) throws ClingoException {
         ground(Arrays.asList(new Part(name)), callback);
     }
-
+    
     public void ground(List<Part> parts, GroundCallback callback) throws ClingoException {
 
-        Pointer<clingo_part> p_parts = null;
-        int partsSize = 0;
-
-        if (parts != null && !parts.isEmpty()) {
-            partsSize = parts.size();
-            clingo_part[] ps = new clingo_part[partsSize];
-            for (int i = 0; i < partsSize; i++) {
-                ps[i] = parts.get(i).getPart();
-            }
-            p_parts = Pointer.pointerToArray(ps);
-        }
-
+                
         Pointer<ClingoLibrary.clingo_ground_callback_t> p_ground_callback = null;
         if (callback != null) {
             ClingoLibrary.clingo_ground_callback_t ground_callback = new ClingoLibrary.clingo_ground_callback_t() {
@@ -150,15 +136,12 @@ public class Clingo implements AutoCloseable {
                     try {
                         callback.groundCallback(loc, name, symbols, (List<Symbol> symbols1) -> {
 
-                            if (symbols1 == null) {
+                            long v_size = ClingoUtil.arraySize(symbols1);
+                            
+                            if (v_size == 0) {
                                 return;
                             }
-
-                            if (symbols1.isEmpty()) {
-                                return;
-                            }
-
-                            long v_size = symbols1.size();
+                            
                             Pointer<Long> v_symbols = createPointerToSymbols(symbols1);
 
                             if (!(csymbol_callback.get().apply(v_symbols, v_size, null))) {
@@ -176,6 +159,9 @@ public class Clingo implements AutoCloseable {
             p_ground_callback.set(ground_callback);
         }
 
+        Pointer<clingo_part> p_parts = ClingoUtil.createArray(parts, clingo_part.class, Clingo::createPath);
+        int partsSize = ClingoUtil.arraySize(parts);
+        
         // ground the base part
         if (!LIB.clingo_control_ground(control.get(), p_parts, partsSize, p_ground_callback, null)) {
             throwError("Error ground the program");
@@ -350,17 +336,16 @@ public class Clingo implements AutoCloseable {
         return new Symbol(pointer);
     }
 
+    private static clingo_part createPath(Part part) {
+        return part.getPart();
+    }
+    
+    private static Long createPointerToSymbol(Symbol symbol) {
+        return symbol.getPointer().get();
+    }
+    
     public static Pointer<Long> createPointerToSymbols(List<Symbol> symbols) {
-        Pointer<Long> result = null;
-        if (symbols != null && !symbols.isEmpty()) {
-            int size = symbols.size();
-            Pointer<Long> v_symbols = Pointer.allocateLongs(size);
-            Pointer<Long> item = v_symbols;
-            for (int i = 0; i < size; i++, item = item.next()) {
-                item.set(symbols.get(i).getPointer().get());
-            }
-        }
-        return result;
+        return ClingoUtil.createArray(symbols, Long.class, Clingo::createPointerToSymbol);
     }
 
     public static List<Symbol> createListOfSymbols(final Pointer<Long> symbols, final long size) {
