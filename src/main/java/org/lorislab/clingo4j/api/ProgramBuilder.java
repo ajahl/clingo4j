@@ -20,7 +20,6 @@ import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.throwError;
 import org.lorislab.clingo4j.api.ast.Statement;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_program_builder;
-import org.lorislab.clingo4j.c.api.clingo_ast_statement;
 
 /**
  *

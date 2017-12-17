@@ -144,7 +144,7 @@ public class Clingo implements AutoCloseable {
                             
                             Pointer<Long> v_symbols = createPointerToSymbols(symbols1);
 
-                            if (!(csymbol_callback.get().apply(v_symbols, v_size, null))) {
+                            if (!(csymbol_callback.get().apply(v_symbols, v_size, csymbol_callback_data))) {
                                 throw new ClingoException();
                             }
                         });
@@ -155,8 +155,7 @@ public class Clingo implements AutoCloseable {
                 }
 
             };
-            p_ground_callback = Pointer.allocate(ClingoLibrary.clingo_ground_callback_t.class);
-            p_ground_callback.set(ground_callback);
+            p_ground_callback = Pointer.getPointer(ground_callback);
         }
 
         Pointer<clingo_part> p_parts = ClingoUtil.createArray(parts, clingo_part.class, Clingo::createPath);
