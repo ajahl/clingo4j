@@ -29,7 +29,7 @@ import org.lorislab.clingo4j.api.ast.Term;
  */
 public class ClingoInjectTermsTest {
 
-//    @Test
+    @Test
     public void controlTest() {
 
         Clingo.init("src/main/clingo");
@@ -38,7 +38,7 @@ public class ClingoInjectTermsTest {
 
             // define a constant in string form
             Symbol number = Clingo.createNumber(23);
-            control.add("base", "#const d=" + number);
+            control.add("base", "#const d=" + number + ".");
 
             // define a constant via the AST
             control.withBuilder((builder) -> {

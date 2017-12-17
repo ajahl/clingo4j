@@ -17,12 +17,14 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import java.util.Optional;
+import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
+import org.lorislab.clingo4j.c.api.clingo_ast_body_literal;
 
 /**
  *
  * @author andrej
  */
-public class BodyAggregate {
+public class BodyAggregate implements BodyLiteralData {
  
     private AggregateFunction function;
     private List<BodyAggregateElement> elements;
@@ -43,6 +45,11 @@ public class BodyAggregate {
 
     public Optional<AggregateGuard> getRightGuard() {
         return rightGuard;
+    }
+
+    @Override
+    public clingo_ast_body_literal createBodyLiteral() {
+        return ASTToC.visitBodyLiteral(this);
     }
     
     

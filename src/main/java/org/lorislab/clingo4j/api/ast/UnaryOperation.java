@@ -15,11 +15,14 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.api.ast.Term.TermData;
+import org.lorislab.clingo4j.c.api.clingo_ast_term;
+
 /**
  *
  * @author andrej
  */
-public class UnaryOperation {
+public class UnaryOperation implements TermData {
     
     private UnaryOperator unaryOperator;
     
@@ -31,6 +34,11 @@ public class UnaryOperation {
 
     public Term getArgument() {
         return argument;
+    }
+
+    @Override
+    public clingo_ast_term createTerm() {
+        return ASTToC.visitTerm(this);
     }
     
 }

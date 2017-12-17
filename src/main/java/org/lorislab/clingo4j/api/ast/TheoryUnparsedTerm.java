@@ -16,18 +16,24 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
+import org.lorislab.clingo4j.c.api.clingo_ast_theory_term;
 
 /**
  *
  * @author andrej
  */
-public class TheoryUnparsedTerm {
-    
+public class TheoryUnparsedTerm implements TheoryTermData {
+
     private List<TheoryUnparsedTermElement> elements;
 
     public List<TheoryUnparsedTermElement> getElements() {
         return elements;
     }
-    
-    
+
+    @Override
+    public clingo_ast_theory_term createTheoryTerm() {
+        return ASTToC.visitTheoryTerm(this);
+    }
+
 }

@@ -16,6 +16,7 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.c.api.clingo_ast_theory_term;
 
 /**
  *
@@ -24,6 +25,24 @@ import org.lorislab.clingo4j.api.Location;
 public class TheoryTerm {
     
     private Location location;
-//    Variant<Symbol, Variable, TheoryTermSequence, TheoryFunction, TheoryUnparsedTerm> data;
-    private Object data;
+    
+    //Symbol, Variable, TheoryTermSequence, TheoryFunction, TheoryUnparsedTerm
+    private TheoryTermData data;
+    
+    public clingo_ast_theory_term createTheoryTerm() {
+        return ASTToC.convTheoryTerm(this);
+    }
+
+    public TheoryTermData getData() {
+        return data;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+    
+    public interface TheoryTermData {
+     
+        public clingo_ast_theory_term createTheoryTerm();
+    }
 }

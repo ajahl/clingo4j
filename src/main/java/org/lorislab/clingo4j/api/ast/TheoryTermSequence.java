@@ -16,14 +16,17 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
+import org.lorislab.clingo4j.c.api.clingo_ast_theory_term;
 
 /**
  *
  * @author andrej
  */
-public class TheoryTermSequence {
+public class TheoryTermSequence implements TheoryTermData {
+
     private TheoryTermSequenceType type;
-    private List<TheoryTerm> terms;    
+    private List<TheoryTerm> terms;
 
     public List<TheoryTerm> getTerms() {
         return terms;
@@ -32,6 +35,10 @@ public class TheoryTermSequence {
     public TheoryTermSequenceType getType() {
         return type;
     }
-    
-    
+
+    @Override
+    public clingo_ast_theory_term createTheoryTerm() {
+        return ASTToC.visitTheoryTerm(this);
+    }
+
 }

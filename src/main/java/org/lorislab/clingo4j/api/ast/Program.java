@@ -16,14 +16,17 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.c.api.clingo_ast_statement;
 
 /**
  *
  * @author andrej
  */
-public class Program {
+public class Program implements StatementData {
+
     private String name;
-    private List<Id> parameters;    
+    private List<Id> parameters;
 
     public String getName() {
         return name;
@@ -32,6 +35,10 @@ public class Program {
     public List<Id> getParameters() {
         return parameters;
     }
-    
-    
+
+    @Override
+    public clingo_ast_statement createStatment() {
+        return ASTToC.visit(this);
+    }
+
 }

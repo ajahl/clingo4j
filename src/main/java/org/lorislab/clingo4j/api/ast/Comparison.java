@@ -15,11 +15,14 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.api.ast.Literal.LiteralData;
+import org.lorislab.clingo4j.c.api.clingo_ast_literal;
+
 /**
  *
  * @author andrej
  */
-public class Comparison {
+public class Comparison implements LiteralData {
 
     private ComparisonOperator comparison;
     private Term left;
@@ -35,6 +38,11 @@ public class Comparison {
 
     public Term getRight() {
         return right;
+    }
+
+    @Override
+    public clingo_ast_literal createLiteral() {
+        return ASTToC.visit(this);
     }
     
     

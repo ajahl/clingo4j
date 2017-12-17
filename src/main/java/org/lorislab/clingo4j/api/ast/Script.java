@@ -15,11 +15,14 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.c.api.clingo_ast_statement;
+
 /**
  *
  * @author andrej
  */
-public class Script {
+public class Script implements StatementData {
 
     private ScriptType type;
     private String code;
@@ -30,6 +33,11 @@ public class Script {
 
     public ScriptType getType() {
         return type;
+    }
+
+    @Override
+    public clingo_ast_statement createStatment() {
+        return ASTToC.visit(this);
     }
     
     

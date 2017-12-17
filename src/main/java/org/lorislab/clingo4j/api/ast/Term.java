@@ -16,19 +16,23 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.api.ast.Literal.LiteralData;
+import org.lorislab.clingo4j.api.ast.Term.TermData;
+import org.lorislab.clingo4j.c.api.clingo_ast_literal;
+import org.lorislab.clingo4j.c.api.clingo_ast_term;
 
 /**
  *
  * @author andrej
  */
-public class Term {
+public class Term implements LiteralData {
     
     private Location location;
     
-    //Variant<Symbol, Variable, UnaryOperation, BinaryOperation, Interval, Function, Pool> data;
-    private Object data;
+    //Symbol, Variable, UnaryOperation, BinaryOperation, Interval, Function, Pool
+    private TermData data;
 
-    public Term(Location location, Object data) {
+    public Term(Location location, TermData data) {
         this.location = location;
         this.data = data;
     }
@@ -36,5 +40,23 @@ public class Term {
     public Location getLocation() {
         return location;
     }
-            
+     
+    public clingo_ast_term createTerm() {
+         return ASTToC.convTerm(this);
+    }
+
+    public TermData getData() {
+        return data;
+    }
+
+    @Override
+    public clingo_ast_literal createLiteral() {
+        return ASTToC.visit(this);
+    }
+     
+    public interface TermData {
+        
+        public clingo_ast_term createTerm();
+        
+    }
 }

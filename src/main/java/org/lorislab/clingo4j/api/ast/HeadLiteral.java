@@ -16,20 +16,33 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.c.api.clingo_ast_head_literal;
 
 /**
  *
  * @author andrej
  */
 public class HeadLiteral {
-    
+
     private Location location;
-    //Variant<Literal, Disjunction, Aggregate, HeadAggregate, TheoryAtom> data;    
-    private Object data;
+    
+    //Literal, Disjunction, Aggregate, HeadAggregate, TheoryAtom   
+    private HeadLiteralData data;
 
     public Location getLocation() {
         return location;
     }
-    
-     
+
+    public HeadLiteralData getData() {
+        return data;
+    }
+
+    public clingo_ast_head_literal createHeadLiteral() {
+        return ASTToC.convHeadLiteral(this);
+    }
+
+    public interface HeadLiteralData {
+
+        public clingo_ast_head_literal createHeadLiteral();
+    }
 }

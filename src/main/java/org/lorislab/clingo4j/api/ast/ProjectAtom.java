@@ -16,15 +16,17 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.c.api.clingo_ast_statement;
 
 /**
  *
  * @author andrej
  */
-public class ProjectAtom {
-    
+public class ProjectAtom implements StatementData {
+
     private Term atom;
-    private List<BodyLiteral> body;    
+    private List<BodyLiteral> body;
 
     public Term getAtom() {
         return atom;
@@ -33,6 +35,10 @@ public class ProjectAtom {
     public List<BodyLiteral> getBody() {
         return body;
     }
-    
-    
+
+    @Override
+    public clingo_ast_statement createStatment() {
+        return ASTToC.visit(this);
+    }
+
 }

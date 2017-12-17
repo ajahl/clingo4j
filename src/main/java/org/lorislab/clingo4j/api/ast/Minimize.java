@@ -16,12 +16,14 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.c.api.clingo_ast_statement;
 
 /**
  *
  * @author andrej
  */
-public class Minimize {
+public class Minimize implements StatementData {
 
     private Term weight;
     private Term priority;
@@ -42,6 +44,11 @@ public class Minimize {
 
     public Term getWeight() {
         return weight;
+    }
+
+    @Override
+    public clingo_ast_statement createStatment() {
+        return ASTToC.visit(this);
     }
     
     

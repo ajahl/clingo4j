@@ -16,14 +16,17 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
+import org.lorislab.clingo4j.c.api.clingo_ast_body_literal;
 
 /**
  *
  * @author andrej
  */
-public class ConditionalLiteral {
+public class ConditionalLiteral implements BodyLiteralData {
+
     private Literal literal;
-    private List<Literal> condition;    
+    private List<Literal> condition;
 
     public List<Literal> getCondition() {
         return condition;
@@ -32,6 +35,10 @@ public class ConditionalLiteral {
     public Literal getLiteral() {
         return literal;
     }
-    
-    
+
+    @Override
+    public clingo_ast_body_literal createBodyLiteral() {
+        return ASTToC.visitBodyLiteral(this);
+    }
+
 }

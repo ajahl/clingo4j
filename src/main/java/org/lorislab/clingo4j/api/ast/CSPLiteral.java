@@ -16,12 +16,14 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.api.ast.Literal.LiteralData;
+import org.lorislab.clingo4j.c.api.clingo_ast_literal;
 
 /**
  *
  * @author andrej
  */
-public class CSPLiteral {
+public class CSPLiteral implements LiteralData {
     
     private CSPSum term;
     
@@ -33,6 +35,11 @@ public class CSPLiteral {
 
     public CSPSum getTerm() {
         return term;
+    }
+
+    @Override
+    public clingo_ast_literal createLiteral() {
+        return ASTToC.visit(this);
     }
         
 }

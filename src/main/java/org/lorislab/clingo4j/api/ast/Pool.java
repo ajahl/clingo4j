@@ -16,17 +16,24 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.api.ast.Term.TermData;
+import org.lorislab.clingo4j.c.api.clingo_ast_term;
 
 /**
  *
  * @author andrej
  */
-public class Pool {
+public class Pool implements TermData {
  
     private List<Term> arguments;
 
     public List<Term> getArguments() {
         return arguments;
+    }
+
+    @Override
+    public clingo_ast_term createTerm() {
+        return ASTToC.visitTerm(this);
     }
         
 }

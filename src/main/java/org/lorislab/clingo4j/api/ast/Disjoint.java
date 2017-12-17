@@ -16,17 +16,24 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
+import org.lorislab.clingo4j.c.api.clingo_ast_body_literal;
 
 /**
  *
  * @author andrej
  */
-public class Disjoint {
+public class Disjoint implements BodyLiteralData {
     
     private List<DisjointElement> elements;
 
     public List<DisjointElement> getElements() {
         return elements;
+    }
+
+    @Override
+    public clingo_ast_body_literal createBodyLiteral() {
+        return ASTToC.visitBodyLiteral(this);
     }
     
     

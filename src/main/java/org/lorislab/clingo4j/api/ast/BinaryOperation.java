@@ -15,11 +15,14 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.api.ast.Term.TermData;
+import org.lorislab.clingo4j.c.api.clingo_ast_term;
+
 /**
  *
  * @author andrej
  */
-public class BinaryOperation {
+public class BinaryOperation implements TermData {
     
     private BinaryOperator operator;
     
@@ -37,6 +40,11 @@ public class BinaryOperation {
 
     public Term getRight() {
         return right;
+    }
+
+    @Override
+    public clingo_ast_term createTerm() {
+        return ASTToC.visitTerm(this);
     }
         
 }

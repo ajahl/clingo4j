@@ -15,16 +15,24 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.api.ast.Literal.LiteralData;
+import org.lorislab.clingo4j.c.api.clingo_ast_literal;
+
 /**
  *
  * @author andrej
  */
-public class Boolean {
+public class Boolean implements LiteralData {
     
     private boolean value;
 
     public boolean isValue() {
         return value;
+    }
+
+    @Override
+    public clingo_ast_literal createLiteral() {
+        return ASTToC.visit(this);
     }
     
     

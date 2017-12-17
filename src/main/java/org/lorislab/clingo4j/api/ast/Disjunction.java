@@ -16,17 +16,24 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
+import org.lorislab.clingo4j.c.api.clingo_ast_head_literal;
 
 /**
  *
  * @author andrej
  */
-public class Disjunction {
+public class Disjunction implements HeadLiteralData {
     
     private List<ConditionalLiteral> elements;
 
     public List<ConditionalLiteral> getElements() {
         return elements;
+    }
+
+    @Override
+    public clingo_ast_head_literal createHeadLiteral() {
+        return ASTToC.visitHeadLiteral(this);
     }
     
     

@@ -22,9 +22,9 @@ import java.util.List;
  * @author andrej
  */
 public class TheoryAtomElement {
-    
+
     private List<TheoryTerm> tuple;
-    private List<Literal> condition; 
+    private List<Literal> condition;
 
     public List<Literal> getCondition() {
         return condition;
@@ -33,6 +33,5 @@ public class TheoryAtomElement {
     public List<TheoryTerm> getTuple() {
         return tuple;
     }
-    
-    
+
 }

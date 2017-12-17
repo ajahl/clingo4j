@@ -45,10 +45,7 @@ public class ProgramBuilder {
     }
 
     public void add(Statement statment) {
-        Pointer<clingo_ast_statement> p_statement = Pointer.allocate(clingo_ast_statement.class);        
-//        p_statement.set(statment.getStatement());
-        
-        if (!LIB.clingo_program_builder_add(pointer, p_statement)) {
+        if (!LIB.clingo_program_builder_add(pointer, Pointer.getPointer(statment.createStatment()))) {
             throwError("Error program builder add!");            
         }
     }

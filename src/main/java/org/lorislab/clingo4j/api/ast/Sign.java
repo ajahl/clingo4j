@@ -45,6 +45,9 @@ public enum Sign {
         return sign;
     }
 
+    public int getValue() {
+        return (int) sign.value;
+    }
     
 
 }

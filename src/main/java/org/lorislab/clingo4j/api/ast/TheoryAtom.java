@@ -17,12 +17,16 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import java.util.Optional;
+import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
+import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
+import org.lorislab.clingo4j.c.api.clingo_ast_body_literal;
+import org.lorislab.clingo4j.c.api.clingo_ast_head_literal;
 
 /**
  *
  * @author andrej
  */
-public class TheoryAtom {
+public class TheoryAtom  implements HeadLiteralData, BodyLiteralData {
     
     private Term term;
     private List<TheoryAtomElement> elements;
@@ -39,6 +43,17 @@ public class TheoryAtom {
     public Term getTerm() {
         return term;
     }
+
+    @Override
+    public clingo_ast_head_literal createHeadLiteral() {
+        return ASTToC.visitHeadLiteral(this);
+    }
+
+    @Override
+    public clingo_ast_body_literal createBodyLiteral() {
+        return ASTToC.visitBodyLiteral(this);
+    }
+    
     
     
     

@@ -15,14 +15,17 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.c.api.clingo_ast_statement;
+
 /**
  *
  * @author andrej
  */
-public class Definition {
-    private String name;
-    private Term value;
-    private boolean isDefault;    
+public class Definition implements StatementData {
+    String name;
+    Term value;
+    boolean isDefault;    
 
     public Definition(String name, Term value, boolean isDefault) {
         this.name = name;
@@ -40,6 +43,11 @@ public class Definition {
 
     public boolean isIsDefault() {
         return isDefault;
+    }
+
+    @Override
+    public clingo_ast_statement createStatment() {
+        return ASTToC.visit(this);
     }
     
     

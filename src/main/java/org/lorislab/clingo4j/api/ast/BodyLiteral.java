@@ -16,15 +16,38 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.c.api.clingo_ast_body_literal;
 
 /**
  *
  * @author andrej
  */
 public class BodyLiteral {
-    
+
     private Location location;
     private Sign sign;
-    //Variant<Literal, ConditionalLiteral, Aggregate, BodyAggregate, TheoryAtom, Disjoint> data;    
-    private Object data;
+    //Literal, ConditionalLiteral, Aggregate, BodyAggregate, TheoryAtom, Disjoint    
+    private BodyLiteralData data;
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public BodyLiteralData getData() {
+        return data;
+    }
+
+    public Sign getSign() {
+        return sign;
+    }
+
+    public clingo_ast_body_literal createBodyLiteral() {
+        return ASTToC.convBodyLiteral(this);
+    }
+    
+    public interface BodyLiteralData {
+
+        public clingo_ast_body_literal createBodyLiteral();
+
+    }
 }

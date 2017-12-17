@@ -16,17 +16,23 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
+import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
+import org.lorislab.clingo4j.c.api.clingo_ast_body_literal;
+import org.lorislab.clingo4j.c.api.clingo_ast_head_literal;
+import org.lorislab.clingo4j.c.api.clingo_ast_literal;
 
 /**
  *
  * @author andrej
  */
-public class Literal {
+public class Literal implements BodyLiteralData, HeadLiteralData {
     
     private Location location;
     private Sign sign;
-//    private Variant<Boolean, Term, Comparison, CSPLiteral> data;
-    private Object data;
+    
+    //Boolean, Term, Comparison, CSPLiteral
+    private LiteralData data;
 
     public Location getLocation() {
         return location;
@@ -35,7 +41,30 @@ public class Literal {
     public Sign getSign() {
         return sign;
     }
+
+    public LiteralData getData() {
+        return data;
+    }
+
+    @Override
+    public clingo_ast_body_literal createBodyLiteral() {
+        return ASTToC.visitBodyLiteral(this);
+    }
     
+    public clingo_ast_literal createLiteral() {
+        return ASTToC.convLiteral(this);
+    }
+
+    @Override
+    public clingo_ast_head_literal createHeadLiteral() {
+        return ASTToC.visitHeadLiteral(this);
+    }
+    
+    public interface LiteralData {
+        
+        public clingo_ast_literal createLiteral();
+        
+    }
     
     
 }

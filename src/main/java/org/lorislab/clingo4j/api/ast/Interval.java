@@ -15,11 +15,14 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.api.ast.Term.TermData;
+import org.lorislab.clingo4j.c.api.clingo_ast_term;
+
 /**
  *
  * @author andrej
  */
-public class Interval {
+public class Interval implements TermData {
 
     private Term left;
     
@@ -31,6 +34,11 @@ public class Interval {
 
     public Term getRight() {
         return right;
+    }
+
+    @Override
+    public clingo_ast_term createTerm() {
+        return ASTToC.visitTerm(this);
     }
     
     

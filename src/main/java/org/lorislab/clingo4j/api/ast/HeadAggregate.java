@@ -17,16 +17,19 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import java.util.Optional;
+import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
+import org.lorislab.clingo4j.c.api.clingo_ast_head_literal;
 
 /**
  *
  * @author andrej
  */
-public class HeadAggregate {
+public class HeadAggregate implements HeadLiteralData {
+
     private AggregateFunction function;
     private List<HeadAggregateElement> elements;
     private Optional<AggregateGuard> leftGuard;
-    private Optional<AggregateGuard> rightGuard;    
+    private Optional<AggregateGuard> rightGuard;
 
     public List<HeadAggregateElement> getElements() {
         return elements;
@@ -43,6 +46,10 @@ public class HeadAggregate {
     public Optional<AggregateGuard> getRightGuard() {
         return rightGuard;
     }
-    
-    
+
+    @Override
+    public clingo_ast_head_literal createHeadLiteral() {
+        return ASTToC.visitHeadLiteral(this);
+    }
+
 }

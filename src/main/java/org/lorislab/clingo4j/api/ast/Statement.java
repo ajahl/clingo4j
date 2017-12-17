@@ -16,20 +16,40 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.c.api.clingo_ast_statement;
 
 /**
  *
  * @author andrej
  */
 public class Statement {
-    
-    private Location location;
-    ///Variant<Rule, Definition, ShowSignature, ShowTerm, Minimize, Script, Program, External, Edge, Heuristic, ProjectAtom, ProjectSignature, TheoryDefinition> data;
-    Object data;
 
-    public Statement(Location location, Object data) {
+    private Location location;
+
+    //Rule, Definition, ShowSignature, ShowTerm, Minimize, Script, Program, External, Edge, Heuristic, ProjectAtom, ProjectSignature, TheoryDefinition
+    private StatementData data;
+
+    public Statement(Location location, StatementData data) {
         this.location = location;
         this.data = data;
     }
-       
+
+    public StatementData getData() {
+        return data;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public clingo_ast_statement createStatment() {
+        return ASTToC.convStatement(this);
+    }
+
+    public interface StatementData {
+
+        public clingo_ast_statement createStatment();
+
+    }
+
 }

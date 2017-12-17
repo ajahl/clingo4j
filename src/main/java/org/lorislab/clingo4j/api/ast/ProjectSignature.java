@@ -15,16 +15,24 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.c.api.clingo_ast_statement;
+
 /**
  *
  * @author andrej
  */
-public class ProjectSignature {
+public class ProjectSignature implements StatementData {
     
     private Signature signature;
 
     public Signature getSignature() {
         return signature;
+    }
+
+    @Override
+    public clingo_ast_statement createStatment() {
+        return ASTToC.visit(this);
     }
     
     
