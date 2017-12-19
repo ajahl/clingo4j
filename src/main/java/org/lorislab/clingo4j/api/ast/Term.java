@@ -59,4 +59,11 @@ public class Term implements LiteralData {
         public clingo_ast_term createTerm();
         
     }
+
+    @Override
+    public String toString() {
+        return "" + data;
+    }
+    
+    
 }

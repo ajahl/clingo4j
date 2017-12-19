@@ -39,6 +39,14 @@ public class Script implements StatementData {
     public clingo_ast_statement createStatment() {
         return ASTToC.visit(this);
     }
-    
+
+    @Override
+    public String toString() {
+        String tmp = code;
+        if (tmp != null && !tmp.endsWith(".")) {
+            tmp = tmp + ".";
+        }
+        return tmp;
+    }
     
 }

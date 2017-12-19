@@ -43,6 +43,10 @@ public class TheoryOperatorDefinition {
     public TheoryOperatorType getType() {
         return type;
     }
-    
+
+    @Override
+    public String toString() {
+        return name + " : " + priority + ", " + type;
+    }
     
 }

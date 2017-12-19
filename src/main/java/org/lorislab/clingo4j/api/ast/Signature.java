@@ -15,16 +15,41 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.bridj.Pointer;
+import static org.lorislab.clingo4j.api.Clingo.LIB;
+
 /**
  *
  * @author andrej
  */
 public class Signature {
-    
+
     private long signature;
 
     public long getSignature() {
         return signature;
     }
-    
+
+    public String getName() {
+        Pointer<Byte> tmp = LIB.clingo_signature_name(signature);
+        return tmp.getCString();
+    }
+
+    public int getArity() {
+        return LIB.clingo_signature_arity(signature);
+    }
+
+    public boolean isPositive() {
+        return LIB.clingo_signature_is_positive(signature);
+    }
+
+    public boolean isNegative() {
+        return LIB.clingo_signature_is_negative(signature);
+    }
+
+    @Override
+    public String toString() {
+        return (isNegative() ? "-" : "") + getName() + "/" + getArity();
+    }
+
 }

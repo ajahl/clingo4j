@@ -40,6 +40,11 @@ public class Interval implements TermData {
     public clingo_ast_term createTerm() {
         return ASTToC.visitTerm(this);
     }
+
+    @Override
+    public String toString() {
+        return "(" + left + ".." + right + ")";
+    }
     
     
     

@@ -52,4 +52,10 @@ public class Statement {
 
     }
 
+    @Override
+    public String toString() {
+        return "" + data;
+    }
+
+    
 }

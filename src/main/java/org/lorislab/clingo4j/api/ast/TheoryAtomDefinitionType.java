@@ -26,14 +26,14 @@ import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_atom_d
  * @author andrej
  */
 public enum TheoryAtomDefinitionType {
-    
-    HEAD(clingo_ast_theory_atom_definition_type_head,"head"),
-    BODY(clingo_ast_theory_atom_definition_type_body,"body"),
-    ANY(clingo_ast_theory_atom_definition_type_any,"any"),
-    DIRECTIVE(clingo_ast_theory_atom_definition_type_directive,"directive");
-            
+
+    HEAD(clingo_ast_theory_atom_definition_type_head, "head"),
+    BODY(clingo_ast_theory_atom_definition_type_body, "body"),
+    ANY(clingo_ast_theory_atom_definition_type_any, "any"),
+    DIRECTIVE(clingo_ast_theory_atom_definition_type_directive, "directive");
+
     private clingo_ast_theory_atom_definition_type type;
-    
+
     private String string;
 
     private TheoryAtomDefinitionType(clingo_ast_theory_atom_definition_type type, String string) {
@@ -44,8 +44,14 @@ public enum TheoryAtomDefinitionType {
     public clingo_ast_theory_atom_definition_type getType() {
         return type;
     }
-    
+
     public int getValue() {
         return (int) type.value;
     }
+
+    @Override
+    public String toString() {
+        return string;
+    }
+
 }

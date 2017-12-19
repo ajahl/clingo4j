@@ -16,14 +16,16 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
 public class HeadAggregateElement {
+
     private List<Term> tuple;
-    private ConditionalLiteral condition;    
+    private ConditionalLiteral condition;
 
     public ConditionalLiteral getCondition() {
         return condition;
@@ -32,6 +34,11 @@ public class HeadAggregateElement {
     public List<Term> getTuple() {
         return tuple;
     }
-    
+
+    @Override
+    public String toString() {
+        return ClingoUtil.print(tuple, "", ",", "", false) + " : " + condition;
+    }
+
     
 }

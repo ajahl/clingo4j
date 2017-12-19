@@ -45,4 +45,11 @@ public class TheoryTerm {
      
         public clingo_ast_theory_term createTheoryTerm();
     }
+
+    @Override
+    public String toString() {
+        return "" + data;
+    }
+    
+    
 }

@@ -53,6 +53,16 @@ public class TheoryAtomDefinition {
     public TheoryAtomDefinitionType getType() {
         return type;
     }
-    
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("&").append(name).append("/").append(arity).append(" : ").append(elements);
+        if (guard.isPresent()) {
+            sb.append(", ").append(guard.get());
+        }
+        sb.append(", ").append(type);
+        return sb.toString();
+    }
     
 }

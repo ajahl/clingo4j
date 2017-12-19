@@ -31,6 +31,10 @@ public class TheoryGuard {
     public TheoryTerm getTerm() {
         return term;
     }
-    
+
+    @Override
+    public String toString() {
+        return operatorName + " " + term;
+    }
     
 }

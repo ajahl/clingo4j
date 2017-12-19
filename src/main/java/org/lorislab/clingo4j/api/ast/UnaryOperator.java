@@ -51,4 +51,14 @@ public enum UnaryOperator {
     public int getValue() {
         return (int) operator.value;
     }
+
+    public String getLeft() {
+        return left;
+    }
+
+    public String getRight() {
+        return right;
+    }
+    
+    
 }

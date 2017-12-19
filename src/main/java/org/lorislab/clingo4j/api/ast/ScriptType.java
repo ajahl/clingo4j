@@ -24,13 +24,12 @@ import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_script_type.c
  * @author andrej
  */
 public enum ScriptType {
-    
-    LUA(clingo_ast_script_type_lua,"lua"),
-            
-    PYTHON(clingo_ast_script_type_python,"python");
-            
+
+    LUA(clingo_ast_script_type_lua, "lua"),
+    PYTHON(clingo_ast_script_type_python, "python");
+
     private clingo_ast_script_type type;
-    
+
     private String string;
 
     private ScriptType(clingo_ast_script_type type, String string) {
@@ -41,10 +40,14 @@ public enum ScriptType {
     public clingo_ast_script_type getType() {
         return type;
     }
-    
+
     public int getValue() {
         return (int) type.value;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return string;
+    }
+
 }

@@ -18,6 +18,7 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
 import org.lorislab.clingo4j.c.api.clingo_ast_theory_term;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -40,5 +41,12 @@ public class TheoryFunction implements TheoryTermData {
     public clingo_ast_theory_term createTheoryTerm() {
         return ASTToC.visitTheoryTerm(this);
     }
+
+    @Override
+    public String toString() {
+        return "" + name + ClingoUtil.print(arguments, "(", ",", ")", !(arguments == null || arguments.isEmpty()));
+    }
+    
+    
 
 }

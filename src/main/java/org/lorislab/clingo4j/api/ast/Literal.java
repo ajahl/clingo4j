@@ -65,6 +65,12 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
         public clingo_ast_literal createLiteral();
         
     }
+
+    @Override
+    public String toString() {
+        return "" + sign + data;
+    }
+    
     
     
 }

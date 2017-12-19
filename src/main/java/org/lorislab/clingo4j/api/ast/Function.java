@@ -18,6 +18,7 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.c.api.clingo_ast_term;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -47,5 +48,13 @@ public class Function implements TermData {
     public clingo_ast_term createTerm() {
         return ASTToC.visitTerm(this);
     }
-        
+
+    @Override
+    public String toString() {
+        boolean tc = name != null && name.startsWith("0") && arguments != null && arguments.size() == 1;
+        boolean ey = (name != null && name.startsWith("0")) || (arguments != null && !arguments.isEmpty());
+        return "" + (external ? "@" : "") + name + ClingoUtil.print(arguments, "(", ",", tc ? ",)" : ")", ey);
+    }
+       
+    
 }

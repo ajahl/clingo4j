@@ -22,10 +22,10 @@ import org.lorislab.clingo4j.api.Location;
  * @author andrej
  */
 public class Id {
-    
+
     private Location location;
-    
-    private String id;    
+
+    private String id;
 
     public Id(Location location, String id) {
         this.location = location;
@@ -39,5 +39,9 @@ public class Id {
     public Location getLocation() {
         return location;
     }
-        
+
+    @Override
+    public String toString() {
+        return id;
+    }
 }

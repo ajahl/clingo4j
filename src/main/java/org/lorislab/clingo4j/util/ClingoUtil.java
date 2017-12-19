@@ -76,4 +76,16 @@ public final class ClingoUtil {
         }
         return sb.toString();
     }
+    
+    public static String printBody(List list) {
+        return printBody(list, " : ");
+    }
+    
+    public static String printBody(List list, String pre) {
+        String tmp = "";
+        if (list != null && !list.isEmpty()) {
+            tmp = pre;
+        }
+        return print(list, tmp, "; ", ".", true);
+    }
 }

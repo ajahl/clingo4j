@@ -17,6 +17,7 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -37,6 +38,11 @@ public class TheoryTermDefinition {
 
     public List<TheoryOperatorDefinition> getOperators() {
         return operators;
+    }
+
+    @Override
+    public String toString() {
+        return name + " {\n" + ClingoUtil.print(operators, "  ", ";\n", "\n", true) + "}";
     }
     
     

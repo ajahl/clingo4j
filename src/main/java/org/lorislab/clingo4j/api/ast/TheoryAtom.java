@@ -21,6 +21,7 @@ import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.c.api.clingo_ast_body_literal;
 import org.lorislab.clingo4j.c.api.clingo_ast_head_literal;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -53,8 +54,15 @@ public class TheoryAtom  implements HeadLiteralData, BodyLiteralData {
     public clingo_ast_body_literal createBodyLiteral() {
         return ASTToC.visitBodyLiteral(this);
     }
-    
-    
-    
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append('&').append(term).append(" { ").append(ClingoUtil.print(elements, "", "; ", "", false)).append(" }");
+        if (guard.isPresent()) {
+            sb.append(" ").append(guard.get());
+        }
+        return sb.toString();
+    }
     
 }

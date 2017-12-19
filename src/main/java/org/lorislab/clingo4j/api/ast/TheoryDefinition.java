@@ -18,13 +18,14 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.c.api.clingo_ast_statement;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
 public class TheoryDefinition implements StatementData {
-    
+
     private String name;
     private List<TheoryTermDefinition> terms;
     private List<TheoryAtomDefinition> atoms;
@@ -45,6 +46,40 @@ public class TheoryDefinition implements StatementData {
     public clingo_ast_statement createStatment() {
         return ASTToC.visit(this);
     }
-    
-    
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("#theory ").append(name).append(" {\n");
+        boolean comma = false;
+        if (terms != null) {
+            for (TheoryTermDefinition term : terms) {
+                if (comma) {
+                    sb.append(";\n");
+                } else {
+                    comma = true;
+                }
+                sb.append("  ").append(term.getName()).append(" {\n");
+                sb.append(ClingoUtil.print(term.getOperators(), "    ", ";\n", "\n", true)).append("  }");
+            }
+        }
+
+        if (atoms != null) {
+            for (TheoryAtomDefinition atom : atoms) {
+                if (comma) {
+                    sb.append(";\n");
+                } else {
+                    comma = true;
+                }
+                sb.append("  ").append(atom);
+            }
+        }
+
+        if (comma) {
+            sb.append("\n");
+        }
+        sb.append("}.");
+        return sb.toString();
+    }
+
 }

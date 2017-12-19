@@ -17,16 +17,18 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
 public class DisjointElement {
+
     private Location location;
     private List<Term> tuple;
     private CSPSum term;
-    private List<Literal> condition;    
+    private List<Literal> condition;
 
     public List<Literal> getCondition() {
         return condition;
@@ -43,6 +45,11 @@ public class DisjointElement {
     public List<Term> getTuple() {
         return tuple;
     }
-    
+
+    @Override
+    public String toString() {
+        return ClingoUtil.print(tuple, "", ",", "", false) + " : " + term + " : " + ClingoUtil.print(condition, "", ",", "", false);
+    }
+
     
 }

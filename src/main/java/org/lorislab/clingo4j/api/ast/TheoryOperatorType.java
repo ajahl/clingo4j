@@ -45,4 +45,11 @@ public enum TheoryOperatorType {
     public int getValue() {
         return (int) type.value;
     }
+
+    @Override
+    public String toString() {
+        return string;
+    }
+    
+    
 }

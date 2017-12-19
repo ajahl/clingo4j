@@ -40,4 +40,9 @@ public class ShowSignature implements StatementData {
         return ASTToC.visit(this);
     }
 
+    @Override
+    public String toString() {
+        return "#show " + (csp ? "$" : "") + signature + ".";
+    }
+    
 }

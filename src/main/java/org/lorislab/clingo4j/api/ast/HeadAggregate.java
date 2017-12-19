@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.c.api.clingo_ast_head_literal;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -52,4 +53,17 @@ public class HeadAggregate implements HeadLiteralData {
         return ASTToC.visitHeadLiteral(this);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (leftGuard.isPresent()) {
+            sb.append(leftGuard.get().getTerm()).append(" ").append(leftGuard.get().getComparison()).append(" ");
+        }
+        sb.append(function).append(" { ").append(ClingoUtil.print(elements, "", ": ", "", false)).append(" }");
+        if (rightGuard.isPresent()) {
+            sb.append(" ").append(rightGuard.get().getComparison()).append(" ").append(rightGuard.get().getTerm());
+        }
+        return sb.toString();
+    }
+    
 }

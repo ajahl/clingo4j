@@ -18,6 +18,7 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.c.api.clingo_ast_statement;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -41,4 +42,10 @@ public class Program implements StatementData {
         return ASTToC.visit(this);
     }
 
+    @Override
+    public String toString() {
+        return "#program " + name + ClingoUtil.print(parameters, "(", ",", ")", false) + ".";
+    }
+
+    
 }

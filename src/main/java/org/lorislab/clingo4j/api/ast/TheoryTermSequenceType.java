@@ -53,5 +53,14 @@ public enum TheoryTermSequenceType {
         return type;
     }
 
+    public String getRight() {
+        return right;
+    }
+
+    public String getLeft() {
+        return left;
+    }
+
+    
     
 }

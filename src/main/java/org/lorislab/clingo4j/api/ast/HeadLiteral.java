@@ -45,4 +45,11 @@ public class HeadLiteral {
 
         public clingo_ast_head_literal createHeadLiteral();
     }
+
+    @Override
+    public String toString() {
+        return "" + data;
+    }
+    
+    
 }

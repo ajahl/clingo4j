@@ -16,6 +16,7 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -34,4 +35,10 @@ public class TheoryAtomElement {
         return tuple;
     }
 
+    @Override
+    public String toString() {
+        return ClingoUtil.print(tuple, "", ",", "", false) + " : " + ClingoUtil.print(condition, "", ",", "", false);
+    }
+
+    
 }

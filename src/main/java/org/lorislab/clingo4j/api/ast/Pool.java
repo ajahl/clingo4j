@@ -18,13 +18,14 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.c.api.clingo_ast_term;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
 public class Pool implements TermData {
- 
+
     private List<Term> arguments;
 
     public List<Term> getArguments() {
@@ -35,5 +36,13 @@ public class Pool implements TermData {
     public clingo_ast_term createTerm() {
         return ASTToC.visitTerm(this);
     }
-        
+
+    @Override
+    public String toString() {
+        if (arguments == null || arguments.isEmpty()) {
+            return "(1/0)";
+        }
+        return ClingoUtil.print(arguments, "(", ";", ")", true);
+    }
+
 }
