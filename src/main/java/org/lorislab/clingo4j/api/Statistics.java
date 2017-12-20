@@ -19,7 +19,7 @@ import java.util.Iterator;
 import org.bridj.Pointer;
 import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_statistic;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistic;
 
 /**
  *

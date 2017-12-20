@@ -4,7 +4,7 @@
 
 -mode Directory
 
--package org.lorislab.clingo4j.c.api
+-package org.lorislab.clingo4j.api.c
 
 -runtime BridJ
 

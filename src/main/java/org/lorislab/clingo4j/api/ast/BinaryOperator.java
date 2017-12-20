@@ -15,15 +15,15 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_binary_operator;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_and;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_division;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_minus;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_modulo;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_multiplication;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_or;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_plus;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_xor;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_and;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_division;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_minus;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_modulo;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_multiplication;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_or;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_plus;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_xor;
 
 /**
  *

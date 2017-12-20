@@ -15,10 +15,10 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_term_type;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_list;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_set;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_tuple;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_list;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_set;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_tuple;
 
 /**
  *

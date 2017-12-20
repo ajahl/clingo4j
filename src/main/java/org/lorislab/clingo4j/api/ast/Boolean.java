@@ -16,7 +16,7 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.ast.Literal.LiteralData;
-import org.lorislab.clingo4j.c.api.clingo_ast_literal;
+import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 
 /**
  *

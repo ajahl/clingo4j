@@ -15,13 +15,13 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_comparison_operator;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_equal;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_greater_equal;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_greater_than;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_less_equal;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_less_than;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_not_equal;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_comparison_operator;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_equal;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_greater_equal;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_greater_than;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_less_equal;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_less_than;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_not_equal;
 
 /**
  *

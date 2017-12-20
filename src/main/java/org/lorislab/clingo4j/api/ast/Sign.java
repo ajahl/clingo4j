@@ -15,10 +15,10 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_sign;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_sign.clingo_ast_sign_double_negation;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_sign.clingo_ast_sign_negation;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_sign.clingo_ast_sign_none;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_sign;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_sign.clingo_ast_sign_double_negation;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_sign.clingo_ast_sign_negation;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_sign.clingo_ast_sign_none;
 
 /**
  *

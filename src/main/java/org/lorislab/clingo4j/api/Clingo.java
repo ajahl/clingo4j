@@ -22,16 +22,16 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.bridj.BridJ;
 import org.bridj.Pointer;
-import org.lorislab.clingo4j.c.api.ClingoLibrary;
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_control;
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model;
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_program_builder;
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_event_callback_t;
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_handle;
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_mode;
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_statistic;
-import org.lorislab.clingo4j.c.api.clingo_location;
-import org.lorislab.clingo4j.c.api.clingo_part;
+import org.lorislab.clingo4j.api.c.ClingoLibrary;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_control;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_program_builder;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_event_callback_t;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_handle;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_mode;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistic;
+import org.lorislab.clingo4j.api.c.clingo_location;
+import org.lorislab.clingo4j.api.c.clingo_part;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**

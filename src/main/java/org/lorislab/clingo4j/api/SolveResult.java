@@ -15,10 +15,10 @@
  */
 package org.lorislab.clingo4j.api;
 
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_result.clingo_solve_result_exhausted;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_result.clingo_solve_result_interrupted;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_result.clingo_solve_result_satisfiable;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_result.clingo_solve_result_unsatisfiable;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_result.clingo_solve_result_exhausted;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_result.clingo_solve_result_interrupted;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_result.clingo_solve_result_satisfiable;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_result.clingo_solve_result_unsatisfiable;
 
 /**
  *

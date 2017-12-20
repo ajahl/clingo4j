@@ -15,10 +15,10 @@
  */
 package org.lorislab.clingo4j.api;
 
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model_type;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model_type.clingo_model_type_brave_consequences;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model_type.clingo_model_type_cautious_consequences;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_model_type.clingo_model_type_stable_model;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model_type;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model_type.clingo_model_type_brave_consequences;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model_type.clingo_model_type_cautious_consequences;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model_type.clingo_model_type_stable_model;
 
 /**
  *

@@ -15,14 +15,14 @@
  */
 package org.lorislab.clingo4j.api;
 
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_all;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_atoms;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_complement;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_csp;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_extra;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_shown;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_show_type.clingo_show_type_terms;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_show_type;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_show_type.clingo_show_type_all;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_show_type.clingo_show_type_atoms;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_show_type.clingo_show_type_complement;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_show_type.clingo_show_type_csp;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_show_type.clingo_show_type_extra;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_show_type.clingo_show_type_shown;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_show_type.clingo_show_type_terms;
 
 
 /**

@@ -15,12 +15,12 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_aggregate_function;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_count;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_max;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_min;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_sum;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_sump;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_function;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_count;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_max;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_min;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_sum;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_sump;
 
 /**
  *

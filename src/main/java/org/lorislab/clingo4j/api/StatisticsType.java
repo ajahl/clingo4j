@@ -15,11 +15,11 @@
  */
 package org.lorislab.clingo4j.api;
 
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_statistics_type;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_statistics_type.clingo_statistics_type_array;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_statistics_type.clingo_statistics_type_empty;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_statistics_type.clingo_statistics_type_map;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_statistics_type.clingo_statistics_type_value;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistics_type;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistics_type.clingo_statistics_type_array;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistics_type.clingo_statistics_type_empty;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistics_type.clingo_statistics_type_map;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistics_type.clingo_statistics_type_value;
 
 /**
  *

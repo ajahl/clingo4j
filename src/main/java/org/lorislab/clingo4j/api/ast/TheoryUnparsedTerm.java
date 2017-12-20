@@ -17,7 +17,7 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
-import org.lorislab.clingo4j.c.api.clingo_ast_theory_term;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**

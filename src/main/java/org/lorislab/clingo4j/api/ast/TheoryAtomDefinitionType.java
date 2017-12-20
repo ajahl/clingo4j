@@ -15,11 +15,11 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_atom_definition_type;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_atom_definition_type.clingo_ast_theory_atom_definition_type_any;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_atom_definition_type.clingo_ast_theory_atom_definition_type_body;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_atom_definition_type.clingo_ast_theory_atom_definition_type_directive;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_theory_atom_definition_type.clingo_ast_theory_atom_definition_type_head;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_atom_definition_type;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_atom_definition_type.clingo_ast_theory_atom_definition_type_any;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_atom_definition_type.clingo_ast_theory_atom_definition_type_body;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_atom_definition_type.clingo_ast_theory_atom_definition_type_directive;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_atom_definition_type.clingo_ast_theory_atom_definition_type_head;
 
 /**
  *

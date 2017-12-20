@@ -16,7 +16,7 @@
 package org.lorislab.clingo4j.api;
 
 import org.bridj.Pointer;
-import org.lorislab.clingo4j.c.api.clingo_location;
+import org.lorislab.clingo4j.api.c.clingo_location;
 
 /**
  *

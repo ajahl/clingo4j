@@ -15,10 +15,10 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
-import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_unary_operator;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_unary_operator.clingo_ast_unary_operator_absolute;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_unary_operator.clingo_ast_unary_operator_minus;
-import static org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_ast_unary_operator.clingo_ast_unary_operator_negation;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_unary_operator;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_unary_operator.clingo_ast_unary_operator_absolute;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_unary_operator.clingo_ast_unary_operator_minus;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_unary_operator.clingo_ast_unary_operator_negation;
 
 /**
  *
