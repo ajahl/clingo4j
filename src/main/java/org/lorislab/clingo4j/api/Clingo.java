@@ -29,6 +29,7 @@ import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_program_builder;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_event_callback_t;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_handle;
 import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_solve_mode;
+import org.lorislab.clingo4j.c.api.ClingoLibrary.clingo_statistic;
 import org.lorislab.clingo4j.c.api.clingo_location;
 import org.lorislab.clingo4j.c.api.clingo_part;
 import org.lorislab.clingo4j.util.ClingoUtil;
@@ -277,6 +278,24 @@ public class Clingo implements AutoCloseable {
             }
         };
         return iter;
+    }
+
+    
+    public Statistics getStatistics() {
+        
+        Pointer<Pointer<clingo_statistic>> statistics = Pointer.allocatePointer(clingo_statistic.class);
+        throwError(LIB.clingo_control_statistics(control.get(), statistics), "Error reading the statistics!");
+        
+        Pointer<Long> key = Pointer.allocateLong();
+        throwError(LIB.clingo_statistics_root(statistics.get(), key), "Error reading the statistics root key!");
+        
+        return new Statistics(statistics.get(), key.getLong());
+    }
+    
+    public static void throwError(boolean value, String message) throws ClingoException {
+        if (!value) {
+            throwError(message);
+        }
     }
 
     public static void throwError(String message) throws ClingoException {
