@@ -23,6 +23,7 @@ import java.util.NoSuchElementException;
 import org.bridj.BridJ;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.ClingoLibrary;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_control;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_program_builder;
@@ -290,6 +291,14 @@ public class Clingo implements AutoCloseable {
         throwError(LIB.clingo_statistics_root(statistics.get(), key), "Error reading the statistics root key!");
         
         return new Statistics(statistics.get(), key.getLong());
+    }
+    
+    public Configuration getConfiguration() {
+        Pointer<Pointer<clingo_configuration>> config = Pointer.allocatePointer(clingo_configuration.class);
+        throwError(LIB.clingo_control_configuration(control.get(), config), "Error reading the configuration!");
+        Pointer<Integer> key = Pointer.allocateInt();
+        throwError(LIB.clingo_configuration_root(config.get(), key), "Error reading the configuration root key!");
+        return new Configuration(config.get(), key.getInt());        
     }
     
     public static void throwError(boolean value, String message) throws ClingoException {

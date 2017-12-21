@@ -52,6 +52,10 @@ public class Statistics {
         return size.getInt();
     }
 
+    public boolean isArrayEmpty() {
+        return getArraySize() == 0;
+    }
+    
     public Iterator<Statistics> getArrayIterator() {
 
         final int size = getArraySize();
@@ -85,6 +89,10 @@ public class Statistics {
         return size.getInt();
     }
 
+    public boolean isMapEmpty() {
+        return getMapSize() == 0;
+    }
+    
     public String getMapKey(int index) {
         Pointer<Byte> name = Pointer.allocateByte();
         if (!LIB.clingo_statistics_map_subkey_name(pointer, key, index, name.getReference())) {
