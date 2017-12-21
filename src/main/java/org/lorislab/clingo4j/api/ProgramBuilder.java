@@ -17,9 +17,10 @@ package org.lorislab.clingo4j.api;
 
 import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
-import static org.lorislab.clingo4j.api.Clingo.throwError;
 import org.lorislab.clingo4j.api.ast.Statement;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_program_builder;
+import static org.lorislab.clingo4j.api.Clingo.handleError;
+import static org.lorislab.clingo4j.api.Clingo.throwError;
 
 /**
  *

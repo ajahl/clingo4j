@@ -19,8 +19,9 @@ import java.util.Iterator;
 import org.bridj.Pointer;
 import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
-import static org.lorislab.clingo4j.api.Clingo.throwError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration;
+import static org.lorislab.clingo4j.api.Clingo.handleError;
+import static org.lorislab.clingo4j.api.Clingo.throwError;
 
 /**
  *
@@ -39,19 +40,19 @@ public class Configuration {
     
     public ConfigurationType getType() {
         Pointer<Integer > type = Pointer.allocateInt();
-        throwError(LIB.clingo_configuration_type(pointer, key, type), "Error reading the configuration type!");
+        handleError(LIB.clingo_configuration_type(pointer, key, type), "Error reading the configuration type!");
         return ConfigurationType.createConfigurationType(type.getInt());
     }
     
     public boolean isAssigned() {
         Pointer<Boolean> result = Pointer.allocateBoolean();
-        throwError(LIB.clingo_configuration_value_is_assigned(pointer, key, result), "Error reading the configureation assigned.");
+        handleError(LIB.clingo_configuration_value_is_assigned(pointer, key, result), "Error reading the configureation assigned.");
         return result.getBoolean();
     }
    
     public int getArraySize() {
         Pointer<SizeT> size = Pointer.allocateSizeT();
-        throwError(LIB.clingo_configuration_array_size(pointer, key, size), "Error reading the configuration array size!");
+        handleError(LIB.clingo_configuration_array_size(pointer, key, size), "Error reading the configuration array size!");
         return size.getInt();
     }    
     
@@ -61,7 +62,7 @@ public class Configuration {
     
     public Configuration getArrayAt(int index) {
         Pointer<Integer> subkey = Pointer.allocateInt();
-        throwError(LIB.clingo_configuration_array_at(pointer, key, index, subkey), "Error reading the configuration item in array at " + index + " position!");
+        handleError(LIB.clingo_configuration_array_at(pointer, key, index, subkey), "Error reading the configuration item in array at " + index + " position!");
         return new Configuration(pointer, subkey.getInt());
     }  
     
@@ -94,7 +95,7 @@ public class Configuration {
 
     public int getMapSize() {
         Pointer<SizeT> size = Pointer.allocateSizeT();
-        throwError(LIB.clingo_configuration_map_size(pointer, key, size), "Error reading the configuration map size!");
+        handleError(LIB.clingo_configuration_map_size(pointer, key, size), "Error reading the configuration map size!");
         return size.getInt();
     }
 
@@ -104,14 +105,14 @@ public class Configuration {
     
     public String getMapKey(int index) {
         Pointer<Byte> name = Pointer.allocateByte();
-        throwError(LIB.clingo_configuration_map_subkey_name(pointer, key, index, name.getReference()),"Error reading the configuration key name!");
+        handleError(LIB.clingo_configuration_map_subkey_name(pointer, key, index, name.getReference()),"Error reading the configuration key name!");
         return name.getCString();
     }
 
     public Configuration getMapByKey(String name) {
         Pointer<Byte> tmp = Pointer.pointerToCString(name);
         Pointer<Integer> subkey = Pointer.allocateInt();
-        throwError(LIB.clingo_configuration_map_at(pointer, key, tmp, subkey), "Error reading the configuration item in map by" + tmp + " key!");
+        handleError(LIB.clingo_configuration_map_at(pointer, key, tmp, subkey), "Error reading the configuration item in map by" + tmp + " key!");
         return new Configuration(pointer, subkey.getInt());
     }
     
@@ -172,20 +173,20 @@ public class Configuration {
     
     public String getValue() {
         Pointer<SizeT> size = Pointer.allocateSizeT();
-        throwError(LIB.clingo_configuration_value_get_size(pointer, key, size), "Error reading the configuration value size!");
+        handleError(LIB.clingo_configuration_value_get_size(pointer, key, size), "Error reading the configuration value size!");
         Pointer<Byte> value = Pointer.allocateByte();
-        throwError(LIB.clingo_configuration_value_get(pointer, key, value, size.getInt()), "Error reading the configuration value!");
+        handleError(LIB.clingo_configuration_value_get(pointer, key, value, size.getInt()), "Error reading the configuration value!");
         return value.getCString();
     }
 
     public void setValue(String value) {
         Pointer<Byte> p = Pointer.pointerToCString(value);
-        throwError(LIB.clingo_configuration_value_set(pointer, key, p), "Error settings the configuration value " + value + "!");
+        handleError(LIB.clingo_configuration_value_set(pointer, key, p), "Error settings the configuration value " + value + "!");
     }
     
     public String getDescription() {
        Pointer<Pointer<Byte>> description = Pointer.allocatePointer(Byte.class);
-        throwError(LIB.clingo_configuration_description(pointer, key, description), "Error reading the configuration description!");
+        handleError(LIB.clingo_configuration_description(pointer, key, description), "Error reading the configuration description!");
         return description.getCString();
     }
     

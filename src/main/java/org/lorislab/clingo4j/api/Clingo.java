@@ -285,23 +285,23 @@ public class Clingo implements AutoCloseable {
     public Statistics getStatistics() {
         
         Pointer<Pointer<clingo_statistic>> statistics = Pointer.allocatePointer(clingo_statistic.class);
-        throwError(LIB.clingo_control_statistics(control.get(), statistics), "Error reading the statistics!");
+        handleError(LIB.clingo_control_statistics(control.get(), statistics), "Error reading the statistics!");
         
         Pointer<Long> key = Pointer.allocateLong();
-        throwError(LIB.clingo_statistics_root(statistics.get(), key), "Error reading the statistics root key!");
+        handleError(LIB.clingo_statistics_root(statistics.get(), key), "Error reading the statistics root key!");
         
         return new Statistics(statistics.get(), key.getLong());
     }
     
     public Configuration getConfiguration() {
         Pointer<Pointer<clingo_configuration>> config = Pointer.allocatePointer(clingo_configuration.class);
-        throwError(LIB.clingo_control_configuration(control.get(), config), "Error reading the configuration!");
+        handleError(LIB.clingo_control_configuration(control.get(), config), "Error reading the configuration!");
         Pointer<Integer> key = Pointer.allocateInt();
-        throwError(LIB.clingo_configuration_root(config.get(), key), "Error reading the configuration root key!");
+        handleError(LIB.clingo_configuration_root(config.get(), key), "Error reading the configuration root key!");
         return new Configuration(config.get(), key.getInt());        
     }
     
-    public static void throwError(boolean value, String message) throws ClingoException {
+    public static void handleError(boolean value, String message) throws ClingoException {
         if (!value) {
             throwError(message);
         }
