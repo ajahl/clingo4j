@@ -25,6 +25,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.ClingoLibrary;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_control;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_logger_t;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_program_builder;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_event_callback_t;
@@ -64,20 +65,32 @@ public class Clingo implements AutoCloseable {
     private final Pointer<Pointer<clingo_control>> control;
 
     public Clingo() throws ClingoException {
-        this(MESSAGE_LIMIT);
+        this(MESSAGE_LIMIT, null);
     }
 
-    public Clingo(int messageLimit, String... parameters) throws ClingoException {
+    public Clingo(int messageLimit, final ClingoLogger logger, String... parameters) throws ClingoException {
 
+        Pointer<ClingoLibrary.clingo_logger_t> p_logger = null;
+        if (logger != null) {
+            clingo_logger_t log = new clingo_logger_t() {
+                public void apply(int code, Pointer<Byte> message, Pointer<?> data) {
+                    try {
+                        logger.warn(WarningCode.createWarningCode(code), message.getCString());
+                    } catch (Exception e) {
+                        // ignore
+                    }
+                }
+            };
+            p_logger = Pointer.getPointer(log);
+        }
+        
         // create a control object and pass command line arguments
         control = Pointer.allocatePointer(clingo_control.class);
-        if (!LIB.clingo_control_new(null, 0, null, null, messageLimit, control)) {
-            throwError("Could not create clingo controller");
-        }
+        handleError(LIB.clingo_control_new(null, 0, p_logger, null, messageLimit, control), "Could not create clingo controller");
     }
 
     public Clingo(String... parameters) throws ClingoException {
-        this(MESSAGE_LIMIT, parameters);
+        this(MESSAGE_LIMIT, null, parameters);
     }
 
     @Override
@@ -103,8 +116,8 @@ public class Clingo implements AutoCloseable {
 
         Pointer<Byte> tmp_name = Pointer.pointerToCString(name);
         Pointer<Byte> tmp_program = Pointer.pointerToCString(program);
-        
-        Pointer<Pointer<Byte>> tmp_params = ClingoUtil.createListArray(parameters);        
+
+        Pointer<Pointer<Byte>> tmp_params = ClingoUtil.createListArray(parameters);
         int tmp_size = ClingoUtil.arraySize(parameters);
 
         // add a logic program to the base part
@@ -120,10 +133,9 @@ public class Clingo implements AutoCloseable {
     public void ground(String name, GroundCallback callback) throws ClingoException {
         ground(Arrays.asList(new Part(name)), callback);
     }
-    
+
     public void ground(List<Part> parts, GroundCallback callback) throws ClingoException {
 
-                
         Pointer<ClingoLibrary.clingo_ground_callback_t> p_ground_callback = null;
         if (callback != null) {
             ClingoLibrary.clingo_ground_callback_t ground_callback = new ClingoLibrary.clingo_ground_callback_t() {
@@ -139,11 +151,11 @@ public class Clingo implements AutoCloseable {
                         callback.groundCallback(loc, name, symbols, (List<Symbol> symbols1) -> {
 
                             long v_size = ClingoUtil.arraySize(symbols1);
-                            
+
                             if (v_size == 0) {
                                 return;
                             }
-                            
+
                             Pointer<Long> v_symbols = createPointerToSymbols(symbols1);
 
                             if (!(csymbol_callback.get().apply(v_symbols, v_size, csymbol_callback_data))) {
@@ -162,7 +174,7 @@ public class Clingo implements AutoCloseable {
 
         Pointer<clingo_part> p_parts = ClingoUtil.createArray(parts, clingo_part.class, Clingo::createPath);
         int partsSize = ClingoUtil.arraySize(parts);
-        
+
         // ground the base part
         if (!LIB.clingo_control_ground(control.get(), p_parts, partsSize, p_ground_callback, null)) {
             throwError("Error ground the program");
@@ -281,26 +293,40 @@ public class Clingo implements AutoCloseable {
         return iter;
     }
 
-    
     public Statistics getStatistics() {
-        
+
         Pointer<Pointer<clingo_statistic>> statistics = Pointer.allocatePointer(clingo_statistic.class);
         handleError(LIB.clingo_control_statistics(control.get(), statistics), "Error reading the statistics!");
-        
+
         Pointer<Long> key = Pointer.allocateLong();
         handleError(LIB.clingo_statistics_root(statistics.get(), key), "Error reading the statistics root key!");
-        
+
         return new Statistics(statistics.get(), key.getLong());
     }
-    
+
     public Configuration getConfiguration() {
         Pointer<Pointer<clingo_configuration>> config = Pointer.allocatePointer(clingo_configuration.class);
         handleError(LIB.clingo_control_configuration(control.get(), config), "Error reading the configuration!");
         Pointer<Integer> key = Pointer.allocateInt();
         handleError(LIB.clingo_configuration_root(config.get(), key), "Error reading the configuration root key!");
-        return new Configuration(config.get(), key.getInt());        
+        return new Configuration(config.get(), key.getInt());
     }
-    
+
+    public void assignExternal(Symbol atom, TruthValue value) {
+        handleError(LIB.clingo_control_assign_external(control.get(), atom.getPointer().get(), value.getValue()), "Error clingo assign external!");
+    }
+
+    public void releaseExternal(Symbol atom) {
+        handleError(LIB.clingo_control_release_external(control.get(), atom.getPointer().get()), "Error clingo release external!");
+    }
+
+//inline SymbolicAtoms Control::symbolic_atoms() const {
+//    clingo_symbolic_atoms_t *ret;
+//    Detail::handle_error(clingo_control_symbolic_atoms(*impl_, &ret));
+//    return SymbolicAtoms{ret};
+//}
+
+
     public static void handleError(boolean value, String message) throws ClingoException {
         if (!value) {
             throwError(message);
@@ -366,11 +392,11 @@ public class Clingo implements AutoCloseable {
     private static clingo_part createPath(Part part) {
         return part.getPart();
     }
-    
+
     private static Long createPointerToSymbol(Symbol symbol) {
         return symbol.getPointer().get();
     }
-    
+
     public static Pointer<Long> createPointerToSymbols(List<Symbol> symbols) {
         return ClingoUtil.createArray(symbols, Long.class, Clingo::createPointerToSymbol);
     }
