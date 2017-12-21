@@ -598,7 +598,7 @@ public class ASTToC {
     static clingo_ast_statement visit(ShowSignature x) {
         clingo_ast_show_signature signature = new clingo_ast_show_signature();
         signature.csp(x.isCsp());
-        signature.signature(x.getSignature().getSignature());
+        signature.signature(x.getSignature().getPointer().get());
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_show_signature);
         ret.field1().show_signature(Pointer.getPointer(signature));
         return ret;
@@ -693,7 +693,7 @@ public class ASTToC {
 
     static clingo_ast_statement visit(ProjectSignature x) {
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_project_atom_signature);
-        ret.field1().project_signature(x.getSignature().getSignature());
+        ret.field1().project_signature(x.getSignature().getPointer().get());
         return ret;
     }
 
