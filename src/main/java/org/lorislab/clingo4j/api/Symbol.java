@@ -26,7 +26,6 @@ import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
-import static org.lorislab.clingo4j.api.Clingo.throwError;
 
 /**
  *
@@ -51,33 +50,25 @@ public class Symbol implements TermData, TheoryTermData {
 
     public boolean isNegative() {
         Pointer<Boolean> negative = Pointer.allocateBoolean();
-        if (!LIB.clingo_symbol_is_negative(pointer.get(), negative)) {
-            throwError("Error reading the symbol negative!");
-        }
+        handleError(LIB.clingo_symbol_is_negative(pointer.get(), negative), "Error reading the symbol negative!");
         return negative.get();
     }
 
     public boolean isPositive() {
         Pointer<Boolean> positive = Pointer.allocateBoolean();
-        if (!LIB.clingo_symbol_is_positive(pointer.get(), positive)) {
-            throwError("Error reading the symbol positive!");
-        }
+        handleError(LIB.clingo_symbol_is_positive(pointer.get(), positive), "Error reading the symbol positive!");
         return positive.get();
     }
 
     public int getNumber() {
         Pointer<Integer> number = Pointer.allocateInt();
-        if (!LIB.clingo_symbol_number(pointer.get(), number)) {
-            throwError("Error reading the symbol number!");
-        }
+        handleError(LIB.clingo_symbol_number(pointer.get(), number), "Error reading the symbol number!");
         return number.get();
     }
 
     public String getName() {
         Pointer<Pointer<Byte>> name = Pointer.allocatePointer(Byte.class);
-        if (!LIB.clingo_symbol_name(pointer.get(), name)) {
-            throwError("Error reading the symbol name!");
-        }
+        handleError(LIB.clingo_symbol_name(pointer.get(), name), "Error reading the symbol name!");
         return name.get().getCString();
     }
 
@@ -86,9 +77,7 @@ public class Symbol implements TermData, TheoryTermData {
 
         Pointer<Pointer<Long>> args = Pointer.allocatePointer(Long.class);
         Pointer<SizeT> args_size = Pointer.allocateSizeT();
-        if (!LIB.clingo_symbol_arguments(pointer.get(), args, args_size)) {
-            throwError("Error reading the symbol arguments!");
-        }
+        handleError(LIB.clingo_symbol_arguments(pointer.get(), args, args_size), "Error reading the symbol arguments!");
 
         if (0 < args_size.getLong()) {
             result = new ArrayList<>((int) args_size.getLong());
@@ -106,15 +95,9 @@ public class Symbol implements TermData, TheoryTermData {
     @Override
     public String toString() {
         Pointer<SizeT> size = Pointer.allocateSizeT();
-        if (!LIB.clingo_symbol_to_string_size(pointer.get(), size)) {
-            throwError("Error reading the symbol string size!");
-        }
-        
+        handleError(LIB.clingo_symbol_to_string_size(pointer.get(), size), "Error reading the symbol string size!");
         Pointer<Byte> string = Pointer.allocateBytes(size.getLong());
-        if (!LIB.clingo_symbol_to_string(pointer.get(), string, size.getLong())) {
-            throwError("Error reading the symbol string value!");
-        }
-        
+        handleError(LIB.clingo_symbol_to_string(pointer.get(), string, size.getLong()), "Error reading the symbol string value!");
         return string.getCString();
     }    
 
