@@ -33,7 +33,7 @@ import static org.lorislab.clingo4j.api.Clingo.handleError;
  */
 public class Symbol implements TermData, TheoryTermData {
 
-    private Pointer<Long> pointer;
+    private final Pointer<Long> pointer;
 
     public Symbol(Pointer<Long> pointer) {
         this.pointer = pointer;
