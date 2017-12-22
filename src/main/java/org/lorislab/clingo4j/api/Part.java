@@ -17,7 +17,9 @@ package org.lorislab.clingo4j.api;
 
 import java.util.List;
 import org.bridj.Pointer;
+import org.lorislab.clingo4j.api.Symbol.SymbolList;
 import org.lorislab.clingo4j.api.c.clingo_part;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -41,7 +43,7 @@ public class Part {
     public Part(String name, List<Symbol> symbols) {
         this(name);
         if (symbols != null && !symbols.isEmpty()) {
-            Pointer<Long> tmp = Clingo.createPointerToSymbols(symbols);
+            Pointer<Long> tmp = Symbol.toArray(symbols);
             part.params(tmp);
             part.size(symbols.size());
         }
@@ -56,7 +58,14 @@ public class Part {
     }
     
     public List<Symbol> getParameters() {
-        return Clingo.createListOfSymbols(part.params(), part.size());
+        return new SymbolList(part.params(), (int) part.size());
     }
     
+    private static clingo_part getPartFrom(Part part) {
+        return part.getPart();
+    }    
+    
+    public static Pointer<clingo_part> toArray(List<Part> parts) {
+        return ClingoUtil.createArray(parts, clingo_part.class, Part::getPartFrom);
+    }
 }

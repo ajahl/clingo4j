@@ -23,10 +23,11 @@ import java.util.List;
  */
 public interface GroundCallback {
     
-    public void groundCallback(Location loc, String name, List<Symbol> symbols, GroundSymbolCallback callback);
+    public void groundCallback(Location loc, String name, List<Symbol> symbols, GroundSymbolCallback callback) throws ClingoException;
     
     public interface GroundSymbolCallback {
         
-        public void apply(List<Symbol> symbols);
+        public void apply(List<Symbol> symbols) throws ClingoException;
+        
     }
 }

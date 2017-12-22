@@ -37,14 +37,14 @@ public class ClingoInjectTermsTest {
         try (Clingo control = new Clingo()) {
 
             // define a constant in string form
-            Symbol number = Clingo.createNumber(23);
+            Symbol number = Symbol.createNumber(23);
             control.add("base", "#const d=" + number + ".");
 
             // define a constant via the AST
-            control.withBuilder((builder) -> {
+            control.withBuilder((ProgramBuilder builder) -> {
                 Location loc = new Location("<generated>", "<generated>", 1, 1, 1, 1);
-                Symbol num = Clingo.createNumber(24);           
-                builder.add(new Statement(loc, new Definition("e", new Term(loc, Clingo.createNumber(24)), false)));                       
+                Symbol num = Symbol.createNumber(24);
+                builder.add(new Statement(loc, new Definition("e", new Term(loc, Symbol.createNumber(24)), false)));
             });
 
             control.add("base", "p(@c()). p(d). p(e).");
@@ -53,8 +53,8 @@ public class ClingoInjectTermsTest {
             control.ground("base", (Location loc, String name, List<Symbol> symbols, GroundCallback.GroundSymbolCallback callback) -> {
                 if ("c".equals(name) && (symbols == null || symbols.isEmpty())) {
                     List<Symbol> tmp = new ArrayList<>(2);
-                    tmp.add(Clingo.createNumber(42));
-                    tmp.add(Clingo.createNumber(43));
+                    tmp.add(Symbol.createNumber(42));
+                    tmp.add(Symbol.createNumber(43));
                     callback.apply(tmp);
                 }
             });

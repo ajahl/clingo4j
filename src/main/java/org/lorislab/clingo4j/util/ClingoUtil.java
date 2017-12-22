@@ -53,7 +53,7 @@ public final class ClingoUtil {
         return result;
     }
 
-    public static Pointer<Pointer<Byte>> createListArray(List<String> data) {
+    public static Pointer<Pointer<Byte>> createStringArray(List<String> data) {
         Pointer<Pointer<Byte>> result = null;
         if (data != null && !data.isEmpty()) {
             result = Pointer.pointerToCStrings(data.toArray(new String[data.size()]));

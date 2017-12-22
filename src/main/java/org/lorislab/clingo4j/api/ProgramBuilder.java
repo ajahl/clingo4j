@@ -20,7 +20,6 @@ import static org.lorislab.clingo4j.api.Clingo.LIB;
 import org.lorislab.clingo4j.api.ast.Statement;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_program_builder;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
-import static org.lorislab.clingo4j.api.Clingo.throwError;
 
 /**
  *
@@ -28,7 +27,7 @@ import static org.lorislab.clingo4j.api.Clingo.throwError;
  */
 public class ProgramBuilder {
     
-    private  Pointer<clingo_program_builder> pointer;
+    private final  Pointer<clingo_program_builder> pointer;
 
     public ProgramBuilder(Pointer<clingo_program_builder> pointer) {
         this.pointer = pointer;
@@ -38,22 +37,16 @@ public class ProgramBuilder {
         return pointer;
     }
         
-    public void begin() {
-        if (!LIB.clingo_program_builder_begin(pointer)) {
-            throwError("Error program builder begin!");
-        }
+    public void begin() throws ClingoException {
+        handleError(LIB.clingo_program_builder_begin(pointer), "Error program builder begin!");
     }
 
-    public void add(Statement statment) {
-        if (!LIB.clingo_program_builder_add(pointer, Pointer.getPointer(statment.createStatment()))) {
-            throwError("Error program builder add!");            
-        }
+    public void add(Statement statment) throws ClingoException {
+        handleError(LIB.clingo_program_builder_add(pointer, Pointer.getPointer(statment.createStatment())), "Error program builder add!");            
     }
     
-    public void end() {
-        if (!LIB.clingo_program_builder_end(pointer)) {
-            throwError("Error program builder begin!");
-        }        
+    public void end() throws ClingoException {
+        handleError(LIB.clingo_program_builder_end(pointer), "Error program builder begin!");
     }
         
 }

@@ -15,11 +15,23 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.bridj.Pointer;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_backend;
+
 /**
  *
  * @author andrej
  */
-public interface ProgramBuilderCallback {
+public class Backend {
     
-    public void run(ProgramBuilder builder) throws ClingoException;
+    private final Pointer<clingo_backend> pointer;
+
+    public Backend(Pointer<clingo_backend> pointer) {
+        this.pointer = pointer;
+    }
+
+    public Pointer<clingo_backend> getPointer() {
+        return pointer;
+    }
+
 }

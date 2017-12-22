@@ -22,7 +22,6 @@ import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
-import static org.lorislab.clingo4j.api.Clingo.throwError;
 
 /**
  *
@@ -30,7 +29,7 @@ import static org.lorislab.clingo4j.api.Clingo.throwError;
  */
 public class Model {
 
-    private Pointer<clingo_model> pointer;
+    private final Pointer<clingo_model> pointer;
 
     public Model(Pointer<clingo_model> pointer) {
         this.pointer = pointer;
@@ -40,42 +39,33 @@ public class Model {
         return pointer;
     }
 
-    public ModelType getType() {
+    public ModelType getType() throws ClingoException {
         Pointer<Integer> type = Pointer.allocateInt();
-        if (!LIB.clingo_model_type(pointer, type)) {
-            throwError("Error reading the model type");
-        }
+        handleError(LIB.clingo_model_type(pointer, type), "Error reading the model type");
         return ModelType.createModelType(type.get());
     }
 
-    public List<Symbol> getSymbols() {
+    public List<Symbol> getSymbols() throws ClingoException {
         return getSymbols(ShowType.SHOWN);
     }
     
-    public List<Symbol> getSymbols(ShowType type) {
+    public List<Symbol> getSymbols(ShowType type) throws ClingoException {
         List<Symbol> result = null;
 
         int show = (int) type.getValue();
 
         // determine the number of (shown) symbols in the model    
         Pointer<SizeT> size = Pointer.allocateSizeT();
-        if (!LIB.clingo_model_symbols_size(pointer, show, size)) {
-            throwError("Error reading size of symbols of the model");
-        }
+        handleError(LIB.clingo_model_symbols_size(pointer, show, size), "Error reading size of symbols of the model");
 
         if (0 < size.getLong()) {
             // allocate required memory to hold all the symbols
             Pointer<Long> atoms = Pointer.allocateLongs(size.getLong());
 
             // retrieve the symbols in the model
-            if (!LIB.clingo_model_symbols(pointer, show, atoms, size.getLong())) {
-                throwError("Error read the model symbols");
-            }
+            handleError(LIB.clingo_model_symbols(pointer, show, atoms, size.getLong()), "Error read the model symbols");
             
-            result = new ArrayList<>((int) size.getLong());
-            for (int i = 0; i < size.getLong(); i++, atoms = atoms.next()) {
-                result.add(new Symbol(atoms));
-            }
+            result = new Symbol.SymbolList(atoms, size.getLong());
         }
         return result;
     }

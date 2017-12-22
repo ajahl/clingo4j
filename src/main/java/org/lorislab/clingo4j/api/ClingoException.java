@@ -19,37 +19,37 @@ package org.lorislab.clingo4j.api;
  *
  * @author andrej
  */
-public class ClingoException extends RuntimeException {
+public class ClingoException extends Exception {
     
     private static final long serialVersionUID = -5124979156179474046L;
     
-    private final int clingoErrorCode;
+    private final ErrorCode errorCode;
     
-    private final String clingoErrorMessage;
+    private final String errorMessage;
 
     public ClingoException() {
         super();
-        this.clingoErrorCode = -1;
-        this.clingoErrorMessage = null;
+        this.errorCode = null;
+        this.errorMessage = null;
     }
     
-    public ClingoException(int errorCode, String errorMessage, String message) {
+    public ClingoException(ErrorCode errorCode, String errorMessage, String message) {
         super(message);
-        this.clingoErrorCode = errorCode;
-        this.clingoErrorMessage = errorMessage;
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
     }
 
-    public int getClingoErrorCode() {
-        return clingoErrorCode;
+    public ErrorCode getErrorCode() {
+        return errorCode;
     }
 
-    public String getClingoErrorMessage() {
-        return clingoErrorMessage;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
     @Override
     public String getMessage() {
-        return super.getMessage() + " Clingo error code: " + clingoErrorCode + " message: " + clingoErrorMessage;
+        return super.getMessage() + " Clingo error code: " + errorCode + " message: " + errorMessage;
     }
     
     

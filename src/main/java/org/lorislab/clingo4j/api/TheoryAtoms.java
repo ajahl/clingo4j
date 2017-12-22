@@ -15,11 +15,24 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.bridj.Pointer;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
+
 /**
  *
  * @author andrej
  */
-public interface ProgramBuilderCallback {
+public class TheoryAtoms {
     
-    public void run(ProgramBuilder builder) throws ClingoException;
+    private Pointer<clingo_theory_atoms> pointer;
+
+    public TheoryAtoms(Pointer<clingo_theory_atoms> pointer) {
+        this.pointer = pointer;
+    }
+
+    public Pointer<clingo_theory_atoms> getPointer() {
+        return pointer;
+    }
+    
+    
 }

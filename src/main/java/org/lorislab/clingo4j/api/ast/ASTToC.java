@@ -228,7 +228,7 @@ public class ASTToC {
         clingo_ast_theory_unparsed_term_element ret = new clingo_ast_theory_unparsed_term_element();
         ret.term(convTheoryTerm(x.getTerm()));
         ret.size(ClingoUtil.arraySize(x.getOperators()));
-        ret.operators(ClingoUtil.createListArray(x.getOperators()));
+        ret.operators(ClingoUtil.createStringArray(x.getOperators()));
         return ret;
     }
 
@@ -551,7 +551,7 @@ public class ASTToC {
     static clingo_ast_theory_guard_definition convTheoryGuardDefinition(TheoryGuardDefinition x) {
         clingo_ast_theory_guard_definition ret = new clingo_ast_theory_guard_definition();
         ret.term(Pointer.pointerToCString(x.getTerm()));
-        ret.operators(ClingoUtil.createListArray(x.getOperators()));
+        ret.operators(ClingoUtil.createStringArray(x.getOperators()));
         ret.size(ClingoUtil.arraySize(x.getOperators()));
         return ret;
     }

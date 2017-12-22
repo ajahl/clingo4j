@@ -18,6 +18,7 @@ package org.lorislab.clingo4j.api.ast;
 import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
+import org.lorislab.clingo4j.api.ClingoException;
 
 /**
  *
@@ -27,7 +28,7 @@ public class Signature {
 
     private final Pointer<Long> pointer;
 
-    public Signature(String name, int arity, boolean positive) {
+    public Signature(String name, int arity, boolean positive) throws ClingoException {
        pointer = Pointer.allocateLong();
        handleError(LIB.clingo_signature_create(Pointer.pointerToCString(name), arity, positive, pointer), "Error creating the signature!");
     }
