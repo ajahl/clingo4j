@@ -26,22 +26,22 @@ import org.bridj.Pointer;
  * @author andrej
  * @param <T>
  */
-public abstract class SpanList<T> implements List<T> {
+public abstract class SpanList<T, K> implements List<T> {
 
-    private final Pointer<Long> pointer;
+    private final Pointer<K> pointer;
 
     private final long size;
 
-    public SpanList(Pointer<Long> pointer, long size) {
+    public SpanList(Pointer<K> pointer, long size) {
         this.pointer = pointer;
         this.size = size;
     }
 
-    public Pointer<Long> getPointer() {
+    public Pointer<K> getPointer() {
         return pointer;
     }
 
-    protected abstract T getItem(Pointer<Long> p);
+    protected abstract T getItem(Pointer<K> p);
 
     @Override
     public int size() {

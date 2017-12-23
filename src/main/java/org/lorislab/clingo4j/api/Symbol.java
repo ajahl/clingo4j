@@ -179,7 +179,7 @@ public class Symbol implements TermData, TheoryTermData {
         return symbol.getPointer().get();
     }
     
-    public static class SymbolList extends SpanList<Symbol> {
+    public static class SymbolList extends SpanList<Symbol, Long> {
 
         public SymbolList(Pointer<Long> pointer, long size) {
             super(pointer, size);
