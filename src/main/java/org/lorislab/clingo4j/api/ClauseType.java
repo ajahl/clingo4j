@@ -15,7 +15,6 @@
  */
 package org.lorislab.clingo4j.api;
 
-import static java.lang.System.out;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_clause_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_clause_type.clingo_clause_type_learnt;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_clause_type.clingo_clause_type_static;
@@ -46,13 +45,12 @@ public enum ClauseType {
         return type;
     }
 
-    public String getString() {
-        return string;
-    }
-
     @Override
     public String toString() {
         return string;
     }
 
+    public int getValue() {
+        return (int) type.value;
+    }
 }

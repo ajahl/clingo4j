@@ -15,7 +15,6 @@
  */
 package org.lorislab.clingo4j.api;
 
-import static java.lang.System.out;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_external_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_external_type.clingo_external_type_false;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_external_type.clingo_external_type_free;
@@ -55,4 +54,14 @@ public enum ExternalType {
         return string;
     }
     
+    public static ExternalType createExternalType(int value) {
+        ExternalType r = null;
+        ExternalType[] values = ExternalType.values();
+        for (int i=0; i<values.length && r == null; i++) {
+            if (values[i].getValue() == value) {
+                r = values[i];
+            }
+        }
+        return r;
+    }
 }

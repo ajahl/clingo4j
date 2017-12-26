@@ -40,6 +40,19 @@ public final class ClingoUtil {
 
     }
 
+    public static <T> Pointer<T> createArray(List<T> data, Class<T> clazz) {
+        Pointer<T> result = null;
+        if (data != null && !data.isEmpty()) {
+            result = Pointer.allocateArray(clazz, data.size());
+            Pointer<T> iter = result;
+            for (T item : data) {
+                iter.set(item);
+                iter = iter.next();
+            }
+        }
+        return result;
+    }
+    
     public static <T, E> Pointer<T> createArray(List<E> data, Class<T> clazz, Convertor<T, E> convertor) {
         Pointer<T> result = null;
         if (data != null && !data.isEmpty()) {

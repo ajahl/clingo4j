@@ -43,4 +43,15 @@ public enum PropagatorCheckMode {
     public int getValue() {
         return (int) mode.value;
     }
+    
+    public static PropagatorCheckMode createPropagatorCheckMode(int value) {
+        PropagatorCheckMode result = null;
+        PropagatorCheckMode[] values = PropagatorCheckMode.values();
+        for (int i=0; i<values.length && result == null; i++) {
+            if (values[i].getValue() == value) {
+                result = values[i];
+            }
+        }
+        return result;
+    }
 }

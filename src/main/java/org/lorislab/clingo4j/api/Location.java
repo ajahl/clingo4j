@@ -23,11 +23,11 @@ import org.lorislab.clingo4j.api.c.clingo_location;
  * @author andrej
  */
 public class Location extends clingo_location {
-    
+
     public Location(Pointer<clingo_location> location) {
         super(location);
     }
-    
+
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public Location(String beginFile, String endFile, long beginLine, long endLine, long beginColumn, long endColumn) {
         begin_file(Pointer.pointerToCString(beginFile));
@@ -37,29 +37,67 @@ public class Location extends clingo_location {
         begin_column(beginColumn);
         end_column(endColumn);
     }
-    
+
     public long getBeginColumn() {
         return this.begin_column();
     }
-    
+
     public String getBeginFile() {
         return this.begin_file().getCString();
     }
-    
+
     public long getBeginLine() {
         return this.begin_line();
     }
-    
+
     public long getEndColumn() {
         return this.end_column();
     }
-    
+
     public String getEndFile() {
         return this.end_file().getCString();
     }
-    
+
     public long getEndLine() {
         return this.end_line();
     }
-    
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getBeginFile()).append(":").append(getBeginLine()).append(":").append(getBeginColumn());
+
+        boolean dash = true;
+        boolean eq = getBeginFile().equals(getEndFile());
+        if (!eq) {
+            if (dash) {
+                sb.append("-");
+            } else {
+                sb.append(":");
+            }
+            sb.append(getEndFile());
+            dash = false;
+        }
+        eq = eq && (getBeginLine() == getEndLine());
+        if (!eq) {
+            if (dash) {
+                sb.append("-");
+            } else {
+                sb.append(":");
+            }
+            sb.append(getEndLine());
+            dash = false;
+        }
+        eq = eq && (getBeginColumn() == getEndColumn());
+        if (!eq) {
+            if (dash) {
+                sb.append("-");
+            } else {
+                sb.append(":");
+            }
+            sb.append(getEndColumn());
+        }
+        return sb.toString();
+    }
+
 }

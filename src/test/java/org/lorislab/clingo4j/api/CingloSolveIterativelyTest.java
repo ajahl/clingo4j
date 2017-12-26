@@ -51,11 +51,10 @@ public class CingloSolveIterativelyTest {
             
             control.add("base", PROGRAM);
             control.ground("base");
-            Iterator<Model> iter = control.solve();
-            while (iter.hasNext()) {
-                Model model = iter.next();
-                System.out.println("Model type: " + model.getType());
-                for (Symbol atom : model.getSymbols()) {
+            
+            for (Model model : control.solve())  {
+                System.out.println("Model type: " + model.type());
+                for (Symbol atom : model.symbols()) {
                     System.out.println(atom);
                 }
             }

@@ -15,17 +15,22 @@
  */
 package org.lorislab.clingo4j.api;
 
+import java.util.Iterator;
+import java.util.List;
 import org.bridj.Pointer;
 import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
+import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
+import org.lorislab.clingo4j.api.ast.Signature;
+import org.lorislab.clingo4j.api.ast.Signature.SignatureList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbolic_atoms;
 
 /**
  *
  * @author andrej
  */
-public class SymbolicAtoms {
+public class SymbolicAtoms implements Iterable<SymbolicAtom> {
 
     private final Pointer<clingo_symbolic_atoms> pointer;
 
@@ -41,5 +46,54 @@ public class SymbolicAtoms {
         Pointer<SizeT> ret = Pointer.allocateSizeT();
         handleError(LIB.clingo_symbolic_atoms_size(pointer, ret), "Error reading the symbolic atoms size!");
         return ret.getInt();
+    }
+
+    public List<Signature> signatures() throws ClingoException {
+        Pointer<SizeT> n = Pointer.allocateSizeT();
+        handleError(LIB.clingo_symbolic_atoms_signatures_size(pointer, n), "Error reading the symbolic atoms signatures size!");
+        Pointer<Long> signatures = Pointer.allocateLongs(n.getLong());
+        handleError(LIB.clingo_symbolic_atoms_signatures(pointer, signatures, n.getLong()), "Error reading the symbolic atoms signatures!");
+        return new SignatureList(signatures, n.getLong());
+    }
+
+    public SymbolicAtom find(Symbol atom) throws ClingoException {
+        Pointer<Long> iter = Pointer.allocateLong();
+        handleError(LIB.clingo_symbolic_atoms_find(pointer, atom.getSymbol(), iter), "Error reading the symbolic atoms by symbol");
+        SymbolicAtomIterator iterator = new SymbolicAtomIterator(pointer, iter.get(), 0);
+        if (iterator.isValidIterator()) {
+            return iterator.get();
+        }
+        return null;
+    }
+
+    public Iterator<SymbolicAtom> iterator(Symbol atom) throws ClingoException {
+        Pointer<Long> iter = Pointer.allocateLong();
+        handleError(LIB.clingo_symbolic_atoms_find(pointer, atom.getSymbol(), iter), "Error reading the symbolic atoms by symbol");
+        Pointer<Long> end = Pointer.allocateLong();
+        handleError(LIB.clingo_symbolic_atoms_end(pointer, end), "Error reading the symbolic atoms iterator end!");
+        return new SymbolicAtomIterator(pointer, iter.get(), end.get());
+    }
+
+    public Iterator<SymbolicAtom> iterator(Signature signature) throws ClingoException {
+
+        Pointer<Long> s = null;
+        if (signature != null) {
+            s = signature.getPointer();
+        }
+        Pointer<Long> iter = Pointer.allocateLong();
+        handleError(LIB.clingo_symbolic_atoms_begin(pointer, s, iter), "Error reading the symbolic atoms iterator begin!");
+        Pointer<Long> end = Pointer.allocateLong();
+        handleError(LIB.clingo_symbolic_atoms_end(pointer, end), "Error reading the symbolic atoms iterator end!");
+        return new SymbolicAtomIterator(pointer, iter.get(), end.get());
+    }
+
+    @Override
+    public Iterator<SymbolicAtom> iterator() {
+        try {
+            return iterator((Signature) null);
+        } catch (ClingoException ex) {
+            handleRuntimeError(ex);
+        }
+        return null;
     }
 }

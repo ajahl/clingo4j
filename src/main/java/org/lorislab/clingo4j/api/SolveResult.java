@@ -26,13 +26,13 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_result.clin
  */
 public class SolveResult {
     
-    private final long value;
+    private final int value;
     
-    public SolveResult(long value) {
+    public SolveResult(int value) {
         this.value = value;
     }
 
-    public long getValue() {
+    public int getValue() {
         return value;
     }
     
@@ -54,6 +54,14 @@ public class SolveResult {
 
     public boolean isUnsatisfiable() {
         return (value & clingo_solve_result_unsatisfiable.value) != 0;
+    }
+    
+    public boolean isEqual(SolveResult r) {
+        return value == r.value;
+    }
+    
+    public boolean isNotEqual(SolveResult r) {
+        return value != r.value;
     }
     
     @Override

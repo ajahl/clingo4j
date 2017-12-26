@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.SpanList;
@@ -23,6 +24,7 @@ import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
+import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
@@ -71,6 +73,21 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
     @Override
     public String toString() {
         return "" + sign + data;
+    }
+    
+    public static LiteralList toLiteralList(List<Integer> list) {
+        if (list == null) {
+            return null;
+        }
+        if (list instanceof LiteralList) {
+            return (LiteralList) list;
+        }
+        if (list.isEmpty()) {
+            return null;
+        }
+        int size = ClingoUtil.arraySize(list);
+        Pointer<Integer> tmp = ClingoUtil.createArray(list, Integer.class);
+        return new LiteralList(tmp, size);
     }
     
     public static class LiteralList extends SpanList<Integer, Integer> {

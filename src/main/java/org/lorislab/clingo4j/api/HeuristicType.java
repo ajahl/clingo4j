@@ -15,7 +15,6 @@
  */
 package org.lorislab.clingo4j.api;
 
-import static java.lang.System.out;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_heuristic_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_heuristic_type.clingo_heuristic_type_factor;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_heuristic_type.clingo_heuristic_type_false;
@@ -59,4 +58,14 @@ public enum HeuristicType {
         return string;
     }
 
+    public static HeuristicType createHeuristicType(int value) {
+        HeuristicType r = null;
+        HeuristicType[] values = HeuristicType.values();
+        for (int i=0; i<values.length && r == null; i++) {
+            if (values[i].getValue() == value) {
+                r = values[i];
+            }
+        }
+        return r;
+    }
 }

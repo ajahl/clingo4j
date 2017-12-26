@@ -52,4 +52,14 @@ public enum TruthValue {
         return string;
     }
    
+    public static TruthValue createTruthValue(int value) {
+        TruthValue r = null;
+        TruthValue[] values = TruthValue.values();
+        for (int i=0; i<values.length && r == null; i++) {
+            if (values[i].getValue() == value) {
+                r = values[i];
+            }
+        }
+        return r;
+    }
 }

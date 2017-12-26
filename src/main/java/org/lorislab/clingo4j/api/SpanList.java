@@ -25,6 +25,7 @@ import org.bridj.Pointer;
  *
  * @author andrej
  * @param <T>
+ * @param <K>
  */
 public abstract class SpanList<T, K> implements List<T> {
 

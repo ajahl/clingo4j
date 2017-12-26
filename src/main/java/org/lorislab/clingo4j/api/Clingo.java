@@ -15,29 +15,60 @@
  */
 package org.lorislab.clingo4j.api;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.bridj.BridJ;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Symbol.SymbolList;
+import org.lorislab.clingo4j.api.WeightedLiteral.WeightedLiteralList;
+import org.lorislab.clingo4j.api.ast.Literal;
+import org.lorislab.clingo4j.api.ast.Literal.LiteralList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_callback_t;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_backend;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_control;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_logger_t;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_program_builder;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_propagate_control;
+import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_propagate_init;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_event_callback_t;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_handle;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_mode;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistic;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbolic_atoms;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
+import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.acyc_edge_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.assume_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.begin_step_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.end_step_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.external_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.heuristic_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.init_program_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.minimize_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.output_atom_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.output_csp_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.output_term_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.project_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.rule_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.theory_atom_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.theory_atom_with_guard_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.theory_element_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.theory_term_compound_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.theory_term_number_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.theory_term_string_callback;
+import org.lorislab.clingo4j.api.c.clingo_ground_program_observer.weight_rule_callback;
 import org.lorislab.clingo4j.api.c.clingo_location;
 import org.lorislab.clingo4j.api.c.clingo_part;
+import org.lorislab.clingo4j.api.c.clingo_propagator;
+import org.lorislab.clingo4j.api.c.clingo_propagator.check_callback;
+import org.lorislab.clingo4j.api.c.clingo_propagator.init_callback;
+import org.lorislab.clingo4j.api.c.clingo_propagator.propagate_callback;
+import org.lorislab.clingo4j.api.c.clingo_propagator.undo_callback;
+import org.lorislab.clingo4j.api.c.clingo_weighted_literal;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -195,11 +226,11 @@ public class Clingo implements AutoCloseable {
         return new ProgramBuilder(tmp.get());
     }
 
-    public Iterator<Model> solve() throws ClingoException {
+    public SolveHandle solve() throws ClingoException {
         return solve(null, false, true);
     }
 
-    public Iterator<Model> solve(SolveEventHandler handler, boolean asynchronous, boolean yield) throws ClingoException {
+    public SolveHandle solve(SolveEventHandler handler, boolean asynchronous, boolean yield) throws ClingoException {
 
         int mode = 0;
         if (asynchronous) {
@@ -208,8 +239,6 @@ public class Clingo implements AutoCloseable {
         if (yield) {
             mode |= (int) clingo_solve_mode.clingo_solve_mode_yield.value;
         }
-
-        final Pointer<Pointer<clingo_solve_handle>> handle = Pointer.allocatePointer(ClingoLibrary.clingo_solve_handle.class);
 
         Pointer<clingo_solve_event_callback_t> p_event = null;
         if (handler != null) {
@@ -239,46 +268,10 @@ public class Clingo implements AutoCloseable {
         }
 
         // get a solve handle        
+        final Pointer<Pointer<clingo_solve_handle>> handle = Pointer.allocatePointer(ClingoLibrary.clingo_solve_handle.class);
         handleError(LIB.clingo_control_solve(control.get(), mode, null, 0, p_event, null, handle), "Error execute control solve");
+        return new SolveHandle(handle.get());
 
-        Iterator<Model> iter = new Iterator<Model>() {
-
-            private Model current;
-
-            @Override
-            public boolean hasNext() {
-                current = getModel();
-                // close the solve handle
-                if (current == null) {
-                    handleRuntimeError(LIB.clingo_solve_handle_close(handle.get()), "Error close the handle.");
-                }
-                return current != null;
-            }
-
-            @Override
-            public Model next() {
-                if (current == null) {
-                    if (!hasNext()) {
-                        throw new NoSuchElementException("No more models in the solution.");
-                    }
-                }
-                return current;
-            }
-
-            private Model getModel() {
-
-                Pointer<Pointer<ClingoLibrary.clingo_model>> model = Pointer.allocatePointer(ClingoLibrary.clingo_model.class);
-
-                handleRuntimeError(LIB.clingo_solve_handle_resume(handle.get()), "Error solve handle resume");
-                handleRuntimeError(LIB.clingo_solve_handle_model(handle.get(), model), "Error solve handle model");
-
-                if (model.get() != null) {
-                    return new Model(model.get());
-                }
-                return null;
-            }
-        };
-        return iter;
     }
 
     public Statistics getStatistics() throws ClingoException {
@@ -298,11 +291,11 @@ public class Clingo implements AutoCloseable {
     }
 
     public void assignExternal(Symbol atom, TruthValue value) throws ClingoException {
-        handleError(LIB.clingo_control_assign_external(control.get(), atom.getPointer().get(), value.getValue()), "Error clingo assign external!");
+        handleError(LIB.clingo_control_assign_external(control.get(), atom.getSymbol(), value.getValue()), "Error clingo assign external!");
     }
 
     public void releaseExternal(Symbol atom) throws ClingoException {
-        handleError(LIB.clingo_control_release_external(control.get(), atom.getPointer().get()), "Error clingo release external!");
+        handleError(LIB.clingo_control_release_external(control.get(), atom.getSymbol()), "Error clingo release external!");
     }
 
     public static void handleError(boolean value, String message) throws ClingoException {
@@ -310,6 +303,17 @@ public class Clingo implements AutoCloseable {
             Pointer<Byte> msg = LIB.clingo_error_message();
             int error = LIB.clingo_error_code();
             throw new ClingoException(ErrorCode.createErrorCode(error), msg.getCString(), message);
+        }
+    }
+
+    public static void handleError(boolean ret, String message, ClingoException exc) throws ClingoException {
+        if (!ret) {
+            if (exc != null) {
+                Exception p = exc;
+                exc = null;
+                throw exc;
+            }
+            handleError(false, message);
         }
     }
 
@@ -321,6 +325,10 @@ public class Clingo implements AutoCloseable {
                 throw new RuntimeException(ex.getMessage(), ex);
             }
         }
+    }
+
+    public static void handleRuntimeError(ClingoException ex) {
+        throw new RuntimeException(ex.getMessage(), ex);
     }
 
     public SymbolicAtoms getSymbolicAtoms() throws ClingoException {
@@ -373,6 +381,256 @@ public class Clingo implements AutoCloseable {
         Pointer<Pointer<clingo_backend>> ret = Pointer.allocatePointer(clingo_backend.class);
         handleError(LIB.clingo_control_backend(control.get(), ret), "Error get backend!");
         return new Backend(ret.get());
+    }
+
+    void registerObserver(final GroundProgramObserver observer) throws ClingoException {
+        registerObserver(observer, false);
+
+    }
+
+    void registerObserver(final GroundProgramObserver observer, boolean replace) throws ClingoException {
+        if (observer == null) {
+            return;
+        }
+        clingo_ground_program_observer tmp = new clingo_ground_program_observer();
+        tmp.init_program(Pointer.getPointer(new init_program_callback() {
+            @Override
+            public boolean apply(boolean incremental, Pointer<?> data) {
+                observer.initProgram(incremental);
+                return true;
+            }
+        }));
+        tmp.begin_step(Pointer.getPointer(new begin_step_callback() {
+            @Override
+            public boolean apply(Pointer<?> data) {
+                observer.beginStep();
+                return true;
+            }
+        }));
+        tmp.end_step(Pointer.getPointer(new end_step_callback() {
+            @Override
+            public boolean apply(Pointer<?> data) {
+                observer.endStep();
+                return true;
+            }
+        }));
+        tmp.rule(Pointer.getPointer(new rule_callback() {
+            @Override
+            public boolean apply(boolean choice, Pointer<Integer> head, long head_size, Pointer<Integer> body, long body_size, Pointer<?> data) {
+                observer.rule(choice, new LiteralList(head, head_size), new LiteralList(body, body_size));
+                return true;
+            }
+        }));
+        tmp.weight_rule(Pointer.getPointer(new weight_rule_callback() {
+            @Override
+            public boolean apply(boolean choice, Pointer<Integer> head, long head_size, int lower_bound, Pointer<clingo_weighted_literal> body, long body_size, Pointer<?> data) {
+                observer.weightRule(choice, new LiteralList(head, head_size), lower_bound, new WeightedLiteralList(body, body_size));
+                return true;
+            }
+        }));
+        tmp.minimize(Pointer.getPointer(new minimize_callback() {
+            @Override
+            public boolean apply(int priority, Pointer<clingo_weighted_literal> literals, long size, Pointer<?> data) {
+                observer.minimize(priority, new WeightedLiteralList(literals, size));
+                return true;
+            }
+        }));
+        tmp.project(Pointer.getPointer(new project_callback() {
+            @Override
+            public boolean apply(Pointer<Integer> atoms, long size, Pointer<?> data) {
+                observer.project(new LiteralList(atoms, size));
+                return true;
+            }
+        }));
+        tmp.output_atom(Pointer.getPointer(new output_atom_callback() {
+            @Override
+            public boolean apply(long symbol, int atom, Pointer<?> data) {
+                observer.outputAtom(new Symbol(symbol), atom);
+                return true;
+            }
+        }));
+        tmp.output_term(Pointer.getPointer(new output_term_callback() {
+            @Override
+            public boolean apply(long symbol, Pointer<Integer> condition, long size, Pointer<?> data) {
+                observer.outputTerm(new Symbol(symbol), new LiteralList(condition, size));
+                return true;
+            }
+        }));
+        tmp.output_csp(Pointer.getPointer(new output_csp_callback() {
+            @Override
+            public boolean apply(long symbol, int value, Pointer<Integer> condition, long size, Pointer<?> data) {
+                observer.outputCsp(new Symbol(symbol), value, new LiteralList(condition, size));
+                return true;
+            }
+        }));
+        tmp.external(Pointer.getPointer(new external_callback() {
+            @Override
+            public boolean apply(int atom, int type, Pointer<?> data) {
+                observer.external(atom, ExternalType.createExternalType(type));
+                return true;
+            }
+        }));
+        tmp.assume(Pointer.getPointer(new assume_callback() {
+            @Override
+            public boolean apply(Pointer<Integer> literals, long size, Pointer<?> data) {
+                observer.assume(new LiteralList(literals, size));
+                return true;
+            }
+        }));
+        tmp.heuristic(Pointer.getPointer(new heuristic_callback() {
+            @Override
+            public boolean apply(int atom, int type, int bias, int priority, Pointer<Integer> condition, long size, Pointer<?> data) {
+                observer.heuristic(atom, HeuristicType.createHeuristicType(type), bias, priority, new LiteralList(condition, size));
+                return true;
+            }
+        }));
+        tmp.acyc_edge(Pointer.getPointer(new acyc_edge_callback() {
+            @Override
+            public boolean apply(int node_u, int node_v, Pointer<Integer> condition, long size, Pointer<?> data) {
+                observer.acycEdge(node_u, node_v, new LiteralList(condition, size));
+                return true;
+            }
+        }));
+        tmp.theory_atom(Pointer.getPointer(new theory_atom_callback() {
+            @Override
+            public boolean apply(int atom_id_or_zero, int term_id, Pointer<Integer> elements, long size, Pointer<?> data) {
+                observer.theoryAtom(atom_id_or_zero, term_id, new LiteralList(elements, size));
+                return true;
+            }
+        }));
+        tmp.theory_atom_with_guard(Pointer.getPointer(new theory_atom_with_guard_callback() {
+            @Override
+            public boolean apply(int atom_id_or_zero, int term_id, Pointer<Integer> elements, long size, int operator_id, int right_hand_side_id, Pointer<?> data) {
+                observer.theoryAtomWithGuard(atom_id_or_zero, term_id, new LiteralList(elements, size), operator_id, right_hand_side_id);
+                return true;
+            }
+        }));
+        tmp.theory_element(Pointer.getPointer(new theory_element_callback() {
+            @Override
+            public boolean apply(int element_id, Pointer<Integer> terms, long terms_size, Pointer<Integer> condition, long condition_size, Pointer<?> data) {
+                observer.theoryElement(element_id, new LiteralList(terms, terms_size), new LiteralList(condition, condition_size));
+                return true;
+            }
+        }));
+        tmp.theory_term_compound(Pointer.getPointer(new theory_term_compound_callback() {
+            @Override
+            public boolean apply(int term_id, int name_id_or_type, Pointer<Integer> arguments, long size, Pointer<?> data) {
+                observer.theoryTermCompound(term_id, name_id_or_type, new LiteralList(arguments, size));
+                return true;
+            }
+        }));
+        tmp.theory_term_number(Pointer.getPointer(new theory_term_number_callback() {
+            @Override
+            public boolean apply(int term_id, int number, Pointer<?> data) {
+                observer.theoryTermNumber(term_id, number);
+                return true;
+            }
+        }));
+        tmp.theory_term_string(Pointer.getPointer(new theory_term_string_callback() {
+            @Override
+            public boolean apply(int term_id, Pointer<Byte> name, Pointer<?> data) {
+                observer.theoryTermString(term_id, name.getCString());
+                return true;
+            }
+        }));
+        handleError(LIB.clingo_control_register_observer(control.get(), Pointer.getPointer(tmp), replace, null), "Error register observer!");
+    }
+
+    void registerPropagator(final Propagator propagator) throws ClingoException {
+        registerPropagator(propagator, false);
+    }
+
+    void registerPropagator(final Propagator propagator, boolean sequential) throws ClingoException {
+        if (propagator == null) {
+            return;
+        }
+        clingo_propagator tmp = new clingo_propagator();
+        tmp.init(Pointer.getPointer(new init_callback() {
+            @Override
+            public boolean apply(Pointer<clingo_propagate_init> init, Pointer<?> data) {
+                propagator.init(new PropagateInit(init));
+                return true;
+            }
+        }));
+        tmp.propagate(Pointer.getPointer(new propagate_callback() {
+            @Override
+            public boolean apply(Pointer<clingo_propagate_control> control, Pointer<Integer> changes, long size, Pointer<?> data) {
+                propagator.propagate(new PropagateControl(control), new Literal.LiteralList(changes, size));
+                return true;
+            }
+        }));
+        tmp.undo(Pointer.getPointer(new undo_callback() {
+            @Override
+            public boolean apply(Pointer<clingo_propagate_control> control, Pointer<Integer> changes, long size, Pointer<?> data) {
+                propagator.undo(new PropagateControl(control), new Literal.LiteralList(changes, size));
+                return true;
+            }
+        }));
+        tmp.check(Pointer.getPointer(new check_callback() {
+            @Override
+            public boolean apply(Pointer<clingo_propagate_control> control, Pointer<?> data) {
+                propagator.check(new PropagateControl(control));
+                return true;
+            }
+        }));
+        handleError(LIB.clingo_control_register_propagator(control.get(), Pointer.getPointer(tmp), null, sequential), "Error register propagator!");
+    }
+
+    public static Symbol parseTerm(String term, ClingoLogger logger, int messageLimit) throws ClingoException {
+        Pointer<Long> ret = Pointer.allocateLong();
+
+        Pointer<ClingoLibrary.clingo_logger_t> p_logger = null;
+        if (logger != null) {
+            clingo_logger_t log = new clingo_logger_t() {
+                public void apply(int code, Pointer<Byte> message, Pointer<?> data) {
+                    try {
+                        logger.warn(WarningCode.createWarningCode(code), message.getCString());
+                    } catch (Exception e) {
+                        // ignore
+                    }
+                }
+            };
+            p_logger = Pointer.getPointer(log);
+        }
+        handleError(LIB.clingo_parse_term(Pointer.pointerToCString(term), p_logger, null, messageLimit, ret), "Error parse term!");
+        return new Symbol(ret.get());
+    }
+
+    public String addString(String str) throws ClingoException {
+        Pointer<Pointer<Byte>> ret = Pointer.allocatePointer(Byte.class);
+        handleError(LIB.clingo_add_string(Pointer.pointerToCString(str), ret), "Error add the string!");
+        return ret.get().getCString();
+    }
+
+    public static void parseProgram(String program, StatementCallback cb, ClingoLogger logger, int messageLimit) throws ClingoException {
+
+        Pointer<ClingoLibrary.clingo_logger_t> p_logger = null;
+        if (logger != null) {
+            clingo_logger_t log = new clingo_logger_t() {
+                public void apply(int code, Pointer<Byte> message, Pointer<?> data) {
+                    try {
+                        logger.warn(WarningCode.createWarningCode(code), message.getCString());
+                    } catch (Exception e) {
+                        // ignore
+                    }
+                }
+            };
+            p_logger = Pointer.getPointer(log);
+        }
+
+        Pointer<clingo_ast_callback_t> p_callback = null;
+        if (cb != null) {
+            clingo_ast_callback_t call = new clingo_ast_callback_t() {
+                @Override
+                public boolean apply(Pointer<clingo_ast_statement> clingo_ast_statement_tPtr1, Pointer<?> voidPtr1) {
+                    //TODO: missing implementation
+//                    cb.callback(statement);
+                    return true;
+                }
+            };
+            p_callback = Pointer.getPointer(call);
+        }
+        handleError(LIB.clingo_parse_program(Pointer.pointerToCString(program), p_callback, null, p_logger, null, messageLimit), "Error parse program!");
     }
 
 }

@@ -19,6 +19,7 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.ClingoException;
+import org.lorislab.clingo4j.api.SpanList;
 
 /**
  *
@@ -28,6 +29,10 @@ public class Signature {
 
     private final Pointer<Long> pointer;
 
+    public Signature(Pointer<Long> pointer) {
+        this.pointer = pointer;
+    }
+    
     public Signature(String name, int arity, boolean positive) throws ClingoException {
        pointer = Pointer.allocateLong();
        handleError(LIB.clingo_signature_create(Pointer.pointerToCString(name), arity, positive, pointer), "Error creating the signature!");
@@ -87,4 +92,18 @@ public class Signature {
         return !LIB.clingo_signature_is_less_than(pointer.get(), s.pointer.get());
     }
     
+    
+    
+    public static class SignatureList extends SpanList<Signature, Long> {
+
+        public SignatureList(Pointer<Long> pointer, long size) {
+            super(pointer, size);
+        }
+
+        @Override
+        protected Signature getItem(Pointer<Long> p) {
+            return new Signature(p);
+        }
+        
+    }
 }

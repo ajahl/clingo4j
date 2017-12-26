@@ -59,11 +59,11 @@ public class ClingoInjectTermsTest {
                 }
             });
 
-            Iterator<Model> iter = control.solve();
+            Iterator<Model> iter = control.solve().iterator();
             while (iter.hasNext()) {
                 Model model = iter.next();
-                System.out.println("Model type: " + model.getType());
-                for (Symbol atom : model.getSymbols()) {
+                System.out.println("Model type: " + model.type());
+                for (Symbol atom : model.symbols()) {
                     System.out.println(atom);
                 }
             }

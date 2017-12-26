@@ -141,7 +141,7 @@ public class ASTToC {
 
     public static clingo_ast_term visitTerm(final Symbol x) {
         clingo_ast_term ret = createAstTerm(clingo_ast_term_type_symbol);
-        ret.field1().symbol(x.getPointer().get());
+        ret.field1().symbol(x.getSymbol());
         return ret;
     }
 
@@ -240,7 +240,7 @@ public class ASTToC {
 
     public static clingo_ast_theory_term visitTheoryTerm(Symbol term) {
         clingo_ast_theory_term ret = createTheoryTerm(clingo_ast_theory_term_type_symbol);
-        ret.field1().symbol(term.getPointer().get());
+        ret.field1().symbol(term.getSymbol());
         return ret;
     }
 
