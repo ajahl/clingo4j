@@ -16,51 +16,44 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_function;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_list;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_set;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_symbol;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_tuple;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_unparsed_term;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_variable;
 
 /**
  *
  * @author andrej
  */
-public enum TheoryTermSequenceType {
+public enum TheoryTermType {
 
-    TUPLE(0,"(",")", clingo_ast_theory_term_type_tuple),
-    LIST(1, "[","]", clingo_ast_theory_term_type_list),
-    SET(2, "{","}", clingo_ast_theory_term_type_set);
-
-    private final int value;
+    SYMBOL(clingo_ast_theory_term_type_symbol),
+    VARIABLE(clingo_ast_theory_term_type_variable),
+    TUPLE(clingo_ast_theory_term_type_tuple),
+    LIST(clingo_ast_theory_term_type_list),
+    SET(clingo_ast_theory_term_type_set),
+    FUNCTIONS(clingo_ast_theory_term_type_function),
+    UNPARSED_TERM(clingo_ast_theory_term_type_unparsed_term);
 
     private final clingo_ast_theory_term_type type;
-    
-    private final String left;
-    
-    private final String right;
-    
-    private TheoryTermSequenceType(int value, String left, String right, clingo_ast_theory_term_type type) {
-        this.value = value;
-        this.left = left;
-        this.right = right;
-        this.type = type;
-    }
 
-    public int getValue() {
-        return value;
+    private TheoryTermType(clingo_ast_theory_term_type type) {
+        this.type = type;
     }
 
     public clingo_ast_theory_term_type getType() {
         return type;
     }
 
-    public String getRight() {
-        return right;
+    public static TheoryTermType valueOfInt(int value) {
+        for (TheoryTermType t : TheoryTermType.values()) {
+            if (t.type.value == value) {
+                return t;
+            }
+        }
+        return null;
     }
-
-    public String getLeft() {
-        return left;
-    }
-
-    
-    
 }

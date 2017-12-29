@@ -26,8 +26,14 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class TheoryFunction implements TheoryTermData {
 
-    private String name;
-    private List<TheoryTerm> arguments;
+    private final String name;
+    
+    private final List<TheoryTerm> arguments;
+
+    public TheoryFunction(String name, List<TheoryTerm> arguments) {
+        this.name = name;
+        this.arguments = arguments;
+    }
 
     public List<TheoryTerm> getArguments() {
         return arguments;
@@ -46,7 +52,5 @@ public class TheoryFunction implements TheoryTermData {
     public String toString() {
         return "" + name + ClingoUtil.print(arguments, "(", ",", ")", !(arguments == null || arguments.isEmpty()));
     }
-    
-    
 
 }

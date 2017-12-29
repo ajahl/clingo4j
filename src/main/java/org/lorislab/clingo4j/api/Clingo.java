@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.api.ast.StatementCallback;
 import java.util.Arrays;
 import java.util.List;
 import org.bridj.BridJ;
@@ -22,7 +23,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Symbol.SymbolList;
 import org.lorislab.clingo4j.api.WeightedLiteral.WeightedLiteralList;
 import org.lorislab.clingo4j.api.ast.Literal;
-import org.lorislab.clingo4j.api.ast.Literal.LiteralList;
+import org.lorislab.clingo4j.api.ast.Literal.LiteralIntegerList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_callback_t;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_backend;
@@ -417,14 +418,14 @@ public class Clingo implements AutoCloseable {
         tmp.rule(Pointer.getPointer(new rule_callback() {
             @Override
             public boolean apply(boolean choice, Pointer<Integer> head, long head_size, Pointer<Integer> body, long body_size, Pointer<?> data) {
-                observer.rule(choice, new LiteralList(head, head_size), new LiteralList(body, body_size));
+                observer.rule(choice, new LiteralIntegerList(head, head_size), new LiteralIntegerList(body, body_size));
                 return true;
             }
         }));
         tmp.weight_rule(Pointer.getPointer(new weight_rule_callback() {
             @Override
             public boolean apply(boolean choice, Pointer<Integer> head, long head_size, int lower_bound, Pointer<clingo_weighted_literal> body, long body_size, Pointer<?> data) {
-                observer.weightRule(choice, new LiteralList(head, head_size), lower_bound, new WeightedLiteralList(body, body_size));
+                observer.weightRule(choice, new LiteralIntegerList(head, head_size), lower_bound, new WeightedLiteralList(body, body_size));
                 return true;
             }
         }));
@@ -438,7 +439,7 @@ public class Clingo implements AutoCloseable {
         tmp.project(Pointer.getPointer(new project_callback() {
             @Override
             public boolean apply(Pointer<Integer> atoms, long size, Pointer<?> data) {
-                observer.project(new LiteralList(atoms, size));
+                observer.project(new LiteralIntegerList(atoms, size));
                 return true;
             }
         }));
@@ -452,14 +453,14 @@ public class Clingo implements AutoCloseable {
         tmp.output_term(Pointer.getPointer(new output_term_callback() {
             @Override
             public boolean apply(long symbol, Pointer<Integer> condition, long size, Pointer<?> data) {
-                observer.outputTerm(new Symbol(symbol), new LiteralList(condition, size));
+                observer.outputTerm(new Symbol(symbol), new LiteralIntegerList(condition, size));
                 return true;
             }
         }));
         tmp.output_csp(Pointer.getPointer(new output_csp_callback() {
             @Override
             public boolean apply(long symbol, int value, Pointer<Integer> condition, long size, Pointer<?> data) {
-                observer.outputCsp(new Symbol(symbol), value, new LiteralList(condition, size));
+                observer.outputCsp(new Symbol(symbol), value, new LiteralIntegerList(condition, size));
                 return true;
             }
         }));
@@ -473,49 +474,49 @@ public class Clingo implements AutoCloseable {
         tmp.assume(Pointer.getPointer(new assume_callback() {
             @Override
             public boolean apply(Pointer<Integer> literals, long size, Pointer<?> data) {
-                observer.assume(new LiteralList(literals, size));
+                observer.assume(new LiteralIntegerList(literals, size));
                 return true;
             }
         }));
         tmp.heuristic(Pointer.getPointer(new heuristic_callback() {
             @Override
             public boolean apply(int atom, int type, int bias, int priority, Pointer<Integer> condition, long size, Pointer<?> data) {
-                observer.heuristic(atom, HeuristicType.createHeuristicType(type), bias, priority, new LiteralList(condition, size));
+                observer.heuristic(atom, HeuristicType.createHeuristicType(type), bias, priority, new LiteralIntegerList(condition, size));
                 return true;
             }
         }));
         tmp.acyc_edge(Pointer.getPointer(new acyc_edge_callback() {
             @Override
             public boolean apply(int node_u, int node_v, Pointer<Integer> condition, long size, Pointer<?> data) {
-                observer.acycEdge(node_u, node_v, new LiteralList(condition, size));
+                observer.acycEdge(node_u, node_v, new LiteralIntegerList(condition, size));
                 return true;
             }
         }));
         tmp.theory_atom(Pointer.getPointer(new theory_atom_callback() {
             @Override
             public boolean apply(int atom_id_or_zero, int term_id, Pointer<Integer> elements, long size, Pointer<?> data) {
-                observer.theoryAtom(atom_id_or_zero, term_id, new LiteralList(elements, size));
+                observer.theoryAtom(atom_id_or_zero, term_id, new LiteralIntegerList(elements, size));
                 return true;
             }
         }));
         tmp.theory_atom_with_guard(Pointer.getPointer(new theory_atom_with_guard_callback() {
             @Override
             public boolean apply(int atom_id_or_zero, int term_id, Pointer<Integer> elements, long size, int operator_id, int right_hand_side_id, Pointer<?> data) {
-                observer.theoryAtomWithGuard(atom_id_or_zero, term_id, new LiteralList(elements, size), operator_id, right_hand_side_id);
+                observer.theoryAtomWithGuard(atom_id_or_zero, term_id, new LiteralIntegerList(elements, size), operator_id, right_hand_side_id);
                 return true;
             }
         }));
         tmp.theory_element(Pointer.getPointer(new theory_element_callback() {
             @Override
             public boolean apply(int element_id, Pointer<Integer> terms, long terms_size, Pointer<Integer> condition, long condition_size, Pointer<?> data) {
-                observer.theoryElement(element_id, new LiteralList(terms, terms_size), new LiteralList(condition, condition_size));
+                observer.theoryElement(element_id, new LiteralIntegerList(terms, terms_size), new LiteralIntegerList(condition, condition_size));
                 return true;
             }
         }));
         tmp.theory_term_compound(Pointer.getPointer(new theory_term_compound_callback() {
             @Override
             public boolean apply(int term_id, int name_id_or_type, Pointer<Integer> arguments, long size, Pointer<?> data) {
-                observer.theoryTermCompound(term_id, name_id_or_type, new LiteralList(arguments, size));
+                observer.theoryTermCompound(term_id, name_id_or_type, new LiteralIntegerList(arguments, size));
                 return true;
             }
         }));
@@ -555,14 +556,14 @@ public class Clingo implements AutoCloseable {
         tmp.propagate(Pointer.getPointer(new propagate_callback() {
             @Override
             public boolean apply(Pointer<clingo_propagate_control> control, Pointer<Integer> changes, long size, Pointer<?> data) {
-                propagator.propagate(new PropagateControl(control), new Literal.LiteralList(changes, size));
+                propagator.propagate(new PropagateControl(control), new Literal.LiteralIntegerList(changes, size));
                 return true;
             }
         }));
         tmp.undo(Pointer.getPointer(new undo_callback() {
             @Override
             public boolean apply(Pointer<clingo_propagate_control> control, Pointer<Integer> changes, long size, Pointer<?> data) {
-                propagator.undo(new PropagateControl(control), new Literal.LiteralList(changes, size));
+                propagator.undo(new PropagateControl(control), new Literal.LiteralIntegerList(changes, size));
                 return true;
             }
         }));

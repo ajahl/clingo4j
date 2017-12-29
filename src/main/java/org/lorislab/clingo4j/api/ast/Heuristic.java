@@ -16,7 +16,9 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralList;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_heuristic;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -26,11 +28,19 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class Heuristic implements StatementData {
     
-    private Term atom;
-    private List<BodyLiteral> body;
-    private Term bias;
-    private Term priority;
-    private Term modifier;    
+    private final Term atom;
+    private final List<BodyLiteral> body;
+    private final Term bias;
+    private final Term priority;
+    private final Term modifier;    
+
+    public Heuristic(Term atom, List<BodyLiteral> body, Term bias, Term priority, Term modifier) {
+        this.atom = atom;
+        this.body = body;
+        this.bias = bias;
+        this.priority = priority;
+        this.modifier = modifier;
+    }
 
     public Term getAtom() {
         return atom;
@@ -62,6 +72,8 @@ public class Heuristic implements StatementData {
         return "#heuristic " + atom + ClingoUtil.printBody(body) + " [" + bias+ "@" + priority + "," + modifier + "]";
     }
     
-    
+    public static Heuristic convert(clingo_ast_heuristic h) {
+        return new Heuristic(Term.convTerm(h.atom()), new BodyLiteralList(h.body(), h.size()), Term.convTerm(h.bias()), Term.convTerm(h.priority()), Term.convTerm(h.modifier()));
+    }
     
 }

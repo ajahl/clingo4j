@@ -18,7 +18,9 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import java.util.Optional;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
+import org.lorislab.clingo4j.api.ast.ConditionalLiteral.ConditionalLiteralList;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
+import org.lorislab.clingo4j.api.c.clingo_ast_aggregate;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.util.ClingoUtil;
@@ -29,9 +31,15 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class Aggregate implements HeadLiteralData, BodyLiteralData {
 
-    private List<ConditionalLiteral> elements;
-    private Optional<AggregateGuard> leftGuard;
-    private Optional<AggregateGuard> rightGuard;
+    private final List<ConditionalLiteral> elements;
+    private final Optional<AggregateGuard> leftGuard;
+    private final Optional<AggregateGuard> rightGuard;
+
+    public Aggregate(List<ConditionalLiteral> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {
+        this.elements = elements;
+        this.leftGuard = leftGuard;
+        this.rightGuard = rightGuard;
+    }
 
     public List<ConditionalLiteral> getElements() {
         return elements;
@@ -59,15 +67,18 @@ public class Aggregate implements HeadLiteralData, BodyLiteralData {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if (leftGuard.isPresent()) {
-            sb.append(leftGuard.get().getTerm()).append(" ").append(leftGuard.get().getComparison()).append(" ");
+            sb.append(leftGuard.get().getTerm()).append(" ").append(leftGuard.get().getOperator()).append(" ");
         }
         sb.append("{ ");
         sb.append(ClingoUtil.print(elements, "", "; ", "", false));
         sb.append(" }");
         if (rightGuard.isPresent()) {
-            sb.append(" ").append(rightGuard.get().getComparison()).append(" ").append(rightGuard.get().getTerm());
+            sb.append(" ").append(rightGuard.get().getOperator()).append(" ").append(rightGuard.get().getTerm());
         }
         return sb.toString();
     }
 
+    public static Aggregate convert(clingo_ast_aggregate ag) {
+       return new Aggregate(new ConditionalLiteralList(ag.elements(), ag.size()), AggregateGuard.convert(ag.left_guard()), AggregateGuard.convert(ag.right_guard()));
+    }
 }

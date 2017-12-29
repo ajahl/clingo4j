@@ -17,6 +17,8 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.api.ast.CSPProduct.CSPProductList;
+import org.lorislab.clingo4j.api.c.clingo_ast_csp_sum_term;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -24,10 +26,15 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  * @author andrej
  */
 public class CSPSum {
-    
-    private Location location;
-    
-    private List<CSPProduct> terms;
+
+    private final Location location;
+
+    private final List<CSPProduct> terms;
+
+    public CSPSum(Location location, List<CSPProduct> terms) {
+        this.location = location;
+        this.terms = terms;
+    }
 
     public Location getLocation() {
         return location;
@@ -45,6 +52,8 @@ public class CSPSum {
             return ClingoUtil.print(terms, "", "$+", "", false);
         }
     }
-    
-    
+
+    public static CSPSum convCSPAdd(clingo_ast_csp_sum_term term) {
+        return new CSPSum(new Location(term.location()), new CSPProductList(term.terms(), term.size()));
+    }
 }

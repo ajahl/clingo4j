@@ -17,6 +17,7 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_show_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -26,9 +27,15 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class ShowTerm implements StatementData {
 
-    private Term term;
-    private List<BodyLiteral> body;
-    private boolean csp;
+    private final Term term;
+    private final List<BodyLiteral> body;
+    private final boolean csp;
+
+    public ShowTerm(Term term, List<BodyLiteral> body, boolean csp) {
+        this.term = term;
+        this.body = body;
+        this.csp = csp;
+    }
 
     public List<BodyLiteral> getBody() {
         return body;
@@ -52,5 +59,7 @@ public class ShowTerm implements StatementData {
         return  "#show " + (csp ? "$" : "") + term + ClingoUtil.printBody(body);
     }
     
-    
+    public static ShowTerm convert(clingo_ast_show_term t) {
+        return new ShowTerm(Term.convTerm(t.term()), new BodyLiteral.BodyLiteralList(t.body(), t.size()), t.csp());
+    }
 }

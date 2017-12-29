@@ -27,40 +27,41 @@ import org.lorislab.clingo4j.api.SpanList;
  */
 public class Signature {
 
-    private final Pointer<Long> pointer;
+    private final long pointer;
 
-    public Signature(Pointer<Long> pointer) {
+    public Signature(long pointer) {
         this.pointer = pointer;
     }
     
     public Signature(String name, int arity, boolean positive) throws ClingoException {
-       pointer = Pointer.allocateLong();
-       handleError(LIB.clingo_signature_create(Pointer.pointerToCString(name), arity, positive, pointer), "Error creating the signature!");
+       Pointer<Long> tmp = Pointer.allocateLong();
+       handleError(LIB.clingo_signature_create(Pointer.pointerToCString(name), arity, positive, tmp), "Error creating the signature!");
+       pointer = tmp.get();
     }
 
-    public Pointer<Long> getPointer() {
+    public long getPointer() {
         return pointer;
     }
 
     public String getName() {
-        Pointer<Byte> tmp = LIB.clingo_signature_name(pointer.get());
+        Pointer<Byte> tmp = LIB.clingo_signature_name(pointer);
         return tmp.getCString();
     }
 
     public int getArity() {
-        return LIB.clingo_signature_arity(pointer.get());
+        return LIB.clingo_signature_arity(pointer);
     }
 
     public boolean isPositive() {
-        return LIB.clingo_signature_is_positive(pointer.get());
+        return LIB.clingo_signature_is_positive(pointer);
     }
 
     public boolean isNegative() {
-        return LIB.clingo_signature_is_negative(pointer.get());
+        return LIB.clingo_signature_is_negative(pointer);
     }
 
     public long getHash() {
-        return LIB.clingo_signature_hash(pointer.get());
+        return LIB.clingo_signature_hash(pointer);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class Signature {
     }
 
     public boolean isEqual(Signature s) {
-        return LIB.clingo_signature_is_equal_to(pointer.get(), s.pointer.get());
+        return LIB.clingo_signature_is_equal_to(pointer, s.pointer);
     }
     
     public boolean isNotEqual(Signature s) {
@@ -77,19 +78,19 @@ public class Signature {
     }
     
     public boolean isLessThan(Signature s) {
-        return LIB.clingo_signature_is_less_than(pointer.get(), s.pointer.get());
+        return LIB.clingo_signature_is_less_than(pointer, s.pointer);
     }
     
     public boolean isLessEqualThan(Signature s) {
-        return !LIB.clingo_signature_is_less_than(s.pointer.get(), pointer.get());
+        return !LIB.clingo_signature_is_less_than(s.pointer, pointer);
     }
     
     public boolean isMoreThan(Signature s) {
-        return LIB.clingo_signature_is_less_than(s.pointer.get(), pointer.get());
+        return LIB.clingo_signature_is_less_than(s.pointer, pointer);
     }
     
     public boolean isMoreEqualThan(Signature s) {
-        return !LIB.clingo_signature_is_less_than(pointer.get(), s.pointer.get());
+        return !LIB.clingo_signature_is_less_than(pointer, s.pointer);
     }
     
     
@@ -102,7 +103,7 @@ public class Signature {
 
         @Override
         protected Signature getItem(Pointer<Long> p) {
-            return new Signature(p);
+            return new Signature(p.get());
         }
         
     }

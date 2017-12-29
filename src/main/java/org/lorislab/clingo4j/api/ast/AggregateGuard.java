@@ -15,21 +15,42 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import java.util.Optional;
+import org.bridj.Pointer;
+import org.lorislab.clingo4j.api.c.clingo_ast_aggregate_guard;
+
 /**
  *
  * @author andrej
  */
 public class AggregateGuard {
-    private ComparisonOperator comparison;
-    private Term term;    
+    
+    private final ComparisonOperator operator;
+    
+    private final Term term;    
 
-    public ComparisonOperator getComparison() {
-        return comparison;
+    public AggregateGuard(ComparisonOperator comparison, Term term) {
+        this.operator = comparison;
+        this.term = term;
+    }
+
+    
+    public ComparisonOperator getOperator() {
+        return operator;
     }
 
     public Term getTerm() {
         return term;
     }
     
+    public static Optional<AggregateGuard> convert(Pointer<clingo_ast_aggregate_guard> p)  {
+        if (p != null && p.get() != null) {
+            return Optional.of(convert(p.get()));
+        }
+        return Optional.empty();
+    }
     
+    public static AggregateGuard convert(clingo_ast_aggregate_guard g) {
+        return new AggregateGuard(ComparisonOperator.valueOfInt(g.comparison()), Term.convTerm(g.term()));
+    }
 }

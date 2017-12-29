@@ -26,9 +26,14 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class CSPLiteral implements LiteralData {
 
-    private CSPSum term;
+    private final CSPSum term;
 
-    private List<CSPGuard> guards;
+    private final List<CSPGuard> guards;
+
+    public CSPLiteral(CSPSum term, List<CSPGuard> guards) {
+        this.term = term;
+        this.guards = guards;
+    }
 
     public List<CSPGuard> getGuards() {
         return guards;

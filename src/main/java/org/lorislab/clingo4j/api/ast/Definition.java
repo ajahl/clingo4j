@@ -16,6 +16,7 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_definition;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 
 /**
@@ -24,9 +25,9 @@ import org.lorislab.clingo4j.api.c.clingo_ast_statement;
  */
 public class Definition implements StatementData {
 
-    String name;
-    Term value;
-    boolean isDefault;
+    private final String name;
+    private final Term value;
+    private final boolean isDefault;
 
     public Definition(String name, Term value, boolean isDefault) {
         this.name = name;
@@ -61,4 +62,7 @@ public class Definition implements StatementData {
         return sb.toString();
     }
     
+    public static Definition convert(clingo_ast_definition d) {
+        return new Definition(d.name().getCString(), Term.convTerm(d.value()), d.is_default());
+    }
 }

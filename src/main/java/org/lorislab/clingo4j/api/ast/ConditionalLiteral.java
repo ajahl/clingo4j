@@ -16,8 +16,11 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
+import org.lorislab.clingo4j.api.SpanList;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
+import org.lorislab.clingo4j.api.c.clingo_ast_conditional_literal;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -26,8 +29,13 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class ConditionalLiteral implements BodyLiteralData {
 
-    private Literal literal;
-    private List<Literal> condition;
+    private final Literal literal;
+    private final List<Literal> condition;
+
+    public ConditionalLiteral(Literal literal, List<Literal> condition) {
+        this.literal = literal;
+        this.condition = condition;
+    }
 
     public List<Literal> getCondition() {
         return condition;
@@ -47,6 +55,20 @@ public class ConditionalLiteral implements BodyLiteralData {
         return "" + literal + ClingoUtil.print(condition, " : ", ", ", "", true);
     }
     
-    
+    public static class ConditionalLiteralList extends SpanList<ConditionalLiteral, clingo_ast_conditional_literal> {
 
+        public ConditionalLiteralList(Pointer<clingo_ast_conditional_literal> pointer, long size) {
+            super(pointer, size);
+        }
+
+        @Override
+        protected ConditionalLiteral getItem(Pointer<clingo_ast_conditional_literal> p) {
+            return convert(p.get());
+        }
+        
+    }
+
+    public static ConditionalLiteral convert(clingo_ast_conditional_literal lit) {
+        return new ConditionalLiteral(Literal.convLiteral(lit.literal()), new Literal.LiteralList(lit.condition(), lit.size()));
+    }
 }

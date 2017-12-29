@@ -24,10 +24,15 @@ import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
  */
 public class HeadLiteral {
 
-    private Location location;
-    
+    private final Location location;
+
     //Literal, Disjunction, Aggregate, HeadAggregate, TheoryAtom   
-    private HeadLiteralData data;
+    private final HeadLiteralData data;
+
+    public HeadLiteral(Location location, HeadLiteralData data) {
+        this.location = location;
+        this.data = data;
+    }
 
     public Location getLocation() {
         return location;
@@ -50,6 +55,35 @@ public class HeadLiteral {
     public String toString() {
         return "" + data;
     }
-    
-    
+
+    public static HeadLiteral convHeadLiteral(final clingo_ast_head_literal head) {
+
+        HeadLiteralType type = HeadLiteralType.valueOfInt(head.type());
+        if (type != null) {
+            Location loc = new Location(head.location());
+            HeadLiteralData data = null;
+            switch (type) {
+                case LITERAL:
+                    data = Literal.convLiteral(head.field1().literal().get());
+                    break;
+                case DISJUNCTION:
+                    data = Disjunction.convert(head.field1().disjunction().get());
+                    break;
+                case AGGREGATE:
+                    data = Aggregate.convert(head.field1().aggregate().get());
+                    break;
+                case HEAD_AGGREGATE:
+                    data = HeadAggregate.convert(head.field1().head_aggregate().get());
+                    break;
+                case THEORY_ATOM:
+                    data = TheoryAtom.convert(head.field1().theory_atom().get());
+                    break;
+            }
+            if (data != null) {
+                return new HeadLiteral(loc, data);
+            }
+        }
+        throw new RuntimeException("cannot happen!");
+    }
+
 }

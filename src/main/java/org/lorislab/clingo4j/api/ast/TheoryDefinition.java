@@ -17,7 +17,10 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.ast.TheoryAtomDefinition.TheoryAtomDefinitionList;
+import org.lorislab.clingo4j.api.ast.TheoryTermDefinition.TheoryTermDefinitionList;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_definition;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -26,9 +29,15 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class TheoryDefinition implements StatementData {
 
-    private String name;
-    private List<TheoryTermDefinition> terms;
-    private List<TheoryAtomDefinition> atoms;
+    private final String name;
+    private final List<TheoryTermDefinition> terms;
+    private final List<TheoryAtomDefinition> atoms;
+
+    public TheoryDefinition(String name, List<TheoryTermDefinition> terms, List<TheoryAtomDefinition> atoms) {
+        this.name = name;
+        this.terms = terms;
+        this.atoms = atoms;
+    }
 
     public List<TheoryAtomDefinition> getAtoms() {
         return atoms;
@@ -82,4 +91,7 @@ public class TheoryDefinition implements StatementData {
         return sb.toString();
     }
 
+    public static TheoryDefinition convert(clingo_ast_theory_definition d) {
+        return new TheoryDefinition(d.name().getCString(), new TheoryTermDefinitionList(d.terms(), d.terms_size()), new TheoryAtomDefinitionList(d.atoms(), d.atoms_size()));
+    }
 }

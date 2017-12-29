@@ -32,11 +32,11 @@ public enum UnaryOperator {
     
     NEGATION(clingo_ast_unary_operator_negation,"~","");
             
-    private clingo_ast_unary_operator operator;
+    private final clingo_ast_unary_operator operator;
 
-    private String left;
+    private final String left;
 
-    private String right;
+    private final String right;
     
     private UnaryOperator(clingo_ast_unary_operator operator, String left, String right) {
         this.operator = operator;
@@ -60,5 +60,12 @@ public enum UnaryOperator {
         return right;
     }
     
-    
+    public static UnaryOperator valueOfInt(int value) {
+        for (UnaryOperator t : UnaryOperator.values()) {
+            if (t.operator.value == value) {
+                return t;
+            }
+        }
+        return null;
+    }
 }

@@ -55,5 +55,13 @@ public enum Sign {
     }
     
     
-
+    public static Sign valueOfInt(int value) {
+        Sign[] values = Sign.values();
+        for (int i=0; i<values.length; i++) {
+            if (values[i].sign.value == value) {
+                return values[i];
+            }
+        }
+        return null;
+    }
 }

@@ -16,7 +16,11 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
+import org.lorislab.clingo4j.api.SpanList;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term_element;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.StringList;
 
 /**
  *
@@ -24,8 +28,14 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class TheoryUnparsedTermElement {
     
-    private List<String> operators;
-    private TheoryTerm term;    
+    private final List<String> operators;
+
+    private final TheoryTerm term;    
+
+    public TheoryUnparsedTermElement(List<String> operators, TheoryTerm term) {
+        this.operators = operators;
+        this.term = term;
+    }
 
     public List<String> getOperators() {
         return operators;
@@ -40,6 +50,20 @@ public class TheoryUnparsedTermElement {
         return ClingoUtil.print(operators, " ", " ", " ", false) + term;
     }
     
+    public static TheoryUnparsedTermElement convert(clingo_ast_theory_unparsed_term_element e) {
+        return new TheoryUnparsedTermElement(new StringList(e.operators(), e.size()), TheoryTerm.convert(e.term()));
+    }
     
+    public static class TheoryUnparsedTermElementList extends SpanList<TheoryUnparsedTermElement, clingo_ast_theory_unparsed_term_element> {
+
+        public TheoryUnparsedTermElementList(Pointer<clingo_ast_theory_unparsed_term_element> pointer, long size) {
+            super(pointer, size);
+        }
+
+        @Override
+        protected TheoryUnparsedTermElement getItem(Pointer<clingo_ast_theory_unparsed_term_element> p) {
+            return convert(p.get());
+        }
         
+    }
 }

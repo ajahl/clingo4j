@@ -34,9 +34,9 @@ public enum AggregateFunction {
     MIN(clingo_ast_aggregate_function_min,"#min"),
     MAX(clingo_ast_aggregate_function_max,"#max");
             
-    private clingo_ast_aggregate_function function;
+    private final clingo_ast_aggregate_function function;
 
-    private String string;
+    private final String string;
 
     private AggregateFunction(clingo_ast_aggregate_function function, String string) {
         this.function = function;
@@ -56,4 +56,12 @@ public enum AggregateFunction {
         return string;
     }
     
+    public static AggregateFunction valueOfInt(int value) {
+        for (AggregateFunction t :  AggregateFunction.values())  {
+            if (t.function.value == value) {
+                return t;
+            }
+        }
+        return null;
+    }
 }

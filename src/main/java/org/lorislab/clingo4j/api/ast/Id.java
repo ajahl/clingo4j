@@ -15,7 +15,10 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.api.SpanList;
+import org.lorislab.clingo4j.api.c.clingo_ast_id;
 
 /**
  *
@@ -23,9 +26,9 @@ import org.lorislab.clingo4j.api.Location;
  */
 public class Id {
 
-    private Location location;
+    private final Location location;
 
-    private String id;
+    private final String id;
 
     public Id(Location location, String id) {
         this.location = location;
@@ -43,5 +46,22 @@ public class Id {
     @Override
     public String toString() {
         return id;
+    }
+    
+    public static Id convert(clingo_ast_id d) {
+        return new Id(new Location(d.location()), d.id().getCString());
+    }
+    
+    public static class IdList extends SpanList<Id, clingo_ast_id> {
+
+        public IdList(Pointer<clingo_ast_id> pointer, long size) {
+            super(pointer, size);
+        }
+
+        @Override
+        protected Id getItem(Pointer<clingo_ast_id> p) {
+            return convert(p.get());
+        }
+        
     }
 }

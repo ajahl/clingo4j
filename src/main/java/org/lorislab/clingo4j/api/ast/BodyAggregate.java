@@ -17,7 +17,9 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import java.util.Optional;
+import org.lorislab.clingo4j.api.ast.BodyAggregateElement.BodyAggregateElementList;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
+import org.lorislab.clingo4j.api.c.clingo_ast_body_aggregate;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -26,11 +28,22 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  * @author andrej
  */
 public class BodyAggregate implements BodyLiteralData {
+
+    static BodyAggregate convert(clingo_ast_body_aggregate a) {
+        return new BodyAggregate(AggregateFunction.valueOfInt(a.function()), new BodyAggregateElementList(a.elements(), a.size()), AggregateGuard.convert(a.left_guard()), AggregateGuard.convert(a.right_guard()));
+    }
  
-    private AggregateFunction function;
-    private List<BodyAggregateElement> elements;
-    private Optional<AggregateGuard> leftGuard;
-    private Optional<AggregateGuard> rightGuard;
+    private final AggregateFunction function;
+    private final List<BodyAggregateElement> elements;
+    private final Optional<AggregateGuard> leftGuard;
+    private final Optional<AggregateGuard> rightGuard;
+
+    public BodyAggregate(AggregateFunction function, List<BodyAggregateElement> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {
+        this.function = function;
+        this.elements = elements;
+        this.leftGuard = leftGuard;
+        this.rightGuard = rightGuard;
+    }
 
     public List<BodyAggregateElement> getElements() {
         return elements;
@@ -57,11 +70,11 @@ public class BodyAggregate implements BodyLiteralData {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if (leftGuard.isPresent()) {
-            sb.append(leftGuard.get().getTerm()).append(" ").append(leftGuard.get().getComparison()).append(" ");
+            sb.append(leftGuard.get().getTerm()).append(" ").append(leftGuard.get().getOperator()).append(" ");
         }
         sb.append(" { ").append(ClingoUtil.print(elements, "", "; ", "", false)).append(" }");
         if (rightGuard.isPresent()) {
-           sb.append(" ").append(rightGuard.get().getComparison()).append(" ").append(rightGuard.get().getTerm());
+           sb.append(" ").append(rightGuard.get().getOperator()).append(" ").append(rightGuard.get().getTerm());
         }
         return sb.toString();
     }

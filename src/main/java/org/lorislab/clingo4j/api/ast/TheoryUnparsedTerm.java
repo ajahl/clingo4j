@@ -26,7 +26,11 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class TheoryUnparsedTerm implements TheoryTermData {
 
-    private List<TheoryUnparsedTermElement> elements;
+    private final List<TheoryUnparsedTermElement> elements;
+
+    public TheoryUnparsedTerm(List<TheoryUnparsedTermElement> elements) {
+        this.elements = elements;
+    }
 
     public List<TheoryUnparsedTermElement> getElements() {
         return elements;

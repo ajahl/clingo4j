@@ -16,7 +16,11 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.api.SpanList;
+import org.lorislab.clingo4j.api.ast.Literal.LiteralList;
+import org.lorislab.clingo4j.api.c.clingo_ast_disjoint_element;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -25,10 +29,17 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class DisjointElement {
 
-    private Location location;
-    private List<Term> tuple;
-    private CSPSum term;
-    private List<Literal> condition;
+    private final Location location;
+    private final List<Term> tuple;
+    private final CSPSum term;
+    private final List<Literal> condition;
+
+    public DisjointElement(Location location, List<Term> tuple, CSPSum term, List<Literal> condition) {
+        this.location = location;
+        this.tuple = tuple;
+        this.term = term;
+        this.condition = condition;
+    }
 
     public List<Literal> getCondition() {
         return condition;
@@ -51,5 +62,21 @@ public class DisjointElement {
         return ClingoUtil.print(tuple, "", ",", "", false) + " : " + term + " : " + ClingoUtil.print(condition, "", ",", "", false);
     }
 
+    public static DisjointElement convert(clingo_ast_disjoint_element e) {
+        return new DisjointElement(new Location(e.location()), new Term.TermList(e.tuple(), e.tuple_size()), CSPSum.convCSPAdd(e.term()), new LiteralList(e.condition(), e.condition_size()));
+    }
+    
+    public static class DisjointElementList extends SpanList<DisjointElement, clingo_ast_disjoint_element> {
+
+        public DisjointElementList(Pointer<clingo_ast_disjoint_element> pointer, long size) {
+            super(pointer, size);
+        }
+
+        @Override
+        protected DisjointElement getItem(Pointer<clingo_ast_disjoint_element> p) {
+            return convert(p.get());
+        }
+        
+    }
     
 }

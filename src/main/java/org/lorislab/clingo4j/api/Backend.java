@@ -20,7 +20,7 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.ast.Literal;
-import org.lorislab.clingo4j.api.ast.Literal.LiteralList;
+import org.lorislab.clingo4j.api.ast.Literal.LiteralIntegerList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_backend;
 import org.lorislab.clingo4j.api.c.clingo_weighted_literal;
 import org.lorislab.clingo4j.util.ClingoUtil;
@@ -42,7 +42,7 @@ public class Backend {
     }
 
     public void rule(boolean choice, List<Integer> head, List<Integer> body) throws ClingoException {
-        LiteralList tmp = Literal.toLiteralList(body);
+        LiteralIntegerList tmp = Literal.toLiteralList(body);
         Pointer<Integer> h = ClingoUtil.createArray(head, Integer.class);
         handleError(LIB.clingo_backend_rule(pointer, choice, h, head.size(), tmp.getPointer(), tmp.size()), "Error rule to the backend!");
     }
@@ -68,17 +68,17 @@ public class Backend {
     }
 
     public void assume(List<Integer> lits) throws ClingoException {
-        LiteralList tmp = Literal.toLiteralList(lits);
+        LiteralIntegerList tmp = Literal.toLiteralList(lits);
         handleError(LIB.clingo_backend_assume(pointer, tmp.getPointer(), tmp.size()), "Error assume to the backend!");
     }
 
     public void heuristic(int atom, HeuristicType type, int bias, int priority, List<Integer> condition) throws ClingoException {
-        LiteralList tmp = Literal.toLiteralList(condition);
+        LiteralIntegerList tmp = Literal.toLiteralList(condition);
         handleError(LIB.clingo_backend_heuristic(pointer, atom, type.getValue(), bias, priority, tmp.getPointer(), tmp.size()), "Error heuristic to the backend!");
     }
 
     public void acycEdge(int node_u, int node_v, List<Integer> condition) throws ClingoException {
-        LiteralList tmp = Literal.toLiteralList(condition);
+        LiteralIntegerList tmp = Literal.toLiteralList(condition);
         handleError(LIB.clingo_backend_acyc_edge(pointer, node_u, node_v, tmp.getPointer(), tmp.size()), "Error acyc edge on the backend!");
     }
 

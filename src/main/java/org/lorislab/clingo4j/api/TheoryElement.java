@@ -21,7 +21,7 @@ import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
-import org.lorislab.clingo4j.api.ast.Literal.LiteralList;
+import org.lorislab.clingo4j.api.ast.Literal.LiteralIntegerList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
 
 /**
@@ -51,14 +51,14 @@ public class TheoryElement {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> size = Pointer.allocateSizeT();
         handleError(LIB.clingo_theory_atoms_element_tuple(atoms, id, ret, size), "Error reading theory element tuple!");
-        return new TheoryTerm.TheoryTermList(atoms, ret.get(), size.getInt());
+        return new TheoryTerm.TheoryTermAtomList(atoms, ret.get(), size.getInt());
     }
 
     public List<Integer> condition() throws ClingoException {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> size = Pointer.allocateSizeT();
         handleError(LIB.clingo_theory_atoms_element_condition(atoms, id, ret, size), "Error reading the theory elements condition!");
-        return new LiteralList(ret.get(), size.getInt());
+        return new LiteralIntegerList(ret.get(), size.getInt());
     }
 
     public int conditionId() throws ClingoException {

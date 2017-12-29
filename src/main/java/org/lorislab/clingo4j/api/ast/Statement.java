@@ -24,10 +24,10 @@ import org.lorislab.clingo4j.api.c.clingo_ast_statement;
  */
 public class Statement {
 
-    private Location location;
+    private final Location location;
 
     //Rule, Definition, ShowSignature, ShowTerm, Minimize, Script, Program, External, Edge, Heuristic, ProjectAtom, ProjectSignature, TheoryDefinition
-    private StatementData data;
+    private final StatementData data;
 
     public Statement(Location location, StatementData data) {
         this.location = location;
@@ -57,5 +57,57 @@ public class Statement {
         return "" + data;
     }
 
-    
+    public static void convStatement(clingo_ast_statement stm, StatementCallback cb) {
+
+        StatementType type = StatementType.valueOfInt(stm.type());
+        if (type != null) {
+            StatementData data = null;
+            switch (type) {
+                case RULE:
+                    data = Rule.convert(stm.field1().rule().get());
+                    break;
+                case CONST:
+                    data = Definition.convert(stm.field1().definition().get());
+                    break;
+                case SHOW_SIGNATURE:
+                    data = ShowSignature.convert(stm.field1().show_signature().get());
+                    break;
+                case SHOW_TERM:
+                    data = ShowTerm.convert(stm.field1().show_term().get());
+                    break;
+                case MINIMIZE:
+                    data = Minimize.convert(stm.field1().minimize().get());
+                    break;
+                case SCRIPT:
+                    data = Script.convert(stm.field1().script().get());
+                    break;
+                case PROGRAM:
+                    data = Program.convert(stm.field1().program().get());
+                    break;
+                case EXTERNAL:
+                    data = External.convert(stm.field1().external().get());
+                    break;
+                case EDGE:
+                    data = Edge.convert(stm.field1().edge().get());
+                    break;
+                case HEURISTIC:
+                    data = Heuristic.convert(stm.field1().heuristic().get());
+                    break;
+                case PROJECT_ATOM:
+                    data = ProjectAtom.convert(stm.field1().project_atom().get());
+                    break;
+                case PROJECT_ATOM_SIGNATURE:
+                    data = new ProjectSignature(new Signature(stm.field1().project_signature()));
+                    break;
+                case THEORY_DEFINITION:
+                    data = TheoryDefinition.convert(stm.field1().theory_definition().get());
+                    break;
+            }
+            if (data != null) {
+                cb.callback(new Statement(new Location(stm.location()), data));
+            }
+        }
+
+    }
+
 }

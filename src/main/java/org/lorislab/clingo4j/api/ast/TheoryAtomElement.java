@@ -16,6 +16,12 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
+import org.lorislab.clingo4j.api.SpanList;
+import org.lorislab.clingo4j.api.TheoryTerm.TheoryTermAtomList;
+import org.lorislab.clingo4j.api.ast.Literal.LiteralList;
+import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermList;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom_element;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -24,8 +30,13 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class TheoryAtomElement {
 
-    private List<TheoryTerm> tuple;
-    private List<Literal> condition;
+    private final List<TheoryTerm> tuple;
+    private final List<Literal> condition;
+
+    public TheoryAtomElement(List<TheoryTerm> tuple, List<Literal> condition) {
+        this.tuple = tuple;
+        this.condition = condition;
+    }
 
     public List<Literal> getCondition() {
         return condition;
@@ -40,5 +51,20 @@ public class TheoryAtomElement {
         return ClingoUtil.print(tuple, "", ",", "", false) + " : " + ClingoUtil.print(condition, "", ",", "", false);
     }
 
+    public static TheoryAtomElement convert(clingo_ast_theory_atom_element e) {
+        return new TheoryAtomElement(new TheoryTermList(e.tuple(), e.tuple_size()), new LiteralList(e.condition(), e.condition_size()));
+    }
     
+    public static class TheoryAtomElementList extends SpanList<TheoryAtomElement, clingo_ast_theory_atom_element> {
+
+        public TheoryAtomElementList(Pointer<clingo_ast_theory_atom_element> pointer, long size) {
+            super(pointer, size);
+        }
+
+        @Override
+        protected TheoryAtomElement getItem(Pointer<clingo_ast_theory_atom_element> p) {
+            return convert(p.get());
+        }
+        
+    }
 }

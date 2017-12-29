@@ -18,6 +18,7 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_array;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -26,8 +27,14 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class TheoryTermSequence implements TheoryTermData {
 
-    private TheoryTermSequenceType type;
-    private List<TheoryTerm> terms;
+    private final TheoryTermSequenceType type;
+    
+    private final List<TheoryTerm> terms;
+
+    public TheoryTermSequence(TheoryTermSequenceType type, List<TheoryTerm> terms) {
+        this.type = type;
+        this.terms = terms;
+    }
 
     public List<TheoryTerm> getTerms() {
         return terms;

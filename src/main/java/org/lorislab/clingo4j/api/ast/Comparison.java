@@ -24,12 +24,18 @@ import org.lorislab.clingo4j.api.c.clingo_ast_literal;
  */
 public class Comparison implements LiteralData {
 
-    private ComparisonOperator comparison;
-    private Term left;
-    private Term right;
+    private final ComparisonOperator operator;
+    private final Term left;
+    private final Term right;
 
-    public ComparisonOperator getComparison() {
-        return comparison;
+    public Comparison(ComparisonOperator comparison, Term left, Term right) {
+        this.operator = comparison;
+        this.left = left;
+        this.right = right;
+    }
+    
+    public ComparisonOperator getOperator() {
+        return operator;
     }
 
     public Term getLeft() {
@@ -47,7 +53,7 @@ public class Comparison implements LiteralData {
 
     @Override
     public String toString() {
-        return "" + left + comparison  + right;
+        return "" + left + operator  + right;
     }
     
     

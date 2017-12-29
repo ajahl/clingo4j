@@ -16,7 +16,9 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.lorislab.clingo4j.api.ast.Id.IdList;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_program;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -26,8 +28,13 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class Program implements StatementData {
 
-    private String name;
-    private List<Id> parameters;
+    private final String name;
+    private final List<Id> parameters;
+
+    public Program(String name, List<Id> parameters) {
+        this.name = name;
+        this.parameters = parameters;
+    }
 
     public String getName() {
         return name;
@@ -47,5 +54,7 @@ public class Program implements StatementData {
         return "#program " + name + ClingoUtil.print(parameters, "(", ",", ")", false) + ".";
     }
 
-    
+    public static Program convert(clingo_ast_program p) {
+        return new Program(p.name().getCString(), new IdList(p.parameters(), p.size()));
+    }
 }

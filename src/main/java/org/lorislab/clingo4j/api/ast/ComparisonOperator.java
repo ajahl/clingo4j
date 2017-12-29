@@ -41,9 +41,9 @@ public enum ComparisonOperator {
 
     EQUAL(clingo_ast_comparison_operator_equal, "=");
     
-    private clingo_ast_comparison_operator operator;
+    private final clingo_ast_comparison_operator operator;
 
-    private String string;
+    private final String string;
     
     private ComparisonOperator(clingo_ast_comparison_operator operator, String string) {
         this.operator = operator;
@@ -61,6 +61,15 @@ public enum ComparisonOperator {
     @Override
     public String toString() {
         return string;
+    }
+    
+    public static ComparisonOperator valueOfInt(int value) {
+        for (ComparisonOperator t : ComparisonOperator.values()) {
+            if (t.operator.value == value) {
+                return t;
+            }
+        }
+        return null;
     }
     
 }

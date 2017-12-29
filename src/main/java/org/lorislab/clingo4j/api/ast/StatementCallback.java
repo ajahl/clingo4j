@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lorislab.clingo4j.api;
-
-import org.lorislab.clingo4j.api.ast.Statement;
+package org.lorislab.clingo4j.api.ast;
 
 /**
  *

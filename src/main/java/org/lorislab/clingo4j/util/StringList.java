@@ -13,36 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lorislab.clingo4j.api.ast;
+package org.lorislab.clingo4j.util;
 
-import org.lorislab.clingo4j.api.ast.Statement.StatementData;
-import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.bridj.Pointer;
+import org.lorislab.clingo4j.api.SpanList;
 
 /**
  *
  * @author andrej
  */
-public class ProjectSignature implements StatementData {
-    
-    private final Signature signature;
+public class StringList extends SpanList<String, Pointer<Byte>>{
 
-    public ProjectSignature(Signature signature) {
-        this.signature = signature;
-    }
-    
-    public Signature getSignature() {
-        return signature;
+    public StringList(Pointer<Pointer<Byte>> pointer, long size) {
+        super(pointer, size);
     }
 
     @Override
-    public clingo_ast_statement createStatment() {
-        return ASTToC.visit(this);
+    protected String getItem(Pointer<Pointer<Byte>> p) {
+        return p.getCString();
     }
-
-    @Override
-    public String toString() {
-        return "#project " + signature + ".";
-    }
-    
     
 }

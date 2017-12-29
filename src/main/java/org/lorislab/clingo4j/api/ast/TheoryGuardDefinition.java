@@ -16,16 +16,25 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import java.util.Optional;
+import org.bridj.Pointer;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_guard_definition;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.StringList;
 
 /**
  *
  * @author andrej
  */
 public class TheoryGuardDefinition {
-    
-    private String term;
-    private List<String> operators;    
+
+    private final String term;
+    private final List<String> operators;
+
+    public TheoryGuardDefinition(String term, List<String> operators) {
+        this.term = term;
+        this.operators = operators;
+    }
 
     public List<String> getOperators() {
         return operators;
@@ -39,6 +48,16 @@ public class TheoryGuardDefinition {
     public String toString() {
         return "{ " + ClingoUtil.print(operators, "", ", ", "", false) + " }, " + term;
     }
-    
-    
+
+    public static Optional<TheoryGuardDefinition> convert(Pointer<clingo_ast_theory_guard_definition> p) {
+        if (p != null && p.get() != null) {
+            return Optional.of(convert(p.get()));
+        }
+        return Optional.empty();
+    }
+
+    public static TheoryGuardDefinition convert(clingo_ast_theory_guard_definition d) {
+        return new TheoryGuardDefinition(d.term().getCString(), new StringList(d.operators(), d.size()));
+    }
+
 }

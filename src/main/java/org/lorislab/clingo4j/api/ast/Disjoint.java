@@ -18,6 +18,7 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
+import org.lorislab.clingo4j.api.c.clingo_ast_disjoint;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -26,7 +27,11 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class Disjoint implements BodyLiteralData {
     
-    private List<DisjointElement> elements;
+    private final List<DisjointElement> elements;
+
+    public Disjoint(List<DisjointElement> elements) {
+        this.elements = elements;
+    }
 
     public List<DisjointElement> getElements() {
         return elements;
@@ -42,6 +47,8 @@ public class Disjoint implements BodyLiteralData {
         return "#disjoint { " + ClingoUtil.print(elements, "", "; ", "", false) + " }";
     }
     
-    
+    public static Disjoint convert(clingo_ast_disjoint d)  {
+        return new Disjoint(new DisjointElement.DisjointElementList(d.elements(), d.size()));
+    }
     
 }

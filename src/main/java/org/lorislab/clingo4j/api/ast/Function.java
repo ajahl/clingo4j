@@ -26,11 +26,17 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class Function implements TermData {
  
-    private String name;
+    private final String name;
     
-    private List<Term> arguments;
+    private final List<Term> arguments;
     
-    private boolean external;
+    private final boolean external;
+
+    public Function(String name, List<Term> arguments, boolean external) {
+        this.name = name;
+        this.arguments = arguments;
+        this.external = external;
+    }
 
     public List<Term> getArguments() {
         return arguments;

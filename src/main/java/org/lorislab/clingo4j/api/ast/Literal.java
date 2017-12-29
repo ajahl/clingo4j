@@ -22,6 +22,8 @@ import org.lorislab.clingo4j.api.SpanList;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
+import org.lorislab.clingo4j.api.c.clingo_ast_comparison;
+import org.lorislab.clingo4j.api.c.clingo_ast_csp_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.util.ClingoUtil;
@@ -31,12 +33,18 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  * @author andrej
  */
 public class Literal implements BodyLiteralData, HeadLiteralData {
-    
+
     private Location location;
     private Sign sign;
-    
+
     //Boolean, Term, Comparison, CSPLiteral
     private LiteralData data;
+
+    public Literal(Location location, Sign sign, LiteralData data) {
+        this.location = location;
+        this.sign = sign;
+        this.data = data;
+    }
 
     public Location getLocation() {
         return location;
@@ -54,7 +62,7 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
     public clingo_ast_body_literal createBodyLiteral() {
         return ASTToC.visitBodyLiteral(this);
     }
-    
+
     public clingo_ast_literal createLiteral() {
         return ASTToC.convLiteral(this);
     }
@@ -63,36 +71,36 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
     public clingo_ast_head_literal createHeadLiteral() {
         return ASTToC.visitHeadLiteral(this);
     }
-    
+
     public interface LiteralData {
-        
+
         public clingo_ast_literal createLiteral();
-        
+
     }
 
     @Override
     public String toString() {
         return "" + sign + data;
     }
-    
-    public static LiteralList toLiteralList(List<Integer> list) {
+
+    public static LiteralIntegerList toLiteralList(List<Integer> list) {
         if (list == null) {
             return null;
         }
-        if (list instanceof LiteralList) {
-            return (LiteralList) list;
+        if (list instanceof LiteralIntegerList) {
+            return (LiteralIntegerList) list;
         }
         if (list.isEmpty()) {
             return null;
         }
         int size = ClingoUtil.arraySize(list);
         Pointer<Integer> tmp = ClingoUtil.createArray(list, Integer.class);
-        return new LiteralList(tmp, size);
+        return new LiteralIntegerList(tmp, size);
     }
-    
-    public static class LiteralList extends SpanList<Integer, Integer> {
 
-        public LiteralList(Pointer<Integer> pointer, long size) {
+    public static class LiteralIntegerList extends SpanList<Integer, Integer> {
+
+        public LiteralIntegerList(Pointer<Integer> pointer, long size) {
             super(pointer, size);
         }
 
@@ -101,6 +109,46 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
             return p.getInt();
         }
 
-    }    
+    }
     
+    public static class LiteralList extends SpanList<Literal, clingo_ast_literal> {
+
+        public LiteralList(Pointer<clingo_ast_literal> pointer, long size) {
+            super(pointer, size);
+        }
+
+        @Override
+        protected Literal getItem(Pointer<clingo_ast_literal> p) {
+            return convLiteral(p.get());
+        }
+        
+    }
+
+    public static Literal convLiteral(clingo_ast_literal lit) {
+
+        LiteralType type = LiteralType.valueOfInt(lit.type());
+        if (type != null) {
+            LiteralData data = null;
+            switch (type) {
+                case BOOLEAN:
+                    data = new Boolean(lit.field1().boolean$());
+                    break;
+                case SYMBOLIC:
+                    data = Term.convTerm(lit.field1().symbol());
+                    break;
+                case COMPARISON:
+                    clingo_ast_comparison com = lit.field1().comparison().get();
+                    data = new Comparison(ComparisonOperator.valueOfInt(com.comparison()), Term.convTerm(com.left()), Term.convTerm(com.right()));
+                    break;
+                case CSP:
+                    clingo_ast_csp_literal csp = lit.field1().csp_literal().get();
+                    data = new CSPLiteral(CSPSum.convCSPAdd(csp.term()), new CSPGuard.CSPGuardList(csp.guards(), csp.size()));
+                    break;
+            }
+            return new Literal(new Location(lit.location()), Sign.valueOfInt(lit.sign()), data);
+        }
+
+        throw new RuntimeException("cannot happen!");
+    }
+
 }

@@ -24,9 +24,14 @@ import org.lorislab.clingo4j.api.c.clingo_ast_term;
  */
 public class Interval implements TermData {
 
-    private Term left;
+    private final Term left;
     
-    private Term right;
+    private final Term right;
+
+    public Interval(Term left, Term right) {
+        this.left = left;
+        this.right = right;
+    }
 
     public Term getLeft() {
         return left;

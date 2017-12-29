@@ -17,6 +17,7 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
+import org.lorislab.clingo4j.api.c.clingo_ast_disjunction;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -26,7 +27,11 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class Disjunction implements HeadLiteralData {
     
-    private List<ConditionalLiteral> elements;
+    private final List<ConditionalLiteral> elements;
+
+    public Disjunction(List<ConditionalLiteral> elements) {
+        this.elements = elements;
+    }
 
     public List<ConditionalLiteral> getElements() {
         return elements;
@@ -42,5 +47,7 @@ public class Disjunction implements HeadLiteralData {
         return ClingoUtil.print(elements, "", "; ", "", false);
     }
     
-    
+    public static Disjunction convert(clingo_ast_disjunction dis) {
+        return new Disjunction(new ConditionalLiteral.ConditionalLiteralList(dis.elements(), dis.size()));
+    }
 }

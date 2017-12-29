@@ -24,9 +24,14 @@ import org.lorislab.clingo4j.api.c.clingo_ast_term;
  */
 public class UnaryOperation implements TermData {
     
-    private UnaryOperator unaryOperator;
+    private final UnaryOperator unaryOperator;
     
-    private Term argument;
+    private final Term argument;
+
+    public UnaryOperation(UnaryOperator unaryOperator, Term argument) {
+        this.unaryOperator = unaryOperator;
+        this.argument = argument;
+    }
 
     public UnaryOperator getUnaryOperator() {
         return unaryOperator;

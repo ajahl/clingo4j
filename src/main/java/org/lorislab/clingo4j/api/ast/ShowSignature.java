@@ -16,6 +16,7 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_show_signature;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 
 /**
@@ -24,9 +25,14 @@ import org.lorislab.clingo4j.api.c.clingo_ast_statement;
  */
 public class ShowSignature implements StatementData {
 
-    private Signature signature;
-    private boolean csp;
+    private final Signature signature;
+    private final boolean csp;
 
+    public ShowSignature(Signature signature, boolean csp) {
+        this.signature = signature;
+        this.csp = csp;
+    }
+    
     public Signature getSignature() {
         return signature;
     }
@@ -45,4 +51,7 @@ public class ShowSignature implements StatementData {
         return "#show " + (csp ? "$" : "") + signature + ".";
     }
     
+    public static ShowSignature convert(clingo_ast_show_signature s) {
+        return new ShowSignature(new Signature(s.signature()), s.csp());
+    }
 }

@@ -17,6 +17,7 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_rule;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -26,8 +27,13 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class Rule implements StatementData {
 
-    private HeadLiteral head;
-    private List<BodyLiteral> body;
+    private final HeadLiteral head;
+    private final List<BodyLiteral> body;
+
+    public Rule(HeadLiteral head, List<BodyLiteral> body) {
+        this.head = head;
+        this.body = body;
+    }
 
     public List<BodyLiteral> getBody() {
         return body;
@@ -47,5 +53,7 @@ public class Rule implements StatementData {
         return "" + head + ClingoUtil.printBody(body, " :- ");
     }
 
-    
+    public static Rule convert(clingo_ast_rule r) {
+        return new Rule(HeadLiteral.convHeadLiteral(r.head()), new BodyLiteral.BodyLiteralList(r.body(), r.size()));
+    }
 }

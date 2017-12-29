@@ -16,7 +16,10 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.Optional;
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.api.SpanList;
+import org.lorislab.clingo4j.api.c.clingo_ast_csp_product_term;
 
 /**
  *
@@ -24,9 +27,15 @@ import org.lorislab.clingo4j.api.Location;
  */
 public class CSPProduct {
 
-    private Location location;
-    private Term coefficient;
-    private Optional<Term> variable;
+    private final Location location;
+    private final Term coefficient;
+    private final Optional<Term> variable;
+
+    public CSPProduct(Location location, Term coefficient, Optional<Term> variable) {
+        this.location = location;
+        this.coefficient = coefficient;
+        this.variable = variable;
+    }
 
     public Term getCoefficient() {
         return coefficient;
@@ -48,4 +57,24 @@ public class CSPProduct {
         return "" + coefficient;
     }
 
+    public static class CSPProductList extends SpanList<CSPProduct, clingo_ast_csp_product_term> {
+
+        public CSPProductList(Pointer<clingo_ast_csp_product_term> pointer, long size) {
+            super(pointer, size);
+        }
+        
+        @Override
+        protected CSPProduct getItem(Pointer<clingo_ast_csp_product_term> p) {
+            return CSPProduct.convert(p.get());
+        }
+        
+    }
+    
+    public static CSPProduct convert(clingo_ast_csp_product_term term) {
+        Term t = null;
+        if (term.variable() != null && term.variable().get() != null) {
+            t = Term.convTerm(term.variable());
+        }
+        return new CSPProduct(new Location(term.location()), Term.convTerm(term.coefficient()), Optional.ofNullable(t));
+    }
 }

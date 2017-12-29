@@ -15,18 +15,27 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.bridj.Pointer;
+import org.lorislab.clingo4j.api.SpanList;
+import org.lorislab.clingo4j.api.c.clingo_ast_csp_guard;
+
 /**
  *
  * @author andrej
  */
 public class CSPGuard {
-    
-    private ComparisonOperator comparison;
-    
-    private CSPSum term;    
 
-    public ComparisonOperator getComparison() {
-        return comparison;
+    private final ComparisonOperator operator;
+
+    private final CSPSum term;
+
+    public CSPGuard(ComparisonOperator operator, CSPSum term) {
+        this.operator = operator;
+        this.term = term;
+    }
+    
+    public ComparisonOperator getOperator() {
+        return operator;
     }
 
     public CSPSum getTerm() {
@@ -35,8 +44,22 @@ public class CSPGuard {
 
     @Override
     public String toString() {
-        return "$" + comparison + term;
+        return "$" + operator + term;
     }
-        
+
+    public static class CSPGuardList extends SpanList<CSPGuard, clingo_ast_csp_guard> {
+
+        public CSPGuardList(Pointer<clingo_ast_csp_guard> pointer, long size) {
+            super(pointer, size);
+        }
+
+        @Override
+        protected CSPGuard getItem(Pointer<clingo_ast_csp_guard> p) {
+            return  convert(p.get());
+        }
+    }
     
+    public static CSPGuard convert(clingo_ast_csp_guard csp) {
+        return new CSPGuard(ComparisonOperator.valueOfInt(csp.comparison()), CSPSum.convCSPAdd(csp.term()));
+    }
 }

@@ -16,6 +16,9 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
+import org.lorislab.clingo4j.api.SpanList;
+import org.lorislab.clingo4j.api.c.clingo_ast_body_aggregate_element;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -24,8 +27,13 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class BodyAggregateElement {
     
-    private List<Term> tuple;
-    private List<Literal> condition;    
+    private final List<Term> tuple;
+    private final List<Literal> condition;    
+
+    public BodyAggregateElement(List<Term> tuple, List<Literal> condition) {
+        this.tuple = tuple;
+        this.condition = condition;
+    }
 
     public List<Literal> getCondition() {
         return condition;
@@ -40,6 +48,21 @@ public class BodyAggregateElement {
         return ClingoUtil.print(tuple, "", ",", "", false) + " : " + ClingoUtil.print(condition, "", ", ", "", false);
     }
     
+    public static BodyAggregateElement convert(clingo_ast_body_aggregate_element e) {
+        return new BodyAggregateElement(new Term.TermList(e.tuple(), e.tuple_size()), new Literal.LiteralList(e.condition(), e.condition_size()));
+    }
     
+    public static class BodyAggregateElementList extends SpanList<BodyAggregateElement, clingo_ast_body_aggregate_element> {
+
+        public BodyAggregateElementList(Pointer<clingo_ast_body_aggregate_element> pointer, long size) {
+            super(pointer, size);
+        }
+
+        @Override
+        protected BodyAggregateElement getItem(Pointer<clingo_ast_body_aggregate_element> p) {
+            return convert(p.get());
+        }
+        
+    }
     
 }

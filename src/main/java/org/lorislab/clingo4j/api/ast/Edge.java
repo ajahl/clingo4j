@@ -17,6 +17,7 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_edge;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -26,9 +27,15 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class Edge implements StatementData {
 
-    private Term u;
-    private Term v;
-    private List<BodyLiteral> body;
+    private final Term u;
+    private final Term v;
+    private final List<BodyLiteral> body;
+
+    public Edge(Term u, Term v, List<BodyLiteral> body) {
+        this.u = u;
+        this.v = v;
+        this.body = body;
+    }
 
     public List<BodyLiteral> getBody() {
         return body;
@@ -52,6 +59,8 @@ public class Edge implements StatementData {
         return "#edge (" + u + "," + v + ")" + ClingoUtil.printBody(body);
     }
 
-    
+    public static Edge convert(clingo_ast_edge e) {
+        return new Edge(Term.convTerm(e.u()), Term.convTerm(e.v()), new BodyLiteral.BodyLiteralList(e.body(), e.size()));
+    }
     
 }

@@ -21,6 +21,7 @@ import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -29,9 +30,15 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class TheoryAtom  implements HeadLiteralData, BodyLiteralData {
     
-    private Term term;
-    private List<TheoryAtomElement> elements;
-    private Optional<TheoryGuard> guard;
+    private final Term term;
+    private final List<TheoryAtomElement> elements;
+    private final Optional<TheoryGuard> guard;
+
+    public TheoryAtom(Term term, List<TheoryAtomElement> elements, Optional<TheoryGuard> guard) {
+        this.term = term;
+        this.elements = elements;
+        this.guard = guard;
+    }
 
     public List<TheoryAtomElement> getElements() {
         return elements;
@@ -64,5 +71,8 @@ public class TheoryAtom  implements HeadLiteralData, BodyLiteralData {
         }
         return sb.toString();
     }
-    
+        
+    public static TheoryAtom convert(clingo_ast_theory_atom a) {
+        return new TheoryAtom(Term.convTerm(a.term()), new TheoryAtomElement.TheoryAtomElementList(a.elements(), a.size()), TheoryGuard.convert(a.guard()));
+    }
 }

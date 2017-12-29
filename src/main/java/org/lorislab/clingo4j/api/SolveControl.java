@@ -21,7 +21,7 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.ast.Literal;
-import org.lorislab.clingo4j.api.ast.Literal.LiteralList;
+import org.lorislab.clingo4j.api.ast.Literal.LiteralIntegerList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_control;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbolic_atoms;
 
@@ -70,7 +70,7 @@ public void addSymbolicLiterallause(List<SymbolicLiteral> clause) throws ClingoE
 }
 
     public void addClause(List<Integer> clause) throws ClingoException {
-        LiteralList tmp = Literal.toLiteralList(clause);
+        LiteralIntegerList tmp = Literal.toLiteralList(clause);
         if (clause != null) {
             handleError(LIB.clingo_solve_control_add_clause(pointer, tmp.getPointer(), tmp.size()), "Error solve control add clause");
         }

@@ -50,4 +50,12 @@ public enum ScriptType {
         return string;
     }
 
+    public static ScriptType valueOfInt(int value) {
+        for (ScriptType t : ScriptType.values()) {
+            if (t.type.value == value) {
+                return t;
+            }
+        }
+        return null;
+    }
 }

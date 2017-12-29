@@ -24,11 +24,17 @@ import org.lorislab.clingo4j.api.c.clingo_ast_term;
  */
 public class BinaryOperation implements TermData {
     
-    private BinaryOperator operator;
+    private final BinaryOperator operator;
     
-    private Term left;
+    private final Term left;
     
-    private Term right;
+    private final Term right;
+
+    public BinaryOperation(BinaryOperator operator, Term left, Term right) {
+        this.operator = operator;
+        this.left = left;
+        this.right = right;
+    }
 
     public BinaryOperator getOperator() {
         return operator;

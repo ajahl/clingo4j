@@ -69,5 +69,12 @@ public enum BinaryOperator {
         return string;
     }
 
-    
+    public static BinaryOperator valueOfInt(int value) {
+        for (BinaryOperator t : BinaryOperator.values()) {
+            if (t.operator.value == value) {
+                return t;
+            }
+        }
+        return null;
+    }
 }

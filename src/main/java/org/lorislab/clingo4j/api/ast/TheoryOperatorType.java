@@ -51,5 +51,13 @@ public enum TheoryOperatorType {
         return string;
     }
     
+    public static TheoryOperatorType valueOfInt(int value) {
+        for (TheoryOperatorType t : TheoryOperatorType.values()) {
+            if (t.type.value == value) {
+                return t;
+            }
+        }
+        return null;
+    }
     
 }

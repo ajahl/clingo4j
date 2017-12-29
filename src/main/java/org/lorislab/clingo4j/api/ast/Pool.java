@@ -26,7 +26,11 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class Pool implements TermData {
 
-    private List<Term> arguments;
+    private final List<Term> arguments;
+
+    public Pool(List<Term> arguments) {
+        this.arguments = arguments;
+    }
 
     public List<Term> getArguments() {
         return arguments;

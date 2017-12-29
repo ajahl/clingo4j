@@ -17,6 +17,7 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_minimize;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -26,10 +27,17 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class Minimize implements StatementData {
 
-    private Term weight;
-    private Term priority;
-    private List<Term> tuple;
-    private List<BodyLiteral> body;
+    private final Term weight;
+    private final Term priority;
+    private final List<Term> tuple;
+    private final List<BodyLiteral> body;
+
+    public Minimize(Term weight, Term priority, List<Term> tuple, List<BodyLiteral> body) {
+        this.weight = weight;
+        this.priority = priority;
+        this.tuple = tuple;
+        this.body = body;
+    }
 
     public List<BodyLiteral> getBody() {
         return body;
@@ -57,7 +65,9 @@ public class Minimize implements StatementData {
         return ClingoUtil.printBody(body, ":~ ") + " [" + weight + "@" + priority + ClingoUtil.print(tuple, ",", ",", "", false) + "]";
     }
     
-    
+    public static Minimize convert(clingo_ast_minimize m) {
+        return new Minimize(Term.convTerm(m.weight()), Term.convTerm(m.priority()), new  Term.TermList(m.tuple(), m.tuple_size()), new BodyLiteral.BodyLiteralList(m.body(), m.body_size()));
+    }
     
 
 }

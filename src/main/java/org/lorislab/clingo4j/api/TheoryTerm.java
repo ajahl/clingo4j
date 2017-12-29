@@ -68,14 +68,14 @@ public class TheoryTerm {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> n = Pointer.allocateSizeT();
         handleError(LIB.clingo_theory_atoms_term_arguments(atoms, id, ret, n), "Error reading the theory teram arguments!");
-        return new TheoryTermList(atoms, ret.get(), id);
+        return new TheoryTermAtomList(atoms, ret.get(), id);
     }
 
-    public static class TheoryTermList extends SpanList<TheoryTerm, Integer> {
+    public static class TheoryTermAtomList extends SpanList<TheoryTerm, Integer> {
 
-        private Pointer<clingo_theory_atoms> atoms;
+        private final Pointer<clingo_theory_atoms> atoms;
 
-        public TheoryTermList(Pointer<clingo_theory_atoms> atoms, Pointer<Integer> pointer, long size) {
+        public TheoryTermAtomList(Pointer<clingo_theory_atoms> atoms, Pointer<Integer> pointer, long size) {
             super(pointer, size);
             this.atoms = atoms;
         }

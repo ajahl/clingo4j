@@ -78,7 +78,7 @@ public class SymbolicAtoms implements Iterable<SymbolicAtom> {
 
         Pointer<Long> s = null;
         if (signature != null) {
-            s = signature.getPointer();
+            s = Pointer.pointerToLong(signature.getPointer());
         }
         Pointer<Long> iter = Pointer.allocateLong();
         handleError(LIB.clingo_symbolic_atoms_begin(pointer, s, iter), "Error reading the symbolic atoms iterator begin!");

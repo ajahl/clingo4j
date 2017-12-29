@@ -26,7 +26,11 @@ import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
  */
 public class Variable implements TermData, TheoryTermData {
     
-    private String name;
+    private final String name;
+
+    public Variable(String name) {
+        this.name = name;
+    }
 
     public String getName() {
         return name;

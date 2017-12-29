@@ -286,7 +286,7 @@ public class ASTToC {
 
     static clingo_ast_csp_guard convCSPGuard(CSPGuard x) {
         clingo_ast_csp_guard ret = new clingo_ast_csp_guard();
-        ret.comparison(x.getComparison().getValue());
+        ret.comparison(x.getOperator().getValue());
         ret.term(convCSPAdd(x.getTerm()));
         return ret;
     }
@@ -312,7 +312,7 @@ public class ASTToC {
 
     static clingo_ast_literal visit(Comparison x) {
         clingo_ast_comparison com = new clingo_ast_comparison();
-        com.comparison(x.getComparison().getValue());
+        com.comparison(x.getOperator().getValue());
         com.left(convTerm(x.getLeft()));
         com.right(convTerm(x.getRight()));
         clingo_ast_literal ret = createLiteral(clingo_ast_literal_type_comparison);
@@ -340,7 +340,7 @@ public class ASTToC {
         Pointer<clingo_ast_aggregate_guard> result = null;
         if (guard.isPresent()) {
             clingo_ast_aggregate_guard g = new clingo_ast_aggregate_guard();
-            g.comparison(guard.get().getComparison().getValue());
+            g.comparison(guard.get().getOperator().getValue());
             g.term(convTerm(guard.get().getTerm()));
             result = Pointer.getPointer(g);
         }
@@ -598,7 +598,7 @@ public class ASTToC {
     static clingo_ast_statement visit(ShowSignature x) {
         clingo_ast_show_signature signature = new clingo_ast_show_signature();
         signature.csp(x.isCsp());
-        signature.signature(x.getSignature().getPointer().get());
+        signature.signature(x.getSignature().getPointer());
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_show_signature);
         ret.field1().show_signature(Pointer.getPointer(signature));
         return ret;
@@ -693,7 +693,7 @@ public class ASTToC {
 
     static clingo_ast_statement visit(ProjectSignature x) {
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_project_atom_signature);
-        ret.field1().project_signature(x.getSignature().getPointer().get());
+        ret.field1().project_signature(x.getSignature().getPointer());
         return ret;
     }
 

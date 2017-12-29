@@ -15,7 +15,10 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
+import org.lorislab.clingo4j.api.SpanList;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_operator_definition;
 
 /**
  *
@@ -23,10 +26,17 @@ import org.lorislab.clingo4j.api.Location;
  */
 public class TheoryOperatorDefinition {
  
-    private Location location;
-    private String name;
-    private int priority;
-    private TheoryOperatorType type;
+    private final Location location;
+    private final String name;
+    private final int priority;
+    private final TheoryOperatorType type;
+
+    public TheoryOperatorDefinition(Location location, String name, int priority, TheoryOperatorType type) {
+        this.location = location;
+        this.name = name;
+        this.priority = priority;
+        this.type = type;
+    }
 
     public Location getLocation() {
         return location;
@@ -49,4 +59,20 @@ public class TheoryOperatorDefinition {
         return name + " : " + priority + ", " + type;
     }
     
+    public static TheoryOperatorDefinition convert(clingo_ast_theory_operator_definition d) {
+        return new TheoryOperatorDefinition(new Location(d.location()), d.name().getCString(), d.priority(), TheoryOperatorType.valueOfInt(d.type()));
+    }
+    
+    public static class TheoryOperatorDefinitionList extends SpanList<TheoryOperatorDefinition, clingo_ast_theory_operator_definition> {
+
+        public TheoryOperatorDefinitionList(Pointer<clingo_ast_theory_operator_definition> pointer, long size) {
+            super(pointer, size);
+        }
+
+        @Override
+        protected TheoryOperatorDefinition getItem(Pointer<clingo_ast_theory_operator_definition> p) {
+            return convert(p.get());
+        }
+    
+    }
 }

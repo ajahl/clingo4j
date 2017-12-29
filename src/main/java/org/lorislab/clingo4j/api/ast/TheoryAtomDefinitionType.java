@@ -54,4 +54,12 @@ public enum TheoryAtomDefinitionType {
         return string;
     }
 
+    public static TheoryAtomDefinitionType valueOfInt(int value) {
+        for (TheoryAtomDefinitionType t : TheoryAtomDefinitionType.values()) {
+            if (t.type.value == value) {
+                return t;
+            }
+        }
+        return null;
+    }
 }

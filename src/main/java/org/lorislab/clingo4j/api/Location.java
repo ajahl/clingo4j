@@ -24,6 +24,10 @@ import org.lorislab.clingo4j.api.c.clingo_location;
  */
 public class Location extends clingo_location {
 
+    public Location(clingo_location loc) {
+        super(Pointer.getPointer(loc));
+    }
+    
     public Location(Pointer<clingo_location> location) {
         super(location);
     }

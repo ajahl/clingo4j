@@ -17,6 +17,7 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_external;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -26,8 +27,13 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class External implements StatementData {
 
-    private Term atom;
-    private List<BodyLiteral> body;
+    private final Term atom;
+    private final List<BodyLiteral> body;
+
+    public External(Term atom, List<BodyLiteral> body) {
+        this.atom = atom;
+        this.body = body;
+    }
 
     public Term getAtom() {
         return atom;
@@ -47,6 +53,8 @@ public class External implements StatementData {
         return "#external " + atom + ClingoUtil.printBody(body);
     }
     
-    
+    public static External convert(clingo_ast_external e) {
+        return new External(Term.convTerm(e.atom()), new BodyLiteral.BodyLiteralList(e.body(), e.size()));
+    }
     
 }
