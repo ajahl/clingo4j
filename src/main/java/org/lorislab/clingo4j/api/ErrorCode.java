@@ -51,7 +51,6 @@ public enum ErrorCode {
         return this.name() + "[" + getValue() + "]";
     }
     
-    
     public static final ErrorCode createErrorCode(int value) {
         ErrorCode r = null;
         ErrorCode[] values = ErrorCode.values();
