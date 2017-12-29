@@ -24,6 +24,7 @@ import org.lorislab.clingo4j.api.Symbol.SymbolList;
 import org.lorislab.clingo4j.api.WeightedLiteral.WeightedLiteralList;
 import org.lorislab.clingo4j.api.ast.Literal;
 import org.lorislab.clingo4j.api.ast.Literal.LiteralIntegerList;
+import org.lorislab.clingo4j.api.ast.Statement;
 import org.lorislab.clingo4j.api.c.ClingoLibrary;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_callback_t;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_backend;
@@ -623,9 +624,11 @@ public class Clingo implements AutoCloseable {
         if (cb != null) {
             clingo_ast_callback_t call = new clingo_ast_callback_t() {
                 @Override
-                public boolean apply(Pointer<clingo_ast_statement> clingo_ast_statement_tPtr1, Pointer<?> voidPtr1) {
-                    //TODO: missing implementation
-//                    cb.callback(statement);
+                public boolean apply(Pointer<clingo_ast_statement> stm, Pointer<?> voidPtr1) {
+                    Statement st = Statement.convStatement(stm.get());
+                    if (st != null) {
+                        cb.callback(st);
+                    }
                     return true;
                 }
             };

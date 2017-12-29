@@ -57,7 +57,7 @@ public class Statement {
         return "" + data;
     }
 
-    public static void convStatement(clingo_ast_statement stm, StatementCallback cb) {
+    public static Statement convStatement(clingo_ast_statement stm) {
 
         StatementType type = StatementType.valueOfInt(stm.type());
         if (type != null) {
@@ -104,10 +104,10 @@ public class Statement {
                     break;
             }
             if (data != null) {
-                cb.callback(new Statement(new Location(stm.location()), data));
+                return new Statement(new Location(stm.location()), data);
             }
         }
-
+        return null;
     }
 
 }
