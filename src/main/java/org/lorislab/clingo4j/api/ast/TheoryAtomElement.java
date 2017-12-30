@@ -32,6 +32,10 @@ public class TheoryAtomElement {
     private final List<TheoryTerm> tuple;
     private final List<Literal> condition;
 
+    public TheoryAtomElement(clingo_ast_theory_atom_element e) {
+        this(new TheoryTermList(e.tuple(), e.tuple_size()), new LiteralList(e.condition(), e.condition_size()));
+    }
+    
     public TheoryAtomElement(List<TheoryTerm> tuple, List<Literal> condition) {
         this.tuple = tuple;
         this.condition = condition;
@@ -50,10 +54,6 @@ public class TheoryAtomElement {
         return ClingoUtil.print(tuple, "", ",", "", false) + " : " + ClingoUtil.print(condition, "", ",", "", false);
     }
 
-    public static TheoryAtomElement convert(clingo_ast_theory_atom_element e) {
-        return new TheoryAtomElement(new TheoryTermList(e.tuple(), e.tuple_size()), new LiteralList(e.condition(), e.condition_size()));
-    }
-    
     public static class TheoryAtomElementList extends SpanList<TheoryAtomElement, clingo_ast_theory_atom_element> {
 
         public TheoryAtomElementList(Pointer<clingo_ast_theory_atom_element> pointer, long size) {
@@ -62,7 +62,7 @@ public class TheoryAtomElement {
 
         @Override
         protected TheoryAtomElement getItem(Pointer<clingo_ast_theory_atom_element> p) {
-            return convert(p.get());
+            return new TheoryAtomElement(p.get());
         }
         
     }

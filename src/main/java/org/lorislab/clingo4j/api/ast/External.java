@@ -30,6 +30,10 @@ public class External implements StatementData {
     private final Term atom;
     private final List<BodyLiteral> body;
 
+    public External(clingo_ast_external e) {
+        this(new Term(e.atom()), new BodyLiteral.BodyLiteralList(e.body(), e.size()));
+    }
+    
     public External(Term atom, List<BodyLiteral> body) {
         this.atom = atom;
         this.body = body;
@@ -51,10 +55,6 @@ public class External implements StatementData {
     @Override
     public String toString() {
         return "#external " + atom + ClingoUtil.printBody(body);
-    }
-    
-    public static External convert(clingo_ast_external e) {
-        return new External(Term.convTerm(e.atom()), new BodyLiteral.BodyLiteralList(e.body(), e.size()));
     }
     
 }

@@ -29,15 +29,15 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class BodyAggregate implements BodyLiteralData {
 
-    static BodyAggregate convert(clingo_ast_body_aggregate a) {
-        return new BodyAggregate(AggregateFunction.valueOfInt(a.function()), new BodyAggregateElementList(a.elements(), a.size()), AggregateGuard.convert(a.left_guard()), AggregateGuard.convert(a.right_guard()));
-    }
- 
     private final AggregateFunction function;
     private final List<BodyAggregateElement> elements;
     private final Optional<AggregateGuard> leftGuard;
     private final Optional<AggregateGuard> rightGuard;
 
+    public BodyAggregate(clingo_ast_body_aggregate a) {
+        this(AggregateFunction.valueOfInt(a.function()), new BodyAggregateElementList(a.elements(), a.size()), AggregateGuard.convert(a.left_guard()), AggregateGuard.convert(a.right_guard()));
+    }
+    
     public BodyAggregate(AggregateFunction function, List<BodyAggregateElement> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {
         this.function = function;
         this.elements = elements;

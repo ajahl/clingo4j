@@ -33,7 +33,11 @@ public class TheoryAtom  implements HeadLiteralData, BodyLiteralData {
     private final Term term;
     private final List<TheoryAtomElement> elements;
     private final Optional<TheoryGuard> guard;
-
+        
+    public TheoryAtom(clingo_ast_theory_atom a) {
+        this(new Term(a.term()), new TheoryAtomElement.TheoryAtomElementList(a.elements(), a.size()), TheoryGuard.convert(a.guard()));
+    }
+    
     public TheoryAtom(Term term, List<TheoryAtomElement> elements, Optional<TheoryGuard> guard) {
         this.term = term;
         this.elements = elements;
@@ -71,8 +75,5 @@ public class TheoryAtom  implements HeadLiteralData, BodyLiteralData {
         }
         return sb.toString();
     }
-        
-    public static TheoryAtom convert(clingo_ast_theory_atom a) {
-        return new TheoryAtom(Term.convTerm(a.term()), new TheoryAtomElement.TheoryAtomElementList(a.elements(), a.size()), TheoryGuard.convert(a.guard()));
-    }
+
 }

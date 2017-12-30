@@ -625,9 +625,8 @@ public class Clingo implements AutoCloseable {
             clingo_ast_callback_t call = new clingo_ast_callback_t() {
                 @Override
                 public boolean apply(Pointer<clingo_ast_statement> stm, Pointer<?> voidPtr1) {
-                    Statement st = Statement.convStatement(stm.get());
-                    if (st != null) {
-                        cb.callback(st);
+                    if (stm != null && stm.get() != null) {
+                        cb.callback(new Statement(stm.get()));
                     }
                     return true;
                 }

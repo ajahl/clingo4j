@@ -29,11 +29,14 @@ public class AggregateGuard {
     
     private final Term term;    
 
+    public AggregateGuard(clingo_ast_aggregate_guard g) {
+        this(ComparisonOperator.valueOfInt(g.comparison()), new Term(g.term()));
+    }
+    
     public AggregateGuard(ComparisonOperator comparison, Term term) {
         this.operator = comparison;
         this.term = term;
     }
-
     
     public ComparisonOperator getOperator() {
         return operator;
@@ -45,12 +48,9 @@ public class AggregateGuard {
     
     public static Optional<AggregateGuard> convert(Pointer<clingo_ast_aggregate_guard> p)  {
         if (p != null && p.get() != null) {
-            return Optional.of(convert(p.get()));
+            return Optional.of(new AggregateGuard(p.get()));
         }
         return Optional.empty();
     }
     
-    public static AggregateGuard convert(clingo_ast_aggregate_guard g) {
-        return new AggregateGuard(ComparisonOperator.valueOfInt(g.comparison()), Term.convTerm(g.term()));
-    }
 }

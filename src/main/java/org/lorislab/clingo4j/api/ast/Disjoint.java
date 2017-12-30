@@ -29,6 +29,10 @@ public class Disjoint implements BodyLiteralData {
     
     private final List<DisjointElement> elements;
 
+    public Disjoint(clingo_ast_disjoint d)  {
+        this(new DisjointElement.DisjointElementList(d.elements(), d.size()));
+    }
+        
     public Disjoint(List<DisjointElement> elements) {
         this.elements = elements;
     }
@@ -45,10 +49,6 @@ public class Disjoint implements BodyLiteralData {
     @Override
     public String toString() {
         return "#disjoint { " + ClingoUtil.print(elements, "", "; ", "", false) + " }";
-    }
-    
-    public static Disjoint convert(clingo_ast_disjoint d)  {
-        return new Disjoint(new DisjointElement.DisjointElementList(d.elements(), d.size()));
     }
     
 }

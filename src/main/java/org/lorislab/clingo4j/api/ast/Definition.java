@@ -29,6 +29,10 @@ public class Definition implements StatementData {
     private final Term value;
     private final boolean isDefault;
 
+    public Definition(clingo_ast_definition d) {
+        this(d.name().getCString(), new Term(d.value()), d.is_default());
+    }
+    
     public Definition(String name, Term value, boolean isDefault) {
         this.name = name;
         this.value = value;
@@ -62,7 +66,4 @@ public class Definition implements StatementData {
         return sb.toString();
     }
     
-    public static Definition convert(clingo_ast_definition d) {
-        return new Definition(d.name().getCString(), Term.convTerm(d.value()), d.is_default());
-    }
 }

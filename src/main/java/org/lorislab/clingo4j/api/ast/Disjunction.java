@@ -29,6 +29,10 @@ public class Disjunction implements HeadLiteralData {
     
     private final List<ConditionalLiteral> elements;
 
+    public Disjunction(clingo_ast_disjunction dis) {
+        this(new ConditionalLiteral.ConditionalLiteralList(dis.elements(), dis.size()));
+    }
+    
     public Disjunction(List<ConditionalLiteral> elements) {
         this.elements = elements;
     }
@@ -47,7 +51,4 @@ public class Disjunction implements HeadLiteralData {
         return ClingoUtil.print(elements, "", "; ", "", false);
     }
     
-    public static Disjunction convert(clingo_ast_disjunction dis) {
-        return new Disjunction(new ConditionalLiteral.ConditionalLiteralList(dis.elements(), dis.size()));
-    }
 }

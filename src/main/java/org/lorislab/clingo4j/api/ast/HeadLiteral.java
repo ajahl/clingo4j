@@ -29,6 +29,34 @@ public class HeadLiteral {
     //Literal, Disjunction, Aggregate, HeadAggregate, TheoryAtom   
     private final HeadLiteralData data;
 
+    public HeadLiteral(final clingo_ast_head_literal head) {
+        HeadLiteralType type = HeadLiteralType.valueOfInt(head.type());
+        if (type != null) {
+            location = new Location(head.location());
+            switch (type) {
+                case LITERAL:
+                    data = new Literal(head.field1().literal().get());
+                    break;
+                case DISJUNCTION:
+                    data = new Disjunction(head.field1().disjunction().get());
+                    break;
+                case AGGREGATE:
+                    data = new Aggregate(head.field1().aggregate().get());
+                    break;
+                case HEAD_AGGREGATE:
+                    data = new HeadAggregate(head.field1().head_aggregate().get());
+                    break;
+                case THEORY_ATOM:
+                    data = new TheoryAtom(head.field1().theory_atom().get());
+                    break;
+                default:
+                    data = null;
+            }
+        } else {
+            throw new RuntimeException("cannot happen!");
+        }
+    }
+
     public HeadLiteral(Location location, HeadLiteralData data) {
         this.location = location;
         this.data = data;
@@ -54,36 +82,6 @@ public class HeadLiteral {
     @Override
     public String toString() {
         return "" + data;
-    }
-
-    public static HeadLiteral convHeadLiteral(final clingo_ast_head_literal head) {
-
-        HeadLiteralType type = HeadLiteralType.valueOfInt(head.type());
-        if (type != null) {
-            Location loc = new Location(head.location());
-            HeadLiteralData data = null;
-            switch (type) {
-                case LITERAL:
-                    data = Literal.convLiteral(head.field1().literal().get());
-                    break;
-                case DISJUNCTION:
-                    data = Disjunction.convert(head.field1().disjunction().get());
-                    break;
-                case AGGREGATE:
-                    data = Aggregate.convert(head.field1().aggregate().get());
-                    break;
-                case HEAD_AGGREGATE:
-                    data = HeadAggregate.convert(head.field1().head_aggregate().get());
-                    break;
-                case THEORY_ATOM:
-                    data = TheoryAtom.convert(head.field1().theory_atom().get());
-                    break;
-            }
-            if (data != null) {
-                return new HeadLiteral(loc, data);
-            }
-        }
-        throw new RuntimeException("cannot happen!");
     }
 
 }

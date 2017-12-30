@@ -26,9 +26,13 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  * @author andrej
  */
 public class BodyAggregateElement {
-    
+
     private final List<Term> tuple;
-    private final List<Literal> condition;    
+    private final List<Literal> condition;
+
+    public BodyAggregateElement(clingo_ast_body_aggregate_element e) {
+        this(new Term.TermList(e.tuple(), e.tuple_size()), new Literal.LiteralList(e.condition(), e.condition_size()));
+    }
 
     public BodyAggregateElement(List<Term> tuple, List<Literal> condition) {
         this.tuple = tuple;
@@ -47,11 +51,7 @@ public class BodyAggregateElement {
     public String toString() {
         return ClingoUtil.print(tuple, "", ",", "", false) + " : " + ClingoUtil.print(condition, "", ", ", "", false);
     }
-    
-    public static BodyAggregateElement convert(clingo_ast_body_aggregate_element e) {
-        return new BodyAggregateElement(new Term.TermList(e.tuple(), e.tuple_size()), new Literal.LiteralList(e.condition(), e.condition_size()));
-    }
-    
+
     public static class BodyAggregateElementList extends SpanList<BodyAggregateElement, clingo_ast_body_aggregate_element> {
 
         public BodyAggregateElementList(Pointer<clingo_ast_body_aggregate_element> pointer, long size) {
@@ -60,9 +60,9 @@ public class BodyAggregateElement {
 
         @Override
         protected BodyAggregateElement getItem(Pointer<clingo_ast_body_aggregate_element> p) {
-            return convert(p.get());
+            return new BodyAggregateElement(p.get());
         }
-        
+
     }
-    
+
 }

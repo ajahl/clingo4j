@@ -33,6 +33,10 @@ public class TheoryTermDefinition {
     private final String name;
     private final List<TheoryOperatorDefinition> operators;    
 
+    public TheoryTermDefinition(clingo_ast_theory_term_definition d) {
+        this(new Location(d.location()), d.name().getCString(), new TheoryOperatorDefinitionList(d.operators(), d.size()));
+    }
+    
     public TheoryTermDefinition(Location location, String name, List<TheoryOperatorDefinition> operators) {
         this.location = location;
         this.name = name;
@@ -56,10 +60,6 @@ public class TheoryTermDefinition {
         return name + " {\n" + ClingoUtil.print(operators, "  ", ";\n", "\n", true) + "}";
     }
     
-    public static TheoryTermDefinition convert(clingo_ast_theory_term_definition d) {
-        return new TheoryTermDefinition(new Location(d.location()), d.name().getCString(), new TheoryOperatorDefinitionList(d.operators(), d.size()));
-    }
-    
     public static class TheoryTermDefinitionList extends SpanList<TheoryTermDefinition, clingo_ast_theory_term_definition> {
 
         public TheoryTermDefinitionList(Pointer<clingo_ast_theory_term_definition> pointer, long size) {
@@ -68,7 +68,7 @@ public class TheoryTermDefinition {
 
         @Override
         protected TheoryTermDefinition getItem(Pointer<clingo_ast_theory_term_definition> p) {
-            return convert(p.get());
+            return new TheoryTermDefinition(p.get());
         }
         
     }

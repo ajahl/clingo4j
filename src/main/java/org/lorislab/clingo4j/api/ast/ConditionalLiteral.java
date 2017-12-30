@@ -32,6 +32,10 @@ public class ConditionalLiteral implements BodyLiteralData {
     private final Literal literal;
     private final List<Literal> condition;
 
+    public ConditionalLiteral(clingo_ast_conditional_literal lit) {
+        this(new Literal(lit.literal()), new Literal.LiteralList(lit.condition(), lit.size()));
+    }
+    
     public ConditionalLiteral(Literal literal, List<Literal> condition) {
         this.literal = literal;
         this.condition = condition;
@@ -63,12 +67,9 @@ public class ConditionalLiteral implements BodyLiteralData {
 
         @Override
         protected ConditionalLiteral getItem(Pointer<clingo_ast_conditional_literal> p) {
-            return convert(p.get());
+            return new ConditionalLiteral(p.get());
         }
         
     }
 
-    public static ConditionalLiteral convert(clingo_ast_conditional_literal lit) {
-        return new ConditionalLiteral(Literal.convLiteral(lit.literal()), new Literal.LiteralList(lit.condition(), lit.size()));
-    }
 }

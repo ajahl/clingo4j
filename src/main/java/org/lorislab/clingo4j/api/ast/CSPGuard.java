@@ -29,6 +29,10 @@ public class CSPGuard {
 
     private final CSPSum term;
 
+    public CSPGuard(clingo_ast_csp_guard csp) {
+        this(ComparisonOperator.valueOfInt(csp.comparison()), new CSPSum(csp.term()));
+    }
+    
     public CSPGuard(ComparisonOperator operator, CSPSum term) {
         this.operator = operator;
         this.term = term;
@@ -55,11 +59,8 @@ public class CSPGuard {
 
         @Override
         protected CSPGuard getItem(Pointer<clingo_ast_csp_guard> p) {
-            return  convert(p.get());
+            return new CSPGuard(p.get());
         }
     }
     
-    public static CSPGuard convert(clingo_ast_csp_guard csp) {
-        return new CSPGuard(ComparisonOperator.valueOfInt(csp.comparison()), CSPSum.convCSPAdd(csp.term()));
-    }
 }

@@ -33,6 +33,10 @@ public class HeadAggregate implements HeadLiteralData {
     private final Optional<AggregateGuard> leftGuard;
     private final Optional<AggregateGuard> rightGuard;
 
+    public HeadAggregate(clingo_ast_head_aggregate h) {
+        this(AggregateFunction.valueOfInt(h.function()), new HeadAggregateElement.HeadAggregateElementList(h.elements(), h.size()), AggregateGuard.convert(h.left_guard()), AggregateGuard.convert(h.right_guard()));
+    }
+    
     public HeadAggregate(AggregateFunction function, List<HeadAggregateElement> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {
         this.function = function;
         this.elements = elements;
@@ -74,7 +78,4 @@ public class HeadAggregate implements HeadLiteralData {
         return sb.toString();
     }
     
-    public static HeadAggregate convert(clingo_ast_head_aggregate h) {
-        return new HeadAggregate(AggregateFunction.valueOfInt(h.function()), new HeadAggregateElement.HeadAggregateElementList(h.elements(), h.size()), AggregateGuard.convert(h.left_guard()), AggregateGuard.convert(h.right_guard()));
-    }
 }

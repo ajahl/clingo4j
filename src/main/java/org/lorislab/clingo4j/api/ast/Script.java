@@ -28,6 +28,10 @@ public class Script implements StatementData {
     private final ScriptType type;
     private final String code;
 
+    public Script(clingo_ast_script s) {
+        this(ScriptType.valueOfInt(s.type()), s.code().getCString());
+    }
+    
     public Script(ScriptType type, String code) {
         this.type = type;
         this.code = code;
@@ -55,7 +59,4 @@ public class Script implements StatementData {
         return tmp;
     }
     
-    public static Script convert(clingo_ast_script s) {
-        return new Script(ScriptType.valueOfInt(s.type()), s.code().getCString());
-    }
 }

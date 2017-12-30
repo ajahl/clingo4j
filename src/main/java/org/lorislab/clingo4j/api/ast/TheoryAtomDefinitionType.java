@@ -32,9 +32,9 @@ public enum TheoryAtomDefinitionType {
     ANY(clingo_ast_theory_atom_definition_type_any, "any"),
     DIRECTIVE(clingo_ast_theory_atom_definition_type_directive, "directive");
 
-    private clingo_ast_theory_atom_definition_type type;
+    private final clingo_ast_theory_atom_definition_type type;
 
-    private String string;
+    private final String string;
 
     private TheoryAtomDefinitionType(clingo_ast_theory_atom_definition_type type, String string) {
         this.type = type;

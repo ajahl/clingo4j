@@ -31,6 +31,10 @@ public class CSPSum {
 
     private final List<CSPProduct> terms;
 
+    public CSPSum(clingo_ast_csp_sum_term term) {
+        this(new Location(term.location()), new CSPProductList(term.terms(), term.size()));
+    }
+
     public CSPSum(Location location, List<CSPProduct> terms) {
         this.location = location;
         this.terms = terms;
@@ -53,7 +57,4 @@ public class CSPSum {
         }
     }
 
-    public static CSPSum convCSPAdd(clingo_ast_csp_sum_term term) {
-        return new CSPSum(new Location(term.location()), new CSPProductList(term.terms(), term.size()));
-    }
 }

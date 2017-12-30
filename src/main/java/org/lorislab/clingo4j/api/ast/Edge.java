@@ -31,6 +31,10 @@ public class Edge implements StatementData {
     private final Term v;
     private final List<BodyLiteral> body;
 
+    public Edge(clingo_ast_edge e) {
+        this(new Term(e.u()), new Term(e.v()), new BodyLiteral.BodyLiteralList(e.body(), e.size()));
+    }
+        
     public Edge(Term u, Term v, List<BodyLiteral> body) {
         this.u = u;
         this.v = v;
@@ -59,8 +63,4 @@ public class Edge implements StatementData {
         return "#edge (" + u + "," + v + ")" + ClingoUtil.printBody(body);
     }
 
-    public static Edge convert(clingo_ast_edge e) {
-        return new Edge(Term.convTerm(e.u()), Term.convTerm(e.v()), new BodyLiteral.BodyLiteralList(e.body(), e.size()));
-    }
-    
 }

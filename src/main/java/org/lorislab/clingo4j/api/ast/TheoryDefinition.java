@@ -33,6 +33,10 @@ public class TheoryDefinition implements StatementData {
     private final List<TheoryTermDefinition> terms;
     private final List<TheoryAtomDefinition> atoms;
 
+    public TheoryDefinition(clingo_ast_theory_definition d) {
+        this(d.name().getCString(), new TheoryTermDefinitionList(d.terms(), d.terms_size()), new TheoryAtomDefinitionList(d.atoms(), d.atoms_size()));
+    }
+    
     public TheoryDefinition(String name, List<TheoryTermDefinition> terms, List<TheoryAtomDefinition> atoms) {
         this.name = name;
         this.terms = terms;
@@ -91,7 +95,4 @@ public class TheoryDefinition implements StatementData {
         return sb.toString();
     }
 
-    public static TheoryDefinition convert(clingo_ast_theory_definition d) {
-        return new TheoryDefinition(d.name().getCString(), new TheoryTermDefinitionList(d.terms(), d.terms_size()), new TheoryAtomDefinitionList(d.atoms(), d.atoms_size()));
-    }
 }

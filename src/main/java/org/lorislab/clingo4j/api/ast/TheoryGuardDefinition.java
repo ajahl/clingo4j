@@ -31,6 +31,10 @@ public class TheoryGuardDefinition {
     private final String term;
     private final List<String> operators;
 
+    public TheoryGuardDefinition(clingo_ast_theory_guard_definition d) {
+        this(d.term().getCString(), new StringList(d.operators(), d.size()));
+    }
+    
     public TheoryGuardDefinition(String term, List<String> operators) {
         this.term = term;
         this.operators = operators;
@@ -51,13 +55,9 @@ public class TheoryGuardDefinition {
 
     public static Optional<TheoryGuardDefinition> convert(Pointer<clingo_ast_theory_guard_definition> p) {
         if (p != null && p.get() != null) {
-            return Optional.of(convert(p.get()));
+            return Optional.of(new TheoryGuardDefinition(p.get()));
         }
         return Optional.empty();
-    }
-
-    public static TheoryGuardDefinition convert(clingo_ast_theory_guard_definition d) {
-        return new TheoryGuardDefinition(d.term().getCString(), new StringList(d.operators(), d.size()));
     }
 
 }

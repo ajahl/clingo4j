@@ -34,6 +34,10 @@ public class TheoryAtomDefinition {
     private final String elements;
     private final Optional<TheoryGuardDefinition> guard;    
 
+    public TheoryAtomDefinition(clingo_ast_theory_atom_definition d) {
+        this(new Location(d.location()), TheoryAtomDefinitionType.valueOfInt(d.type()), d.name().getCString(), d.arity(), d.elements().getCString(), TheoryGuardDefinition.convert(d.guard()));
+    }
+    
     public TheoryAtomDefinition(Location location, TheoryAtomDefinitionType type, String name, int arity, String elements, Optional<TheoryGuardDefinition> guard) {
         this.location = location;
         this.type = type;
@@ -78,10 +82,6 @@ public class TheoryAtomDefinition {
         return sb.toString();
     }
     
-    public static TheoryAtomDefinition convert(clingo_ast_theory_atom_definition d) {
-        return new TheoryAtomDefinition(new Location(d.location()), TheoryAtomDefinitionType.valueOfInt(d.type()), d.name().getCString(), d.arity(), d.elements().getCString(), TheoryGuardDefinition.convert(d.guard()));
-    }
-    
     public static class TheoryAtomDefinitionList extends SpanList<TheoryAtomDefinition, clingo_ast_theory_atom_definition> {
 
         public TheoryAtomDefinitionList(Pointer<clingo_ast_theory_atom_definition> pointer, long size) {
@@ -90,7 +90,7 @@ public class TheoryAtomDefinition {
 
         @Override
         protected TheoryAtomDefinition getItem(Pointer<clingo_ast_theory_atom_definition> p) {
-            return convert(p.get());
+            return new TheoryAtomDefinition(p.get());
         }
         
     }

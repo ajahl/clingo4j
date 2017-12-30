@@ -66,13 +66,11 @@ public enum StatementType {
     }
     
     public static StatementType valueOfInt(int value) {
-        StatementType r = null;
-        StatementType[] values = StatementType.values();
-        for (int i=0; i<values.length && r == null; i++) {
-            if (values[i].getValue() == value) {
-                r = values[i];
+        for(StatementType t : StatementType.values()) {
+            if (t.type.value == value) {
+                return t;
             }
         }
-        return r;
+        return null;
     }
 }

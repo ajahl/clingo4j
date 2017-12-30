@@ -31,6 +31,10 @@ public class TheoryOperatorDefinition {
     private final int priority;
     private final TheoryOperatorType type;
 
+    public TheoryOperatorDefinition(clingo_ast_theory_operator_definition d) {
+        this(new Location(d.location()), d.name().getCString(), d.priority(), TheoryOperatorType.valueOfInt(d.type()));
+    }
+    
     public TheoryOperatorDefinition(Location location, String name, int priority, TheoryOperatorType type) {
         this.location = location;
         this.name = name;
@@ -59,10 +63,6 @@ public class TheoryOperatorDefinition {
         return name + " : " + priority + ", " + type;
     }
     
-    public static TheoryOperatorDefinition convert(clingo_ast_theory_operator_definition d) {
-        return new TheoryOperatorDefinition(new Location(d.location()), d.name().getCString(), d.priority(), TheoryOperatorType.valueOfInt(d.type()));
-    }
-    
     public static class TheoryOperatorDefinitionList extends SpanList<TheoryOperatorDefinition, clingo_ast_theory_operator_definition> {
 
         public TheoryOperatorDefinitionList(Pointer<clingo_ast_theory_operator_definition> pointer, long size) {
@@ -71,7 +71,7 @@ public class TheoryOperatorDefinition {
 
         @Override
         protected TheoryOperatorDefinition getItem(Pointer<clingo_ast_theory_operator_definition> p) {
-            return convert(p.get());
+            return new TheoryOperatorDefinition(p.get());
         }
     
     }

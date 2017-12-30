@@ -29,6 +29,10 @@ public class TheoryGuard {
     
     private final TheoryTerm term;    
 
+    public TheoryGuard(clingo_ast_theory_guard g) {
+        this(g.operator_name().getCString(), new TheoryTerm(g.term()));
+    }
+    
     public TheoryGuard(String operatorName, TheoryTerm term) {
         this.operatorName = operatorName;
         this.term = term;
@@ -49,12 +53,9 @@ public class TheoryGuard {
     
    public static Optional<TheoryGuard> convert(Pointer<clingo_ast_theory_guard> p)  {
         if (p != null && p.get() != null) {
-            return Optional.of(convert(p.get()));
+            return Optional.of(new TheoryGuard(p.get()));
         }
         return Optional.empty();
     }
     
-    public static TheoryGuard convert(clingo_ast_theory_guard g) {
-        return new TheoryGuard(g.operator_name().getCString(), TheoryTerm.convert(g.term()));
-    }
 }

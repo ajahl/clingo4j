@@ -38,7 +38,35 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
     private final Sign sign;
 
     //Boolean, Term, Comparison, CSPLiteral
-    private LiteralData data;
+    private final LiteralData data;
+
+    public Literal(clingo_ast_literal lit) {
+        LiteralType type = LiteralType.valueOfInt(lit.type());
+        if (type != null) {
+            switch (type) {
+                case BOOLEAN:
+                    data = new Boolean(lit.field1().boolean$());
+                    break;
+                case SYMBOLIC:
+                    data = new Term(lit.field1().symbol().get());
+                    break;
+                case COMPARISON:
+                    clingo_ast_comparison com = lit.field1().comparison().get();
+                    data = new Comparison(ComparisonOperator.valueOfInt(com.comparison()), new Term(com.left()), new Term(com.right()));
+                    break;
+                case CSP:
+                    clingo_ast_csp_literal csp = lit.field1().csp_literal().get();
+                    data = new CSPLiteral(new CSPSum(csp.term()), new CSPGuard.CSPGuardList(csp.guards(), csp.size()));
+                    break;
+                default:
+                    data = null;
+            }
+            location = new Location(lit.location());
+            sign = Sign.valueOfInt(lit.sign());
+        } else {
+            throw new  RuntimeException("cannot happen");
+        }
+    }
 
     public Literal(Location location, Sign sign, LiteralData data) {
         this.location = location;
@@ -110,7 +138,7 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
         }
 
     }
-    
+
     public static class LiteralList extends SpanList<Literal, clingo_ast_literal> {
 
         public LiteralList(Pointer<clingo_ast_literal> pointer, long size) {
@@ -119,36 +147,9 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
 
         @Override
         protected Literal getItem(Pointer<clingo_ast_literal> p) {
-            return convLiteral(p.get());
-        }
-        
-    }
-
-    public static Literal convLiteral(clingo_ast_literal lit) {
-
-        LiteralType type = LiteralType.valueOfInt(lit.type());
-        if (type != null) {
-            LiteralData data = null;
-            switch (type) {
-                case BOOLEAN:
-                    data = new Boolean(lit.field1().boolean$());
-                    break;
-                case SYMBOLIC:
-                    data = Term.convTerm(lit.field1().symbol());
-                    break;
-                case COMPARISON:
-                    clingo_ast_comparison com = lit.field1().comparison().get();
-                    data = new Comparison(ComparisonOperator.valueOfInt(com.comparison()), Term.convTerm(com.left()), Term.convTerm(com.right()));
-                    break;
-                case CSP:
-                    clingo_ast_csp_literal csp = lit.field1().csp_literal().get();
-                    data = new CSPLiteral(CSPSum.convCSPAdd(csp.term()), new CSPGuard.CSPGuardList(csp.guards(), csp.size()));
-                    break;
-            }
-            return new Literal(new Location(lit.location()), Sign.valueOfInt(lit.sign()), data);
+            return new Literal(p.get());
         }
 
-        throw new RuntimeException("cannot happen!");
     }
 
 }

@@ -31,6 +31,10 @@ public class ShowTerm implements StatementData {
     private final List<BodyLiteral> body;
     private final boolean csp;
 
+    public ShowTerm(clingo_ast_show_term t) {
+        this(new Term(t.term()), new BodyLiteral.BodyLiteralList(t.body(), t.size()), t.csp());
+    }
+    
     public ShowTerm(Term term, List<BodyLiteral> body, boolean csp) {
         this.term = term;
         this.body = body;
@@ -59,7 +63,4 @@ public class ShowTerm implements StatementData {
         return  "#show " + (csp ? "$" : "") + term + ClingoUtil.printBody(body);
     }
     
-    public static ShowTerm convert(clingo_ast_show_term t) {
-        return new ShowTerm(Term.convTerm(t.term()), new BodyLiteral.BodyLiteralList(t.body(), t.size()), t.csp());
-    }
 }

@@ -31,6 +31,10 @@ public class Program implements StatementData {
     private final String name;
     private final List<Id> parameters;
 
+    public Program(clingo_ast_program p) {
+        this(p.name().getCString(), new IdList(p.parameters(), p.size()));
+    }
+    
     public Program(String name, List<Id> parameters) {
         this.name = name;
         this.parameters = parameters;
@@ -54,7 +58,4 @@ public class Program implements StatementData {
         return "#program " + name + ClingoUtil.print(parameters, "(", ",", ")", false) + ".";
     }
 
-    public static Program convert(clingo_ast_program p) {
-        return new Program(p.name().getCString(), new IdList(p.parameters(), p.size()));
-    }
 }

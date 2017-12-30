@@ -30,6 +30,10 @@ public class Rule implements StatementData {
     private final HeadLiteral head;
     private final List<BodyLiteral> body;
 
+    public Rule(clingo_ast_rule r) {
+        this(new HeadLiteral(r.head()), new BodyLiteral.BodyLiteralList(r.body(), r.size()));
+    }
+    
     public Rule(HeadLiteral head, List<BodyLiteral> body) {
         this.head = head;
         this.body = body;
@@ -53,7 +57,4 @@ public class Rule implements StatementData {
         return "" + head + ClingoUtil.printBody(body, " :- ");
     }
 
-    public static Rule convert(clingo_ast_rule r) {
-        return new Rule(HeadLiteral.convHeadLiteral(r.head()), new BodyLiteral.BodyLiteralList(r.body(), r.size()));
-    }
 }

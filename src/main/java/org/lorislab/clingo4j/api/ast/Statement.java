@@ -29,6 +29,58 @@ public class Statement {
     //Rule, Definition, ShowSignature, ShowTerm, Minimize, Script, Program, External, Edge, Heuristic, ProjectAtom, ProjectSignature, TheoryDefinition
     private final StatementData data;
 
+    public Statement(clingo_ast_statement stm) {
+        StatementType type = StatementType.valueOfInt(stm.type());
+        if (type != null) {
+            location = new Location(stm.location());
+            switch (type) {
+                case RULE:
+                    data = new Rule(stm.field1().rule().get());
+                    break;
+                case CONST:
+                    data = new Definition(stm.field1().definition().get());
+                    break;
+                case SHOW_SIGNATURE:
+                    data = new ShowSignature(stm.field1().show_signature().get());
+                    break;
+                case SHOW_TERM:
+                    data = new ShowTerm(stm.field1().show_term().get());
+                    break;
+                case MINIMIZE:
+                    data = new Minimize(stm.field1().minimize().get());
+                    break;
+                case SCRIPT:
+                    data = new Script(stm.field1().script().get());
+                    break;
+                case PROGRAM:
+                    data = new Program(stm.field1().program().get());
+                    break;
+                case EXTERNAL:
+                    data = new External(stm.field1().external().get());
+                    break;
+                case EDGE:
+                    data = new Edge(stm.field1().edge().get());
+                    break;
+                case HEURISTIC:
+                    data = new Heuristic(stm.field1().heuristic().get());
+                    break;
+                case PROJECT_ATOM:
+                    data = new ProjectAtom(stm.field1().project_atom().get());
+                    break;
+                case PROJECT_ATOM_SIGNATURE:
+                    data = new ProjectSignature(new Signature(stm.field1().project_signature()));
+                    break;
+                case THEORY_DEFINITION:
+                    data = new TheoryDefinition(stm.field1().theory_definition().get());
+                    break;
+                default:
+                    data = null;
+            }
+        } else {
+            throw new RuntimeException("cannot happen");
+        }
+    }
+
     public Statement(Location location, StatementData data) {
         this.location = location;
         this.data = data;
@@ -55,59 +107,6 @@ public class Statement {
     @Override
     public String toString() {
         return "" + data;
-    }
-
-    public static Statement convStatement(clingo_ast_statement stm) {
-
-        StatementType type = StatementType.valueOfInt(stm.type());
-        if (type != null) {
-            StatementData data = null;
-            switch (type) {
-                case RULE:
-                    data = Rule.convert(stm.field1().rule().get());
-                    break;
-                case CONST:
-                    data = Definition.convert(stm.field1().definition().get());
-                    break;
-                case SHOW_SIGNATURE:
-                    data = ShowSignature.convert(stm.field1().show_signature().get());
-                    break;
-                case SHOW_TERM:
-                    data = ShowTerm.convert(stm.field1().show_term().get());
-                    break;
-                case MINIMIZE:
-                    data = Minimize.convert(stm.field1().minimize().get());
-                    break;
-                case SCRIPT:
-                    data = Script.convert(stm.field1().script().get());
-                    break;
-                case PROGRAM:
-                    data = Program.convert(stm.field1().program().get());
-                    break;
-                case EXTERNAL:
-                    data = External.convert(stm.field1().external().get());
-                    break;
-                case EDGE:
-                    data = Edge.convert(stm.field1().edge().get());
-                    break;
-                case HEURISTIC:
-                    data = Heuristic.convert(stm.field1().heuristic().get());
-                    break;
-                case PROJECT_ATOM:
-                    data = ProjectAtom.convert(stm.field1().project_atom().get());
-                    break;
-                case PROJECT_ATOM_SIGNATURE:
-                    data = new ProjectSignature(new Signature(stm.field1().project_signature()));
-                    break;
-                case THEORY_DEFINITION:
-                    data = TheoryDefinition.convert(stm.field1().theory_definition().get());
-                    break;
-            }
-            if (data != null) {
-                return new Statement(new Location(stm.location()), data);
-            }
-        }
-        return null;
     }
 
 }

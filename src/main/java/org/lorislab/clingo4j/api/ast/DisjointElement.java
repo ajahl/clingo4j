@@ -34,6 +34,10 @@ public class DisjointElement {
     private final CSPSum term;
     private final List<Literal> condition;
 
+    public DisjointElement(clingo_ast_disjoint_element e) {
+        this(new Location(e.location()), new Term.TermList(e.tuple(), e.tuple_size()), new CSPSum(e.term()), new LiteralList(e.condition(), e.condition_size()));
+    }
+    
     public DisjointElement(Location location, List<Term> tuple, CSPSum term, List<Literal> condition) {
         this.location = location;
         this.tuple = tuple;
@@ -62,10 +66,6 @@ public class DisjointElement {
         return ClingoUtil.print(tuple, "", ",", "", false) + " : " + term + " : " + ClingoUtil.print(condition, "", ",", "", false);
     }
 
-    public static DisjointElement convert(clingo_ast_disjoint_element e) {
-        return new DisjointElement(new Location(e.location()), new Term.TermList(e.tuple(), e.tuple_size()), CSPSum.convCSPAdd(e.term()), new LiteralList(e.condition(), e.condition_size()));
-    }
-    
     public static class DisjointElementList extends SpanList<DisjointElement, clingo_ast_disjoint_element> {
 
         public DisjointElementList(Pointer<clingo_ast_disjoint_element> pointer, long size) {
@@ -74,7 +74,7 @@ public class DisjointElement {
 
         @Override
         protected DisjointElement getItem(Pointer<clingo_ast_disjoint_element> p) {
-            return convert(p.get());
+            return new DisjointElement(p.get());
         }
         
     }

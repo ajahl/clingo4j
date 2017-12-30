@@ -28,6 +28,10 @@ public class ShowSignature implements StatementData {
     private final Signature signature;
     private final boolean csp;
 
+    public ShowSignature(clingo_ast_show_signature s) {
+        this(new Signature(s.signature()), s.csp());
+    }
+    
     public ShowSignature(Signature signature, boolean csp) {
         this.signature = signature;
         this.csp = csp;
@@ -51,7 +55,4 @@ public class ShowSignature implements StatementData {
         return "#show " + (csp ? "$" : "") + signature + ".";
     }
     
-    public static ShowSignature convert(clingo_ast_show_signature s) {
-        return new ShowSignature(new Signature(s.signature()), s.csp());
-    }
 }

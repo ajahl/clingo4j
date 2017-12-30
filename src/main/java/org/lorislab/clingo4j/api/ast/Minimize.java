@@ -32,6 +32,10 @@ public class Minimize implements StatementData {
     private final List<Term> tuple;
     private final List<BodyLiteral> body;
 
+    public Minimize(clingo_ast_minimize m) {
+        this(new Term(m.weight()), new Term(m.priority()), new  Term.TermList(m.tuple(), m.tuple_size()), new BodyLiteral.BodyLiteralList(m.body(), m.body_size()));
+    }
+        
     public Minimize(Term weight, Term priority, List<Term> tuple, List<BodyLiteral> body) {
         this.weight = weight;
         this.priority = priority;
@@ -64,10 +68,5 @@ public class Minimize implements StatementData {
     public String toString() {
         return ClingoUtil.printBody(body, ":~ ") + " [" + weight + "@" + priority + ClingoUtil.print(tuple, ",", ",", "", false) + "]";
     }
-    
-    public static Minimize convert(clingo_ast_minimize m) {
-        return new Minimize(Term.convTerm(m.weight()), Term.convTerm(m.priority()), new  Term.TermList(m.tuple(), m.tuple_size()), new BodyLiteral.BodyLiteralList(m.body(), m.body_size()));
-    }
-    
 
 }

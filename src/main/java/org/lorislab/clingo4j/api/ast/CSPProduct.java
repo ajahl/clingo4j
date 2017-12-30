@@ -31,6 +31,16 @@ public class CSPProduct {
     private final Term coefficient;
     private final Optional<Term> variable;
 
+    public CSPProduct(clingo_ast_csp_product_term term) {
+        Term t = null;
+        if (term.variable() != null && term.variable().get() != null) {
+            t = new Term(term.variable().get());
+        }
+        location = new Location(term.location());
+        coefficient = new Term(term.coefficient());
+        variable = Optional.ofNullable(t);
+    }
+    
     public CSPProduct(Location location, Term coefficient, Optional<Term> variable) {
         this.location = location;
         this.coefficient = coefficient;
@@ -65,16 +75,9 @@ public class CSPProduct {
         
         @Override
         protected CSPProduct getItem(Pointer<clingo_ast_csp_product_term> p) {
-            return CSPProduct.convert(p.get());
+            return new CSPProduct(p.get());
         }
         
     }
     
-    public static CSPProduct convert(clingo_ast_csp_product_term term) {
-        Term t = null;
-        if (term.variable() != null && term.variable().get() != null) {
-            t = Term.convTerm(term.variable());
-        }
-        return new CSPProduct(new Location(term.location()), Term.convTerm(term.coefficient()), Optional.ofNullable(t));
-    }
 }

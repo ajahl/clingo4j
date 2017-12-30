@@ -30,6 +30,10 @@ public class HeadAggregateElement {
     private final List<Term> tuple;
     private final ConditionalLiteral condition;
     
+    public HeadAggregateElement(clingo_ast_head_aggregate_element e) {
+        this(new Term.TermList(e.tuple(), e.tuple_size()), new ConditionalLiteral(e.conditional_literal()));
+    }
+    
     public HeadAggregateElement(List<Term> tuple, ConditionalLiteral condition) {
         this.tuple = tuple;
         this.condition = condition;
@@ -48,10 +52,6 @@ public class HeadAggregateElement {
         return ClingoUtil.print(tuple, "", ",", "", false) + " : " + condition;
     }
 
-    public static HeadAggregateElement convert(clingo_ast_head_aggregate_element e) {
-        return new HeadAggregateElement(new Term.TermList(e.tuple(), e.tuple_size()), ConditionalLiteral.convert(e.conditional_literal()));
-    }
-    
     public static class HeadAggregateElementList extends SpanList<HeadAggregateElement, clingo_ast_head_aggregate_element> {
 
         public HeadAggregateElementList(Pointer<clingo_ast_head_aggregate_element> pointer, long size) {
@@ -60,7 +60,7 @@ public class HeadAggregateElement {
 
         @Override
         protected HeadAggregateElement getItem(Pointer<clingo_ast_head_aggregate_element> p) {
-            return convert(p.get());
+            return new HeadAggregateElement(p.get());
         }
         
     }

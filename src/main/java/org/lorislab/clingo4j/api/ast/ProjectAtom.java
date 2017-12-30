@@ -30,6 +30,10 @@ public class ProjectAtom implements StatementData {
     private final Term atom;
     private final List<BodyLiteral> body;
 
+    public ProjectAtom(clingo_ast_project p) {
+        this(new Term(p.atom()), new BodyLiteral.BodyLiteralList(p.body(), p.size()));
+    }
+    
     public ProjectAtom(Term atom, List<BodyLiteral> body) {
         this.atom = atom;
         this.body = body;
@@ -53,7 +57,4 @@ public class ProjectAtom implements StatementData {
         return "#project " + atom + ClingoUtil.printBody(body);
     }
 
-    public static ProjectAtom convert(clingo_ast_project p) {
-        return new ProjectAtom(Term.convTerm(p.atom()), new BodyLiteral.BodyLiteralList(p.body(), p.size()));
-    }
 }

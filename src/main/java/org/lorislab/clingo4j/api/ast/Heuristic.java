@@ -34,6 +34,10 @@ public class Heuristic implements StatementData {
     private final Term priority;
     private final Term modifier;    
 
+    public Heuristic(clingo_ast_heuristic h) {
+        this(new Term(h.atom()), new BodyLiteralList(h.body(), h.size()), new Term(h.bias()), new Term(h.priority()), new Term(h.modifier()));
+    }
+    
     public Heuristic(Term atom, List<BodyLiteral> body, Term bias, Term priority, Term modifier) {
         this.atom = atom;
         this.body = body;
@@ -70,10 +74,6 @@ public class Heuristic implements StatementData {
     @Override
     public String toString() {
         return "#heuristic " + atom + ClingoUtil.printBody(body) + " [" + bias+ "@" + priority + "," + modifier + "]";
-    }
-    
-    public static Heuristic convert(clingo_ast_heuristic h) {
-        return new Heuristic(Term.convTerm(h.atom()), new BodyLiteralList(h.body(), h.size()), Term.convTerm(h.bias()), Term.convTerm(h.priority()), Term.convTerm(h.modifier()));
     }
     
 }

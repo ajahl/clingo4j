@@ -35,6 +35,10 @@ public class Aggregate implements HeadLiteralData, BodyLiteralData {
     private final Optional<AggregateGuard> leftGuard;
     private final Optional<AggregateGuard> rightGuard;
 
+    public Aggregate(clingo_ast_aggregate ag) {
+       this(new ConditionalLiteralList(ag.elements(), ag.size()), AggregateGuard.convert(ag.left_guard()), AggregateGuard.convert(ag.right_guard()));
+    }
+    
     public Aggregate(List<ConditionalLiteral> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {
         this.elements = elements;
         this.leftGuard = leftGuard;
@@ -78,7 +82,4 @@ public class Aggregate implements HeadLiteralData, BodyLiteralData {
         return sb.toString();
     }
 
-    public static Aggregate convert(clingo_ast_aggregate ag) {
-       return new Aggregate(new ConditionalLiteralList(ag.elements(), ag.size()), AggregateGuard.convert(ag.left_guard()), AggregateGuard.convert(ag.right_guard()));
-    }
 }

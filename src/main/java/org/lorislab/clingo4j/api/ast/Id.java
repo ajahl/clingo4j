@@ -30,6 +30,10 @@ public class Id {
 
     private final String id;
 
+    public Id(clingo_ast_id d) {
+        this(new Location(d.location()), d.id().getCString());
+    }
+    
     public Id(Location location, String id) {
         this.location = location;
         this.id = id;
@@ -48,10 +52,6 @@ public class Id {
         return id;
     }
     
-    public static Id convert(clingo_ast_id d) {
-        return new Id(new Location(d.location()), d.id().getCString());
-    }
-    
     public static class IdList extends SpanList<Id, clingo_ast_id> {
 
         public IdList(Pointer<clingo_ast_id> pointer, long size) {
@@ -60,7 +60,7 @@ public class Id {
 
         @Override
         protected Id getItem(Pointer<clingo_ast_id> p) {
-            return convert(p.get());
+            return new Id(p.get());
         }
         
     }

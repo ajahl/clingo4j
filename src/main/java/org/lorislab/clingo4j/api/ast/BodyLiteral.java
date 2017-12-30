@@ -31,6 +31,38 @@ public class BodyLiteral {
     //Literal, ConditionalLiteral, Aggregate, BodyAggregate, TheoryAtom, Disjoint    
     private final BodyLiteralData data;
 
+    public BodyLiteral(clingo_ast_body_literal lit) {
+        BodyLiteralType type = BodyLiteralType.valueOfInt(lit.type());
+        if (type != null) {
+            switch (type) {
+                case LITERAL:
+                    data = new Literal(lit.field1().literal().get());
+                    break;
+                case CONDITIONAL:
+                    data = new ConditionalLiteral(lit.field1().conditional().get());
+                    break;
+                case AGGREGATE:
+                    data = new Aggregate(lit.field1().aggregate().get());
+                    break;
+                case BODY_AGGREGATE:
+                    data = new BodyAggregate(lit.field1().body_aggregate().get());
+                    break;
+                case THEORY_ATOM:
+                    data = new TheoryAtom(lit.field1().theory_atom().get());
+                    break;
+                case DISJOINT:
+                    data = new Disjoint(lit.field1().disjoint().get());
+                    break;
+                default:
+                    data = null;
+            }
+            location = new Location(lit.location());
+            sign = Sign.valueOfInt(lit.sign());
+        } else {
+            throw new RuntimeException("cannot happen");
+        }
+    }
+
     public BodyLiteral(Location location, Sign sign, BodyLiteralData data) {
         this.location = location;
         this.sign = sign;
@@ -59,39 +91,6 @@ public class BodyLiteral {
 
     }
 
-    public static BodyLiteral convert(clingo_ast_body_literal lit) {
-
-        BodyLiteralType type = BodyLiteralType.valueOfInt(lit.type());
-        if (type != null) {
-            BodyLiteralData data = null;
-            switch (type) {
-                case LITERAL:
-                    data = Literal.convLiteral(lit.field1().literal().get());
-                    break;
-                case CONDITIONAL:
-                    data = ConditionalLiteral.convert(lit.field1().conditional().get());
-                    break;
-                case AGGREGATE:
-                    data = Aggregate.convert(lit.field1().aggregate().get());
-                    break;
-                case BODY_AGGREGATE:
-                    data = BodyAggregate.convert(lit.field1().body_aggregate().get());
-                    break;
-                case THEORY_ATOM:
-                    data = TheoryAtom.convert(lit.field1().theory_atom().get());
-                    break;
-                case DISJOINT:
-                    data = Disjoint.convert(lit.field1().disjoint().get());
-                    break;
-            }
-            if (data != null) {
-                return new BodyLiteral(new Location(lit.location()), Sign.valueOfInt(lit.sign()), data);
-            }
-        }
-        throw new RuntimeException("cannot happen");
-    }
-
-    
     @Override
     public String toString() {
         return "" + sign + data;
@@ -105,7 +104,7 @@ public class BodyLiteral {
 
         @Override
         protected BodyLiteral getItem(Pointer<clingo_ast_body_literal> p) {
-            return convert(p.get());
+            return new BodyLiteral(p.get());
         }
 
     }

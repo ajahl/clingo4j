@@ -32,6 +32,10 @@ public class TheoryUnparsedTermElement {
 
     private final TheoryTerm term;    
 
+    public TheoryUnparsedTermElement(clingo_ast_theory_unparsed_term_element e) {
+        this(new StringList(e.operators(), e.size()), new TheoryTerm(e.term()));
+    }
+    
     public TheoryUnparsedTermElement(List<String> operators, TheoryTerm term) {
         this.operators = operators;
         this.term = term;
@@ -50,10 +54,6 @@ public class TheoryUnparsedTermElement {
         return ClingoUtil.print(operators, " ", " ", " ", false) + term;
     }
     
-    public static TheoryUnparsedTermElement convert(clingo_ast_theory_unparsed_term_element e) {
-        return new TheoryUnparsedTermElement(new StringList(e.operators(), e.size()), TheoryTerm.convert(e.term()));
-    }
-    
     public static class TheoryUnparsedTermElementList extends SpanList<TheoryUnparsedTermElement, clingo_ast_theory_unparsed_term_element> {
 
         public TheoryUnparsedTermElementList(Pointer<clingo_ast_theory_unparsed_term_element> pointer, long size) {
@@ -62,7 +62,7 @@ public class TheoryUnparsedTermElement {
 
         @Override
         protected TheoryUnparsedTermElement getItem(Pointer<clingo_ast_theory_unparsed_term_element> p) {
-            return convert(p.get());
+            return new TheoryUnparsedTermElement(p.get());
         }
         
     }
