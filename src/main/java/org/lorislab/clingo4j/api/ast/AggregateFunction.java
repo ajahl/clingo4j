@@ -30,7 +30,7 @@ public enum AggregateFunction {
     
     COUNT(clingo_ast_aggregate_function_count,"#count"),
     SUM(clingo_ast_aggregate_function_sum,"#sum"),
-    SUMPLUS(clingo_ast_aggregate_function_sump,"#sum+"),
+    SUM_PLUS(clingo_ast_aggregate_function_sump,"#sum+"),
     MIN(clingo_ast_aggregate_function_min,"#min"),
     MAX(clingo_ast_aggregate_function_max,"#max");
             

@@ -27,8 +27,8 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_operat
 public enum TheoryOperatorType {
     
     UNARY(clingo_ast_theory_operator_type_unary,"unary"),
-    BINARYLEFT(clingo_ast_theory_operator_type_binary_left,"binary, left"),
-    BINARYRIGHT(clingo_ast_theory_operator_type_binary_right,"binary, right");
+    BINARY_LEFT(clingo_ast_theory_operator_type_binary_left,"binary, left"),
+    BINARY_RIGHT(clingo_ast_theory_operator_type_binary_right,"binary, right");
              
     private clingo_ast_theory_operator_type type;
     private String string;

@@ -34,8 +34,8 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  */
 public class Literal implements BodyLiteralData, HeadLiteralData {
 
-    private Location location;
-    private Sign sign;
+    private final Location location;
+    private final Sign sign;
 
     //Boolean, Term, Comparison, CSPLiteral
     private LiteralData data;

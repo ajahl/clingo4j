@@ -16,7 +16,9 @@
 package org.lorislab.clingo4j.util;
 
 import java.util.List;
+import org.bridj.IntValuedEnum;
 import org.bridj.Pointer;
+import org.bridj.ValuedEnum;
 
 /**
  *

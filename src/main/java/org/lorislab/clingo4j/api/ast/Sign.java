@@ -30,7 +30,7 @@ public enum Sign {
     
     NEGATION(clingo_ast_sign_negation,"not"),
     
-    DOUBLENEGATION(clingo_ast_sign_double_negation,"not not");
+    DOUBLE_NEGATION(clingo_ast_sign_double_negation,"not not");
     
     private clingo_ast_sign sign;
 

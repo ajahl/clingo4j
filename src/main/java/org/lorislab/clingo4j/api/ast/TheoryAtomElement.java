@@ -18,7 +18,6 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.SpanList;
-import org.lorislab.clingo4j.api.TheoryTerm.TheoryTermAtomList;
 import org.lorislab.clingo4j.api.ast.Literal.LiteralList;
 import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermList;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom_element;

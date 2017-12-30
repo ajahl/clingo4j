@@ -35,9 +35,9 @@ public enum ComparisonOperator {
     
     LESS_EQUAL(clingo_ast_comparison_operator_less_equal,"<="),
     
-    GREATEREQUAL(clingo_ast_comparison_operator_greater_equal,">="),
+    GREATER_EQUAL(clingo_ast_comparison_operator_greater_equal,">="),
     
-    NOTEQUAL(clingo_ast_comparison_operator_not_equal, "!="),
+    NOT_EQUAL(clingo_ast_comparison_operator_not_equal, "!="),
 
     EQUAL(clingo_ast_comparison_operator_equal, "=");
     
