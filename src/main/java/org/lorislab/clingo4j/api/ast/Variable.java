@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
@@ -37,18 +38,28 @@ public class Variable implements TermData, TheoryTermData {
     }
 
     @Override
-    public clingo_ast_term createTerm() {
-        return ASTToC.visitTerm(this);
-    }
-
-    @Override
-    public clingo_ast_theory_term createTheoryTerm() {
-        return ASTToC.visitTheoryTerm(this);
-    }
-
-    @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public void updateTerm(clingo_ast_term ret) {
+        ret.field1().variable(Pointer.pointerToCString(name));
+    }
+
+    @Override
+    public TermType getTermType() {
+        return TermType.VARIABLE;
+    }
+
+    @Override
+    public void updateTheoryTerm(clingo_ast_theory_term ret) {
+        ret.field1().variable(Pointer.pointerToCString(name));
+    }
+
+    @Override
+    public TheoryTermType getTheoryTermType() {
+        return TheoryTermType.VARIABLE;
     }
             
     

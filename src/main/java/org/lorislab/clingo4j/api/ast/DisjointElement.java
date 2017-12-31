@@ -21,13 +21,16 @@ import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.ast.Literal.LiteralList;
 import org.lorislab.clingo4j.api.c.clingo_ast_disjoint_element;
+import org.lorislab.clingo4j.api.c.clingo_ast_literal;
+import org.lorislab.clingo4j.api.c.clingo_ast_term;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class DisjointElement {
+public class DisjointElement implements ASTObject<clingo_ast_disjoint_element> {
 
     private final Location location;
     private final List<Term> tuple;
@@ -66,6 +69,18 @@ public class DisjointElement {
         return ClingoUtil.print(tuple, "", ",", "", false) + " : " + term + " : " + ClingoUtil.print(condition, "", ",", "", false);
     }
 
+    @Override
+    public clingo_ast_disjoint_element create() {
+        clingo_ast_disjoint_element ret = new clingo_ast_disjoint_element();
+        ret.location(location);
+        ret.tuple(ClingoUtil.createASTObjectArray(tuple, clingo_ast_term.class));
+        ret.tuple_size(ClingoUtil.arraySize(tuple));
+        ret.term(term.create());
+        ret.condition(ClingoUtil.createASTObjectArray(condition, clingo_ast_literal.class));
+        ret.condition_size(ClingoUtil.arraySize(condition));
+        return ret;
+    }
+    
     public static class DisjointElementList extends SpanList<DisjointElement, clingo_ast_disjoint_element> {
 
         public DisjointElementList(Pointer<clingo_ast_disjoint_element> pointer, long size) {

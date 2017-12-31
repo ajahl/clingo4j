@@ -22,13 +22,15 @@ import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom_element;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class TheoryAtom  implements HeadLiteralData, BodyLiteralData {
+public class TheoryAtom  implements ASTObject<clingo_ast_theory_atom>, HeadLiteralData, BodyLiteralData {
     
     private final Term term;
     private final List<TheoryAtomElement> elements;
@@ -57,16 +59,6 @@ public class TheoryAtom  implements HeadLiteralData, BodyLiteralData {
     }
 
     @Override
-    public clingo_ast_head_literal createHeadLiteral() {
-        return ASTToC.visitHeadLiteral(this);
-    }
-
-    @Override
-    public clingo_ast_body_literal createBodyLiteral() {
-        return ASTToC.visitBodyLiteral(this);
-    }
-
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append('&').append(term).append(" { ").append(ClingoUtil.print(elements, "", "; ", "", false)).append(" }");
@@ -74,6 +66,38 @@ public class TheoryAtom  implements HeadLiteralData, BodyLiteralData {
             sb.append(" ").append(guard.get());
         }
         return sb.toString();
+    }
+
+    @Override
+    public void updateHeadLiteral(clingo_ast_head_literal ret) {
+        ret.field1().theory_atom(createPointer());
+    }
+
+    @Override
+    public HeadLiteralType getHeadLiteralType() {
+        return HeadLiteralType.THEORY_ATOM;
+    }
+
+    @Override
+    public clingo_ast_theory_atom create() {
+        clingo_ast_theory_atom ret = new clingo_ast_theory_atom();
+        ret.term(term.create());
+        if (guard.isPresent()) {
+            ret.guard(guard.get().createPointer());
+        }
+        ret.elements(ClingoUtil.createASTObjectArray(elements, clingo_ast_theory_atom_element.class));
+        ret.size(ClingoUtil.arraySize(elements));
+        return ret;
+    }
+
+    @Override
+    public void updateBodyLiteral(clingo_ast_body_literal ret) {
+        ret.field1().theory_atom(createPointer());
+    }
+
+    @Override
+    public BodyLiteralType getBodyLiteralType() {
+        return BodyLiteralType.THEORY_ATOM;
     }
 
 }

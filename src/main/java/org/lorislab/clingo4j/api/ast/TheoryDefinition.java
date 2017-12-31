@@ -16,18 +16,23 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.api.ast.TheoryAtomDefinition.TheoryAtomDefinitionList;
 import org.lorislab.clingo4j.api.ast.TheoryTermDefinition.TheoryTermDefinitionList;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_statement_type.clingo_ast_statement_type_theory_definition;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom_definition;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_definition;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_definition;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class TheoryDefinition implements StatementData {
+public class TheoryDefinition implements ASTObject<clingo_ast_theory_definition>, StatementData {
 
     private final String name;
     private final List<TheoryTermDefinition> terms;
@@ -53,11 +58,6 @@ public class TheoryDefinition implements StatementData {
 
     public List<TheoryTermDefinition> getTerms() {
         return terms;
-    }
-
-    @Override
-    public clingo_ast_statement createStatment() {
-        return ASTToC.visit(this);
     }
 
     @Override
@@ -93,6 +93,27 @@ public class TheoryDefinition implements StatementData {
         }
         sb.append("}.");
         return sb.toString();
+    }
+
+    @Override
+    public clingo_ast_theory_definition create() {
+        clingo_ast_theory_definition ret = new clingo_ast_theory_definition();
+        ret.name(Pointer.pointerToCString(name));
+        ret.terms(ClingoUtil.createASTObjectArray(terms, clingo_ast_theory_term_definition.class));
+        ret.terms_size(ClingoUtil.arraySize(terms));
+        ret.atoms(ClingoUtil.createASTObjectArray(atoms, clingo_ast_theory_atom_definition.class));
+        ret.atoms_size(ClingoUtil.arraySize(atoms));
+        return ret;
+    }
+
+    @Override
+    public void updateStatement(clingo_ast_statement ret) {
+        ret.field1().theory_definition(createPointer());
+    }
+
+    @Override
+    public StatementType getStatementType() {
+        return StatementType.THEORY_DEFINITION;
     }
 
 }

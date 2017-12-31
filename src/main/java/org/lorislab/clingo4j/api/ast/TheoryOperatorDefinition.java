@@ -19,13 +19,14 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_operator_definition;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class TheoryOperatorDefinition {
+public class TheoryOperatorDefinition implements ASTObject<clingo_ast_theory_operator_definition> {
  
     private final Location location;
     private final String name;
@@ -62,6 +63,16 @@ public class TheoryOperatorDefinition {
     @Override
     public String toString() {
         return name + " : " + priority + ", " + type;
+    }
+
+    @Override
+    public clingo_ast_theory_operator_definition create() {
+        clingo_ast_theory_operator_definition ret = new clingo_ast_theory_operator_definition();
+        ret.type(type.getInt());
+        ret.priority(priority);
+        ret.location(location);
+        ret.name(Pointer.pointerToCString(name));
+        return ret;
     }
     
     public static class TheoryOperatorDefinitionList extends SpanList<TheoryOperatorDefinition, clingo_ast_theory_operator_definition> {

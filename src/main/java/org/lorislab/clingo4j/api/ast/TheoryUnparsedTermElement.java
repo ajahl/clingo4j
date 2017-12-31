@@ -19,6 +19,7 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term_element;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 import org.lorislab.clingo4j.util.StringList;
 
@@ -26,16 +27,16 @@ import org.lorislab.clingo4j.util.StringList;
  *
  * @author andrej
  */
-public class TheoryUnparsedTermElement {
-    
+public class TheoryUnparsedTermElement implements ASTObject<clingo_ast_theory_unparsed_term_element> {
+
     private final List<String> operators;
 
-    private final TheoryTerm term;    
+    private final TheoryTerm term;
 
     public TheoryUnparsedTermElement(clingo_ast_theory_unparsed_term_element e) {
         this(new StringList(e.operators(), e.size()), new TheoryTerm(e.term()));
     }
-    
+
     public TheoryUnparsedTermElement(List<String> operators, TheoryTerm term) {
         this.operators = operators;
         this.term = term;
@@ -53,7 +54,16 @@ public class TheoryUnparsedTermElement {
     public String toString() {
         return ClingoUtil.print(operators, " ", " ", " ", false) + term;
     }
-    
+
+    @Override
+    public clingo_ast_theory_unparsed_term_element create() {
+        clingo_ast_theory_unparsed_term_element ret = new clingo_ast_theory_unparsed_term_element();
+        ret.term(term.create());
+        ret.size(ClingoUtil.arraySize(operators));
+        ret.operators(ClingoUtil.createStringArray(operators));
+        return ret;
+    }
+
     public static class TheoryUnparsedTermElementList extends SpanList<TheoryUnparsedTermElement, clingo_ast_theory_unparsed_term_element> {
 
         public TheoryUnparsedTermElementList(Pointer<clingo_ast_theory_unparsed_term_element> pointer, long size) {
@@ -64,6 +74,6 @@ public class TheoryUnparsedTermElement {
         protected TheoryUnparsedTermElement getItem(Pointer<clingo_ast_theory_unparsed_term_element> p) {
             return new TheoryUnparsedTermElement(p.get());
         }
-        
+
     }
 }

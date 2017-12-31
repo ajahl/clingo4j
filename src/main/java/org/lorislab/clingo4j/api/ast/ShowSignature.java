@@ -18,12 +18,13 @@ package org.lorislab.clingo4j.api.ast;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.api.c.clingo_ast_show_signature;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.util.ASTObject;
 
 /**
  *
  * @author andrej
  */
-public class ShowSignature implements StatementData {
+public class ShowSignature implements ASTObject<clingo_ast_show_signature>, StatementData {
 
     private final Signature signature;
     private final boolean csp;
@@ -46,13 +47,26 @@ public class ShowSignature implements StatementData {
     }
 
     @Override
-    public clingo_ast_statement createStatment() {
-        return ASTToC.visit(this);
+    public String toString() {
+        return "#show " + (csp ? "$" : "") + signature + ".";
     }
 
     @Override
-    public String toString() {
-        return "#show " + (csp ? "$" : "") + signature + ".";
+    public clingo_ast_show_signature create() {
+        clingo_ast_show_signature ret = new clingo_ast_show_signature();
+        ret.csp(csp);
+        ret.signature(signature.getPointer());
+        return ret;
+    }
+
+    @Override
+    public void updateStatement(clingo_ast_statement ret) {
+        ret.field1().show_signature(createPointer());
+    }
+
+    @Override
+    public StatementType getStatementType() {
+        return StatementType.SHOW_SIGNATURE;
     }
     
 }

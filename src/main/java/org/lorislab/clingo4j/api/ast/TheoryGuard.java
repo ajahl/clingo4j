@@ -18,21 +18,22 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.Optional;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_guard;
+import org.lorislab.clingo4j.util.ASTObject;
 
 /**
  *
  * @author andrej
  */
-public class TheoryGuard {
-    
-    private final  String operatorName;
-    
-    private final TheoryTerm term;    
+public class TheoryGuard implements ASTObject<clingo_ast_theory_guard> {
+
+    private final String operatorName;
+
+    private final TheoryTerm term;
 
     public TheoryGuard(clingo_ast_theory_guard g) {
         this(g.operator_name().getCString(), new TheoryTerm(g.term()));
     }
-    
+
     public TheoryGuard(String operatorName, TheoryTerm term) {
         this.operatorName = operatorName;
         this.term = term;
@@ -50,5 +51,12 @@ public class TheoryGuard {
     public String toString() {
         return operatorName + " " + term;
     }
-    
+
+    @Override
+    public clingo_ast_theory_guard create() {
+        clingo_ast_theory_guard g = new clingo_ast_theory_guard();
+        g.operator_name(Pointer.pointerToCString(operatorName));
+        g.term(term.create());
+        return g;
+    }
 }

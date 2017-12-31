@@ -17,19 +17,23 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import java.util.Optional;
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.ast.ConditionalLiteral.ConditionalLiteralList;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_body_literal_type.clingo_ast_body_literal_type_aggregate;
 import org.lorislab.clingo4j.api.c.clingo_ast_aggregate;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
+import org.lorislab.clingo4j.api.c.clingo_ast_conditional_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class Aggregate implements HeadLiteralData, BodyLiteralData {
+public class Aggregate implements ASTObject<clingo_ast_aggregate>, HeadLiteralData, BodyLiteralData {
 
     private final List<ConditionalLiteral> elements;
     private final Optional<AggregateGuard> leftGuard;
@@ -58,16 +62,6 @@ public class Aggregate implements HeadLiteralData, BodyLiteralData {
     }
 
     @Override
-    public clingo_ast_head_literal createHeadLiteral() {
-        return ASTToC.visitHeadLiteral(this);
-    }
-
-    @Override
-    public clingo_ast_body_literal createBodyLiteral() {
-        return ASTToC.visitBodyLiteral(this);
-    }
-
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if (leftGuard.isPresent()) {
@@ -80,6 +74,44 @@ public class Aggregate implements HeadLiteralData, BodyLiteralData {
             sb.append(" ").append(rightGuard.get().getOperator()).append(" ").append(rightGuard.get().getTerm());
         }
         return sb.toString();
+    }
+
+    @Override
+    public clingo_ast_aggregate create() {
+        clingo_ast_aggregate ret = new clingo_ast_aggregate();
+        if (leftGuard.isPresent()) {
+            ret.left_guard(leftGuard.get().createPointer());
+        } else {
+            ret.left_guard(null);
+        }
+        if (rightGuard.isPresent()) {
+            ret.right_guard(rightGuard.get().createPointer());
+        } else {
+            ret.right_guard(null);
+        }
+        ret.elements(ClingoUtil.createASTObjectArray(elements, clingo_ast_conditional_literal.class));
+        ret.size(ClingoUtil.arraySize(elements));
+        return ret;
+    }
+    
+    @Override
+    public void updateHeadLiteral(clingo_ast_head_literal ret) {
+        ret.field1().aggregate(createPointer());
+    }
+
+    @Override
+    public HeadLiteralType getHeadLiteralType() {
+        return HeadLiteralType.AGGREGATE;
+    }
+
+    @Override
+    public void updateBodyLiteral(clingo_ast_body_literal ret) {
+        ret.field1().aggregate(createPointer());
+    }
+
+    @Override
+    public BodyLiteralType getBodyLiteralType() {
+        return BodyLiteralType.AGGREGATE;
     }
 
 }

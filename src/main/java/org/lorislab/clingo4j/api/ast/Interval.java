@@ -15,7 +15,9 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
+import org.lorislab.clingo4j.api.c.clingo_ast_interval;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 
 /**
@@ -42,13 +44,21 @@ public class Interval implements TermData {
     }
 
     @Override
-    public clingo_ast_term createTerm() {
-        return ASTToC.visitTerm(this);
+    public String toString() {
+        return "(" + left + ".." + right + ")";
     }
 
     @Override
-    public String toString() {
-        return "(" + left + ".." + right + ")";
+    public void updateTerm(clingo_ast_term ret) {
+        clingo_ast_interval i = new clingo_ast_interval();
+        i.left(left.create());
+        i.right(right.create());
+        ret.field1().interval(Pointer.getPointer(i));
+    }
+
+    @Override
+    public TermType getTermType() {
+        return TermType.INTERVAL;
     }
     
     

@@ -16,17 +16,20 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Id.IdList;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_id;
 import org.lorislab.clingo4j.api.c.clingo_ast_program;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class Program implements StatementData {
+public class Program implements ASTObject<clingo_ast_program>, StatementData {
 
     private final String name;
     private final List<Id> parameters;
@@ -49,13 +52,27 @@ public class Program implements StatementData {
     }
 
     @Override
-    public clingo_ast_statement createStatment() {
-        return ASTToC.visit(this);
+    public String toString() {
+        return "#program " + name + ClingoUtil.print(parameters, "(", ",", ")", false) + ".";
     }
 
     @Override
-    public String toString() {
-        return "#program " + name + ClingoUtil.print(parameters, "(", ",", ")", false) + ".";
+    public clingo_ast_program create() {
+        clingo_ast_program ret = new  clingo_ast_program();
+        ret.name(Pointer.pointerToCString(name));
+        ret.parameters(ClingoUtil.createASTObjectArray(parameters, clingo_ast_id.class));
+        ret.size(ClingoUtil.arraySize(parameters));
+        return ret;
+    }
+
+    @Override
+    public void updateStatement(clingo_ast_statement ret) {
+        ret.field1().program(createPointer());
+    }
+
+    @Override
+    public StatementType getStatementType() {
+        return StatementType.PROGRAM;
     }
 
 }

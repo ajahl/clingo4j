@@ -17,13 +17,14 @@ package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class HeadLiteral {
+public class HeadLiteral implements ASTObject<clingo_ast_head_literal> {
 
     private final Location location;
 
@@ -71,13 +72,21 @@ public class HeadLiteral {
         return data;
     }
 
-    public clingo_ast_head_literal createHeadLiteral() {
-        return ASTToC.convHeadLiteral(this);
+    @Override
+    public clingo_ast_head_literal create() {
+        clingo_ast_head_literal ret = new clingo_ast_head_literal();
+        ret.type(data.getHeadLiteralType().getInt());
+        ret.location(location);
+        data.updateHeadLiteral(ret);
+        return ret;
     }
 
     public interface HeadLiteralData {
 
-        public clingo_ast_head_literal createHeadLiteral();    
+        public void updateHeadLiteral(clingo_ast_head_literal ret);
+
+        public HeadLiteralType getHeadLiteralType();
+
     }
 
     @Override

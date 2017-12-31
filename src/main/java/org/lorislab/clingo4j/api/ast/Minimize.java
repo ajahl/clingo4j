@@ -16,16 +16,20 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_minimize;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.api.c.clingo_ast_term;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class Minimize implements StatementData {
+public class Minimize implements ASTObject<clingo_ast_minimize>, StatementData {
 
     private final Term weight;
     private final Term priority;
@@ -60,13 +64,30 @@ public class Minimize implements StatementData {
     }
 
     @Override
-    public clingo_ast_statement createStatment() {
-        return ASTToC.visit(this);
+    public String toString() {
+        return ClingoUtil.printBody(body, ":~ ") + " [" + weight + "@" + priority + ClingoUtil.print(tuple, ",", ",", "", false) + "]";
     }
 
     @Override
-    public String toString() {
-        return ClingoUtil.printBody(body, ":~ ") + " [" + weight + "@" + priority + ClingoUtil.print(tuple, ",", ",", "", false) + "]";
+    public void updateStatement(clingo_ast_statement ret) {
+        ret.field1().minimize(createPointer());
+    }
+
+    @Override
+    public StatementType getStatementType() {
+        return StatementType.MINIMIZE;
+    }
+
+    @Override
+    public clingo_ast_minimize create() {
+        clingo_ast_minimize ret = new clingo_ast_minimize();
+        ret.weight(weight.create());
+        ret.priority(priority.create());
+        ret.tuple(ClingoUtil.createASTObjectArray(tuple, clingo_ast_term.class));
+        ret.tuple_size(ClingoUtil.arraySize(tuple));
+        ret.body(ClingoUtil.createASTObjectArray(body, clingo_ast_body_literal.class));
+        ret.body_size(ClingoUtil.arraySize(body));
+        return ret;
     }
 
 }

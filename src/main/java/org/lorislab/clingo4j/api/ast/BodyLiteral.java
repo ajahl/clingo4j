@@ -20,12 +20,13 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
+import org.lorislab.clingo4j.util.ASTObject;
 
 /**
  *
  * @author andrej
  */
-public class BodyLiteral {
+public class BodyLiteral implements ASTObject<clingo_ast_body_literal> {
 
     private final Location location;
     private final Sign sign;
@@ -82,14 +83,21 @@ public class BodyLiteral {
         return sign;
     }
 
-    public clingo_ast_body_literal createBodyLiteral() {
-        return ASTToC.convBodyLiteral(this);
+    @Override
+    public clingo_ast_body_literal create() {
+        clingo_ast_body_literal ret = new clingo_ast_body_literal();
+        ret.type(data.getBodyLiteralType().getInt());
+        ret.location(location);
+        ret.sign(sign.getInt());
+        data.updateBodyLiteral(ret);
+        return ret;
     }
-
+    
     public interface BodyLiteralData {
 
-        public clingo_ast_body_literal createBodyLiteral();
+        public void updateBodyLiteral(clingo_ast_body_literal ret);
 
+        public BodyLiteralType getBodyLiteralType();
     }
 
     @Override

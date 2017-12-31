@@ -19,13 +19,16 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_aggregate_element;
+import org.lorislab.clingo4j.api.c.clingo_ast_literal;
+import org.lorislab.clingo4j.api.c.clingo_ast_term;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class BodyAggregateElement {
+public class BodyAggregateElement implements ASTObject<clingo_ast_body_aggregate_element> {
 
     private final List<Term> tuple;
     private final List<Literal> condition;
@@ -52,6 +55,16 @@ public class BodyAggregateElement {
         return ClingoUtil.print(tuple, "", ",", "", false) + " : " + ClingoUtil.print(condition, "", ", ", "", false);
     }
 
+    @Override
+    public clingo_ast_body_aggregate_element create() {
+        clingo_ast_body_aggregate_element ret = new clingo_ast_body_aggregate_element();
+        ret.tuple(ClingoUtil.createASTObjectArray(tuple, clingo_ast_term.class));
+        ret.tuple_size(ClingoUtil.arraySize(tuple));
+        ret.condition(ClingoUtil.createASTObjectArray(condition, clingo_ast_literal.class));
+        ret.condition_size(ClingoUtil.arraySize(condition));
+        return ret;
+    }
+    
     public static class BodyAggregateElementList extends SpanList<BodyAggregateElement, clingo_ast_body_aggregate_element> {
 
         public BodyAggregateElementList(Pointer<clingo_ast_body_aggregate_element> pointer, long size) {

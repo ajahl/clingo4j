@@ -16,7 +16,9 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
+import org.lorislab.clingo4j.api.c.clingo_ast_pool;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -37,16 +39,24 @@ public class Pool implements TermData {
     }
 
     @Override
-    public clingo_ast_term createTerm() {
-        return ASTToC.visitTerm(this);
-    }
-
-    @Override
     public String toString() {
         if (arguments == null || arguments.isEmpty()) {
             return "(1/0)";
         }
         return ClingoUtil.print(arguments, "(", ";", ")", true);
+    }
+
+    @Override
+    public void updateTerm(clingo_ast_term ret) {
+        clingo_ast_pool pool = new clingo_ast_pool();
+        pool.arguments(ClingoUtil.createASTObjectArray(arguments, clingo_ast_term.class));
+        pool.size(ClingoUtil.arraySize(arguments));
+        ret.field1().pool(Pointer.getPointer(pool));
+    }
+
+    @Override
+    public TermType getTermType() {
+        return TermType.POOL;
     }
 
 }

@@ -18,16 +18,18 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_array;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class TheoryTermSequence implements TheoryTermData {
+public class TheoryTermSequence implements ASTObject<clingo_ast_theory_term_array>, TheoryTermData {
 
     private final TheoryTermSequenceType type;
-    
+
     private final List<TheoryTerm> terms;
 
     public TheoryTermSequence(TheoryTermSequenceType type, List<TheoryTerm> terms) {
@@ -44,11 +46,6 @@ public class TheoryTermSequence implements TheoryTermData {
     }
 
     @Override
-    public clingo_ast_theory_term createTheoryTerm() {
-        return ASTToC.visitTheoryTerm(this);
-    }
-
-    @Override
     public String toString() {
         boolean tc = terms != null && terms.size() == 1 && type == TheoryTermSequenceType.TUPLE;
         StringBuilder sb = new StringBuilder();
@@ -60,5 +57,38 @@ public class TheoryTermSequence implements TheoryTermData {
         }
         return sb.toString();
     }
-     
+
+    @Override
+    public clingo_ast_theory_term_array create() {
+        clingo_ast_theory_term_array a = new clingo_ast_theory_term_array();
+        a.terms(ClingoUtil.createASTObjectArray(terms, clingo_ast_theory_term.class));
+        a.size(ClingoUtil.arraySize(terms));
+        return a;
+    }
+
+    @Override
+    public void updateTheoryTerm(clingo_ast_theory_term ret) {
+        switch (type) {
+            case LIST:
+                ret.field1().list(createPointer());
+            case SET:
+                ret.field1().set(createPointer());
+            case TUPLE:
+                ret.field1().tuple(createPointer());
+        }
+    }
+
+    @Override
+    public TheoryTermType getTheoryTermType() {
+        switch (type) {
+            case LIST:
+                return TheoryTermType.LIST;
+            case SET:
+                return TheoryTermType.SET;
+            case TUPLE:
+                return TheoryTermType.TUPLE;
+        }
+        return null;
+    }
+
 }

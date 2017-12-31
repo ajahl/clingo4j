@@ -36,8 +36,8 @@ public class ProgramBuilder extends AbstractPointerObject<clingo_program_builder
         handleError(LIB.clingo_program_builder_begin(pointer), "Error program builder begin!");
     }
 
-    public void add(Statement statment) throws ClingoException {
-        handleError(LIB.clingo_program_builder_add(pointer, Pointer.getPointer(statment.createStatment())), "Error program builder add!");            
+    public void add(Statement statement) throws ClingoException {
+        handleError(LIB.clingo_program_builder_add(pointer, statement.createPointer()), "Error program builder add!");            
     }
     
     public void end() throws ClingoException {

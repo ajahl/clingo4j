@@ -35,13 +35,18 @@ public class ProjectSignature implements StatementData {
     }
 
     @Override
-    public clingo_ast_statement createStatment() {
-        return ASTToC.visit(this);
+    public String toString() {
+        return "#project " + signature + ".";
     }
 
     @Override
-    public String toString() {
-        return "#project " + signature + ".";
+    public void updateStatement(clingo_ast_statement ret) {
+        ret.field1().project_signature(signature.getPointer());
+    }
+
+    @Override
+    public StatementType getStatementType() {
+        return StatementType.PROJECT_ATOM_SIGNATURE;
     }
     
     

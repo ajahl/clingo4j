@@ -16,18 +16,21 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_function;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class TheoryFunction implements TheoryTermData {
+public class TheoryFunction implements ASTObject<clingo_ast_theory_function>, TheoryTermData {
 
     private final String name;
-    
+
     private final List<TheoryTerm> arguments;
 
     public TheoryFunction(String name, List<TheoryTerm> arguments) {
@@ -44,13 +47,27 @@ public class TheoryFunction implements TheoryTermData {
     }
 
     @Override
-    public clingo_ast_theory_term createTheoryTerm() {
-        return ASTToC.visitTheoryTerm(this);
+    public String toString() {
+        return "" + name + ClingoUtil.print(arguments, "(", ",", ")", !(arguments == null || arguments.isEmpty()));
     }
 
     @Override
-    public String toString() {
-        return "" + name + ClingoUtil.print(arguments, "(", ",", ")", !(arguments == null || arguments.isEmpty()));
+    public clingo_ast_theory_function create() {
+        clingo_ast_theory_function fun = new clingo_ast_theory_function();
+        fun.name(Pointer.pointerToCString(name));
+        fun.arguments(ClingoUtil.createASTObjectArray(arguments, clingo_ast_theory_term.class));
+        fun.size(ClingoUtil.arraySize(arguments));
+        return fun;
+    }
+
+    @Override
+    public void updateTheoryTerm(clingo_ast_theory_term ret) {
+        ret.field1().function(createPointer());
+    }
+
+    @Override
+    public TheoryTermType getTheoryTermType() {
+        return TheoryTermType.FUNCTIONS;
     }
 
 }

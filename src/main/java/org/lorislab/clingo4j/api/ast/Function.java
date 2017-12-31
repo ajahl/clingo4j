@@ -16,7 +16,9 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
+import org.lorislab.clingo4j.api.c.clingo_ast_function;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -51,15 +53,24 @@ public class Function implements TermData {
     }
 
     @Override
-    public clingo_ast_term createTerm() {
-        return ASTToC.visitTerm(this);
-    }
-
-    @Override
     public String toString() {
         boolean tc = name != null && name.startsWith("0") && arguments != null && arguments.size() == 1;
         boolean ey = (name != null && name.startsWith("0")) || (arguments != null && !arguments.isEmpty());
         return "" + (external ? "@" : "") + name + ClingoUtil.print(arguments, "(", ",", tc ? ",)" : ")", ey);
+    }
+
+    @Override
+    public void updateTerm(clingo_ast_term ret) {
+        clingo_ast_function fn = new clingo_ast_function();
+        fn.name(Pointer.pointerToCString(name));
+        fn.arguments(ClingoUtil.createASTObjectArray(arguments, clingo_ast_term.class));
+        fn.size(ClingoUtil.arraySize(arguments));
+        ret.field1().function(Pointer.getPointer(fn));
+    }
+
+    @Override
+    public TermType getTermType() {
+        return TermType.FUNCTION;
     }
        
     

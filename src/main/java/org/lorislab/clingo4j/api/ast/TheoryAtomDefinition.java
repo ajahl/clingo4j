@@ -20,6 +20,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom_definition;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 import org.lorislab.clingo4j.util.EnumValue;
 
@@ -27,7 +28,7 @@ import org.lorislab.clingo4j.util.EnumValue;
  *
  * @author andrej
  */
-public class TheoryAtomDefinition {
+public class TheoryAtomDefinition implements ASTObject<clingo_ast_theory_atom_definition> {
 
     private final Location location;
     private final TheoryAtomDefinitionType type;
@@ -82,6 +83,20 @@ public class TheoryAtomDefinition {
         }
         sb.append(", ").append(type);
         return sb.toString();
+    }
+
+    @Override
+    public clingo_ast_theory_atom_definition create() {
+        clingo_ast_theory_atom_definition ret = new clingo_ast_theory_atom_definition();
+        ret.name(Pointer.pointerToCString(name));
+        ret.arity(arity);
+        ret.location(location);
+        ret.type(type.getInt());
+        ret.elements(Pointer.pointerToCString(elements));
+        if (guard.isPresent()) {
+            ret.guard(guard.get().createPointer());
+        }
+        return ret;
     }
     
     public static class TheoryAtomDefinitionList extends SpanList<TheoryAtomDefinition, clingo_ast_theory_atom_definition> {

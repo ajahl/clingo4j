@@ -19,20 +19,22 @@ import java.util.List;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_disjoint;
+import org.lorislab.clingo4j.api.c.clingo_ast_disjoint_element;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class Disjoint implements BodyLiteralData {
-    
+public class Disjoint implements ASTObject<clingo_ast_disjoint>, BodyLiteralData {
+
     private final List<DisjointElement> elements;
 
-    public Disjoint(clingo_ast_disjoint d)  {
+    public Disjoint(clingo_ast_disjoint d) {
         this(new DisjointElement.DisjointElementList(d.elements(), d.size()));
     }
-        
+
     public Disjoint(List<DisjointElement> elements) {
         this.elements = elements;
     }
@@ -42,13 +44,25 @@ public class Disjoint implements BodyLiteralData {
     }
 
     @Override
-    public clingo_ast_body_literal createBodyLiteral() {
-        return ASTToC.visitBodyLiteral(this);
-    }
-
-    @Override
     public String toString() {
         return "#disjoint { " + ClingoUtil.print(elements, "", "; ", "", false) + " }";
     }
-    
+
+    public clingo_ast_disjoint create() {
+        clingo_ast_disjoint ret = new clingo_ast_disjoint();
+        ret.size(ClingoUtil.arraySize(elements));
+        ret.elements(ClingoUtil.createASTObjectArray(elements, clingo_ast_disjoint_element.class));
+        return ret;
+    }
+
+    @Override
+    public void updateBodyLiteral(clingo_ast_body_literal ret) {
+        ret.field1().disjoint(createPointer());
+    }
+
+    @Override
+    public BodyLiteralType getBodyLiteralType() {
+        return BodyLiteralType.DISJOINT;
+    }
+
 }

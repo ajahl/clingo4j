@@ -43,8 +43,8 @@ public class ClingoInjectTermsTest {
             // define a constant via the AST
             control.withBuilder((ProgramBuilder builder) -> {
                 Location loc = new Location("<generated>", "<generated>", 1, 1, 1, 1);
-                Symbol num = Symbol.createNumber(24);
                 builder.add(new Statement(loc, new Definition("e", new Term(loc, Symbol.createNumber(24)), false)));
+                System.out.println();
             });
 
             control.add("base", "p(@c()). p(d). p(e).");

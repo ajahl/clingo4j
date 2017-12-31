@@ -18,15 +18,17 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralList;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_heuristic;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class Heuristic implements StatementData {
+public class Heuristic implements ASTObject<clingo_ast_heuristic>, StatementData {
     
     private final Term atom;
     private final List<BodyLiteral> body;
@@ -67,13 +69,30 @@ public class Heuristic implements StatementData {
     }
 
     @Override
-    public clingo_ast_statement createStatment() {
-        return ASTToC.visit(this);
+    public String toString() {
+        return "#heuristic " + atom + ClingoUtil.printBody(body) + " [" + bias+ "@" + priority + "," + modifier + "]";
     }
 
     @Override
-    public String toString() {
-        return "#heuristic " + atom + ClingoUtil.printBody(body) + " [" + bias+ "@" + priority + "," + modifier + "]";
+    public clingo_ast_heuristic create() {
+        clingo_ast_heuristic ret = new clingo_ast_heuristic();
+        ret.atom(atom.create());
+        ret.bias(bias.create());
+        ret.priority(priority.create());
+        ret.modifier(modifier.create());
+        ret.body(ClingoUtil.createASTObjectArray(body, clingo_ast_body_literal.class));
+        ret.size(ClingoUtil.arraySize(body));
+        return ret;
+    }
+
+    @Override
+    public void updateStatement(clingo_ast_statement ret) {
+        ret.field1().heuristic(createPointer());
+    }
+
+    @Override
+    public StatementType getStatementType() {
+        return StatementType.HEURISTIC;
     }
     
 }

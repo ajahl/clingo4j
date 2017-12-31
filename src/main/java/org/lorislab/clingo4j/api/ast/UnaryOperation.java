@@ -15,8 +15,10 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
+import org.lorislab.clingo4j.api.c.clingo_ast_unary_operation;
 
 /**
  *
@@ -42,13 +44,21 @@ public class UnaryOperation implements TermData {
     }
 
     @Override
-    public clingo_ast_term createTerm() {
-        return ASTToC.visitTerm(this);
+    public String toString() {
+        return unaryOperator.getLeft() + argument + unaryOperator.getRight();
     }
 
     @Override
-    public String toString() {
-        return unaryOperator.getLeft() + argument + unaryOperator.getRight();
+    public void updateTerm(clingo_ast_term ret) {
+        clingo_ast_unary_operation uo = new clingo_ast_unary_operation();
+        uo.unary_operator(unaryOperator.getInt());
+        uo.argument(argument.create());
+        ret.field1().unary_operation(Pointer.getPointer(uo));
+    }
+
+    @Override
+    public TermType getTermType() {
+        return TermType.UNARY_OPERATION;
     }
     
 }

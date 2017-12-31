@@ -20,13 +20,14 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
-import org.lorislab.clingo4j.api.ast.ASTToC;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
+import org.lorislab.clingo4j.api.ast.TermType;
+import org.lorislab.clingo4j.api.ast.TheoryTermType;
 import org.lorislab.clingo4j.util.ClingoUtil;
 import org.lorislab.clingo4j.util.EnumValue;
 
@@ -97,16 +98,6 @@ public class Symbol implements TermData, TheoryTermData {
         Pointer<Byte> string = Pointer.allocateBytes(size.getLong());
         handleRuntimeError(LIB.clingo_symbol_to_string(symbol, string, size.getLong()), "Error reading the symbol string value!");
         return string.getCString();
-    }
-
-    @Override
-    public clingo_ast_term createTerm() {
-        return ASTToC.visitTerm(this);
-    }
-
-    @Override
-    public clingo_ast_theory_term createTheoryTerm() {
-        return ASTToC.visitTheoryTerm(this);
     }
 
     public static Symbol createId(String name, boolean positive) throws ClingoException {
@@ -183,6 +174,26 @@ public class Symbol implements TermData, TheoryTermData {
     
     private static Long getPointerFromSymbol(Symbol symbol) {
         return symbol.symbol;
+    }
+
+    @Override
+    public void updateTerm(clingo_ast_term ret) {
+        ret.field1().symbol(symbol);
+    }
+
+    @Override
+    public TermType getTermType() {
+        return TermType.SYMBOL;
+    }
+
+    @Override
+    public void updateTheoryTerm(clingo_ast_theory_term ret) {
+        ret.field1().symbol(symbol);
+    }
+
+    @Override
+    public TheoryTermType getTheoryTermType() {
+        return TheoryTermType.SYMBOL;
     }
     
     public static class SymbolList extends SpanList<Symbol, Long> {

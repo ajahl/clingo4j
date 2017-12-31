@@ -15,16 +15,19 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_statement_type.clingo_ast_statement_type_script;
 import org.lorislab.clingo4j.api.c.clingo_ast_script;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class Script implements StatementData {
+public class Script implements ASTObject<clingo_ast_script>, StatementData {
 
     private final ScriptType type;
     private final String code;
@@ -47,17 +50,30 @@ public class Script implements StatementData {
     }
 
     @Override
-    public clingo_ast_statement createStatment() {
-        return ASTToC.visit(this);
-    }
-
-    @Override
     public String toString() {
         String tmp = code;
         if (tmp != null && !tmp.endsWith(".")) {
             tmp = tmp + ".";
         }
         return tmp;
+    }
+
+    @Override
+    public clingo_ast_script create() {
+        clingo_ast_script ret = new clingo_ast_script();
+        ret.type(type.getInt());
+        ret.code(Pointer.pointerToCString(code));
+        return ret;
+    }
+
+    @Override
+    public void updateStatement(clingo_ast_statement ret) {
+        ret.field1().script(createPointer());
+    }
+
+    @Override
+    public StatementType getStatementType() {
+        return StatementType.SCRIPT;
     }
     
 }

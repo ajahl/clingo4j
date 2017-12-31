@@ -17,15 +17,17 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_show_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class ShowTerm implements StatementData {
+public class ShowTerm implements ASTObject<clingo_ast_show_term>, StatementData {
 
     private final Term term;
     private final List<BodyLiteral> body;
@@ -54,13 +56,28 @@ public class ShowTerm implements StatementData {
     }
 
     @Override
-    public clingo_ast_statement createStatment() {
-        return ASTToC.visit(this);
+    public String toString() {
+        return  "#show " + (csp ? "$" : "") + term + ClingoUtil.printBody(body);
     }
 
     @Override
-    public String toString() {
-        return  "#show " + (csp ? "$" : "") + term + ClingoUtil.printBody(body);
+    public clingo_ast_show_term create() {
+        clingo_ast_show_term ret = new clingo_ast_show_term();
+        ret.csp(csp);
+        ret.term(term.create());
+        ret.body(ClingoUtil.createASTObjectArray(body, clingo_ast_body_literal.class));
+        ret.size(ClingoUtil.arraySize(body));
+        return ret;
+    }
+
+    @Override
+    public void updateStatement(clingo_ast_statement ret) {
+        ret.field1().show_term(createPointer());
+    }
+
+    @Override
+    public StatementType getStatementType() {
+        return StatementType.SHOW_TERM;
     }
     
 }

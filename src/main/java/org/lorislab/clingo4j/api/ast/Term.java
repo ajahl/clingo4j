@@ -28,18 +28,19 @@ import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_pool;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_unary_operation;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class Term implements LiteralData {
+public class Term implements ASTObject<clingo_ast_term>, LiteralData {
 
-    private Location location;
+    private final Location location;
 
     //Symbol, Variable, UnaryOperation, BinaryOperation, Interval, Function, Pool
-    private TermData data;
+    private final TermData data;
 
     public Term(final clingo_ast_term term) {
         TermType type = EnumValue.valueOfInt(TermType.class, term.type());
@@ -48,26 +49,36 @@ public class Term implements LiteralData {
             switch (type) {
                 case SYMBOL:
                     data = new Symbol(term.field1().symbol());
+                    break;
                 case VARIABLE:
                     data = new Variable(term.field1().variable().getCString());
+                    break;
                 case UNARY_OPERATION:
                     clingo_ast_unary_operation op = term.field1().unary_operation().get();
                     data = new UnaryOperation(EnumValue.valueOfInt(UnaryOperator.class, op.unary_operator()), new Term(op.argument()));
+                    break;
                 case BINARY_OPERATION:
                     clingo_ast_binary_operation bop = term.field1().binary_operation().get();
                     data = new BinaryOperation(EnumValue.valueOfInt(BinaryOperator.class, bop.binary_operator()), new Term(bop.left()), new Term(bop.right()));
+                    break;
                 case INTERVAL:
                     clingo_ast_interval inter = term.field1().interval().get();
                     data = new Interval(new Term(inter.left()), new Term(inter.right()));
+                    break;
                 case FUNCTION:
                     clingo_ast_function fn = term.field1().function().get();
                     data = new Function(fn.name().getCString(), new TermList(fn.arguments(), fn.size()), false);
+                    break;
                 case EXTERNAL_FUNCTION:
                     clingo_ast_function efn = term.field1().external_function().get();
                     data = new Function(efn.name().getCString(), new TermList(efn.arguments(), efn.size()), true);
+                    break;
                 case POOL:
                     clingo_ast_pool p = term.field1().pool().get();
                     data = new Pool(new TermList(p.arguments(), p.size()));
+                    break;
+                default:
+                    data = null;
             }
         } else {
             throw new RuntimeException("cannot happen");
@@ -83,23 +94,31 @@ public class Term implements LiteralData {
         return location;
     }
 
-    public clingo_ast_term createTerm() {
-        return ASTToC.convTerm(this);
-    }
-
-    public TermData getData() {
-        return data;
+    @Override
+    public clingo_ast_term create() {
+        clingo_ast_term ret = new clingo_ast_term();
+        ret.type(data.getTermType().getInt());
+        ret.location(location);
+        data.updateTerm(ret);
+        return ret;
     }
 
     @Override
-    public clingo_ast_literal createLiteral() {
-        return ASTToC.visit(this);
+    public void updateLiteral(clingo_ast_literal ret) {
+        ret.field1().symbol(Pointer.getPointer(create()));
+    }
+
+    @Override
+    public LiteralType getLiteralType() {
+        return LiteralType.SYMBOLIC;
     }
 
     public interface TermData {
 
-        public clingo_ast_term createTerm();
+        public void updateTerm(clingo_ast_term ret);
 
+        public TermType getTermType();
+        
     }
 
     @Override

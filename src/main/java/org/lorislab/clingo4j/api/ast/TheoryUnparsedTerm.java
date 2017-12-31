@@ -16,15 +16,20 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_unparsed_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term_element;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class TheoryUnparsedTerm implements TheoryTermData {
+public class TheoryUnparsedTerm implements ASTObject<clingo_ast_theory_unparsed_term>, TheoryTermData {
 
     private final List<TheoryUnparsedTermElement> elements;
 
@@ -34,11 +39,6 @@ public class TheoryUnparsedTerm implements TheoryTermData {
 
     public List<TheoryUnparsedTermElement> getElements() {
         return elements;
-    }
-
-    @Override
-    public clingo_ast_theory_term createTheoryTerm() {
-        return ASTToC.visitTheoryTerm(this);
     }
 
     @Override
@@ -52,6 +52,24 @@ public class TheoryUnparsedTerm implements TheoryTermData {
             sb.append(")");
         }
         return sb.toString();
+    }
+
+    @Override
+    public clingo_ast_theory_unparsed_term create() {
+        clingo_ast_theory_unparsed_term ret = new clingo_ast_theory_unparsed_term();
+        ret.elements(ClingoUtil.createASTObjectArray(elements, clingo_ast_theory_unparsed_term_element.class));
+        ret.size(ClingoUtil.arraySize(elements));
+        return ret;
+    }
+    
+    @Override
+    public void updateTheoryTerm(clingo_ast_theory_term ret) {
+        ret.field1().unparsed_term(createPointer());
+    }
+
+    @Override
+    public TheoryTermType getTheoryTermType() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

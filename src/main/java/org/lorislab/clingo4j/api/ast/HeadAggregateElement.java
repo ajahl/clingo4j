@@ -19,13 +19,15 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_aggregate_element;
+import org.lorislab.clingo4j.api.c.clingo_ast_term;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class HeadAggregateElement {
+public class HeadAggregateElement implements ASTObject<clingo_ast_head_aggregate_element> {
 
     private final List<Term> tuple;
     private final ConditionalLiteral condition;
@@ -52,6 +54,15 @@ public class HeadAggregateElement {
         return ClingoUtil.print(tuple, "", ",", "", false) + " : " + condition;
     }
 
+    @Override
+    public clingo_ast_head_aggregate_element create() {
+        clingo_ast_head_aggregate_element ret = new clingo_ast_head_aggregate_element();
+        ret.tuple(ClingoUtil.createASTObjectArray(tuple, clingo_ast_term.class));
+        ret.tuple_size(ClingoUtil.arraySize(tuple));
+        ret.conditional_literal(condition.create());
+        return ret;
+    }
+    
     public static class HeadAggregateElementList extends SpanList<HeadAggregateElement, clingo_ast_head_aggregate_element> {
 
         public HeadAggregateElementList(Pointer<clingo_ast_head_aggregate_element> pointer, long size) {

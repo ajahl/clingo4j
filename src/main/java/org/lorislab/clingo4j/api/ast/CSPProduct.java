@@ -20,12 +20,13 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_product_term;
+import org.lorislab.clingo4j.util.ASTObject;
 
 /**
  *
  * @author andrej
  */
-public class CSPProduct {
+public class CSPProduct implements ASTObject<clingo_ast_csp_product_term> {
 
     private final Location location;
     private final Term coefficient;
@@ -40,7 +41,7 @@ public class CSPProduct {
         coefficient = new Term(term.coefficient());
         variable = Optional.ofNullable(t);
     }
-    
+
     public CSPProduct(Location location, Term coefficient, Optional<Term> variable) {
         this.location = location;
         this.coefficient = coefficient;
@@ -67,17 +68,30 @@ public class CSPProduct {
         return "" + coefficient;
     }
 
+    @Override
+    public clingo_ast_csp_product_term create() {
+        clingo_ast_csp_product_term ret = new clingo_ast_csp_product_term();
+        ret.location(location);
+        if (variable.isPresent()) {
+            ret.variable(variable.get().createPointer());
+        } else {
+            ret.variable(null);
+        }
+        ret.coefficient(coefficient.create());
+        return ret;
+    }
+
     public static class CSPProductList extends SpanList<CSPProduct, clingo_ast_csp_product_term> {
 
         public CSPProductList(Pointer<clingo_ast_csp_product_term> pointer, long size) {
             super(pointer, size);
         }
-        
+
         @Override
         protected CSPProduct getItem(Pointer<clingo_ast_csp_product_term> p) {
             return new CSPProduct(p.get());
         }
-        
+
     }
-    
+
 }

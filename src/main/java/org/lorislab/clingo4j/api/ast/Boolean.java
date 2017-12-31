@@ -35,13 +35,18 @@ public class Boolean implements LiteralData {
     }
 
     @Override
-    public clingo_ast_literal createLiteral() {
-        return ASTToC.visit(this);
+    public String toString() {
+        return value ? "#true" : "#false";
     }
 
     @Override
-    public String toString() {
-        return value ? "#true" : "#false";
+    public void updateLiteral(clingo_ast_literal ret) {
+        ret.field1().boolean$(value);
+    }
+
+    @Override
+    public LiteralType getLiteralType() {
+        return LiteralType.BOOLEAN;
     }
     
 }

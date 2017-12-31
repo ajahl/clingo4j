@@ -16,16 +16,20 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_head_literal_type.clingo_ast_head_literal_type_disjunction;
+import org.lorislab.clingo4j.api.c.clingo_ast_conditional_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_disjunction;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class Disjunction implements HeadLiteralData {
+public class Disjunction implements ASTObject<clingo_ast_disjunction>, HeadLiteralData {
     
     private final List<ConditionalLiteral> elements;
 
@@ -42,13 +46,26 @@ public class Disjunction implements HeadLiteralData {
     }
 
     @Override
-    public clingo_ast_head_literal createHeadLiteral() {
-        return ASTToC.visitHeadLiteral(this);
+    public String toString() {
+        return ClingoUtil.print(elements, "", "; ", "", false);
     }
 
     @Override
-    public String toString() {
-        return ClingoUtil.print(elements, "", "; ", "", false);
+    public clingo_ast_disjunction create() {
+        clingo_ast_disjunction disjunction = new clingo_ast_disjunction();
+        disjunction.elements(ClingoUtil.createASTObjectArray(elements, clingo_ast_conditional_literal.class));
+        disjunction.size(ClingoUtil.arraySize(elements));
+        return disjunction;
+    }
+
+    @Override
+    public void updateHeadLiteral(clingo_ast_head_literal ret) {
+        ret.field1().disjunction(createPointer());
+    }
+
+    @Override
+    public HeadLiteralType getHeadLiteralType() {
+        return HeadLiteralType.DISJUNCTION;
     }
     
 }

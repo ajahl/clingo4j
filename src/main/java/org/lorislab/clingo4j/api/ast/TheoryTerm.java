@@ -23,13 +23,14 @@ import org.lorislab.clingo4j.api.c.clingo_ast_theory_function;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_array;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class TheoryTerm {
+public class TheoryTerm implements ASTObject<clingo_ast_theory_term> {
 
     private final Location location;
 
@@ -80,8 +81,13 @@ public class TheoryTerm {
         this.data = data;
     }
 
-    public clingo_ast_theory_term createTheoryTerm() {
-        return ASTToC.convTheoryTerm(this);
+    @Override
+    public clingo_ast_theory_term create() {
+        clingo_ast_theory_term result = new clingo_ast_theory_term();
+        result.type(data.getTheoryTermType().getInt());
+        result.location(location);
+        data.updateTheoryTerm(result);
+        return result;
     }
 
     public TheoryTermData getData() {
@@ -94,7 +100,9 @@ public class TheoryTerm {
 
     public interface TheoryTermData {
 
-        public clingo_ast_theory_term createTheoryTerm();
+        public void updateTheoryTerm(clingo_ast_theory_term ret);
+
+        public TheoryTermType getTheoryTermType();
     }
 
     @Override

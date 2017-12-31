@@ -15,7 +15,9 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
+import org.lorislab.clingo4j.api.c.clingo_ast_binary_operation;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 
 /**
@@ -49,13 +51,22 @@ public class BinaryOperation implements TermData {
     }
 
     @Override
-    public clingo_ast_term createTerm() {
-        return ASTToC.visitTerm(this);
+    public String toString() {
+        return "("  + left + operator + right + ")";
     }
 
     @Override
-    public String toString() {
-        return "("  + left + operator + right + ")";
+    public void updateTerm(clingo_ast_term ret) {
+        clingo_ast_binary_operation bo = new clingo_ast_binary_operation();
+        bo.binary_operator(operator.getInt());
+        bo.left(left.create());
+        bo.right(right.create());
+        ret.field1().binary_operation(Pointer.getPointer(bo));
+    }
+
+    @Override
+    public TermType getTermType() {
+        return TermType.BINARY_OPERATION;
     }
  
     

@@ -119,7 +119,7 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  * @author andrej
  */
 public class ASTToC {
-
+/*
     public static clingo_ast_statement convStatement(Statement x) {
         clingo_ast_statement t = x.getData().createStatment();
         t.location(x.getLocation());
@@ -708,5 +708,5 @@ public class ASTToC {
         ret.field1().theory_definition(Pointer.getPointer(theory_definition));
         return ret;
     }
-
+*/
 }

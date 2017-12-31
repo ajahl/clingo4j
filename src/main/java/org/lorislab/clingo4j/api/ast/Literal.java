@@ -26,6 +26,7 @@ import org.lorislab.clingo4j.api.c.clingo_ast_comparison;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 import org.lorislab.clingo4j.util.EnumValue;
 import org.lorislab.clingo4j.util.IntegerList;
@@ -34,7 +35,7 @@ import org.lorislab.clingo4j.util.IntegerList;
  *
  * @author andrej
  */
-public class Literal implements BodyLiteralData, HeadLiteralData {
+public class Literal implements ASTObject<clingo_ast_literal>, BodyLiteralData, HeadLiteralData {
 
     private final Location location;
     private final Sign sign;
@@ -89,23 +90,39 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
     }
 
     @Override
-    public clingo_ast_body_literal createBodyLiteral() {
-        return ASTToC.visitBodyLiteral(this);
-    }
-
-    public clingo_ast_literal createLiteral() {
-        return ASTToC.convLiteral(this);
+    public clingo_ast_literal create() {
+        clingo_ast_literal r = new clingo_ast_literal();
+        r.type(data.getLiteralType().getInt());
+        r.location(location);
+        data.updateLiteral(r);
+        return r;
     }
 
     @Override
-    public clingo_ast_head_literal createHeadLiteral() {
-        return ASTToC.visitHeadLiteral(this);
+    public void updateHeadLiteral(clingo_ast_head_literal ret) {
+        ret.field1().literal(Pointer.getPointer(create()));
+    }
+
+    @Override
+    public HeadLiteralType getHeadLiteralType() {
+        return HeadLiteralType.LITERAL;
+    }
+
+    @Override
+    public void updateBodyLiteral(clingo_ast_body_literal ret) {
+        ret.field1().literal(createPointer());
+    }
+
+    @Override
+    public BodyLiteralType getBodyLiteralType() {
+        return BodyLiteralType.LITERAL;
     }
 
     public interface LiteralData {
 
-        public clingo_ast_literal createLiteral();
+        public void updateLiteral(clingo_ast_literal lit);
 
+        public LiteralType getLiteralType();
     }
 
     @Override

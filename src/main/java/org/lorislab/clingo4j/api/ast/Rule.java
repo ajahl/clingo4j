@@ -17,15 +17,17 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_rule;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class Rule implements StatementData {
+public class Rule implements ASTObject<clingo_ast_rule>, StatementData {
 
     private final HeadLiteral head;
     private final List<BodyLiteral> body;
@@ -48,13 +50,26 @@ public class Rule implements StatementData {
     }
 
     @Override
-    public clingo_ast_statement createStatment() {
-        return ASTToC.visit(this);
+    public String toString() {
+        return "" + head + ClingoUtil.printBody(body, " :- ");
+    }
+
+    public clingo_ast_rule create() {
+        clingo_ast_rule rule = new clingo_ast_rule();
+        rule.head(head.create());
+        rule.size(ClingoUtil.arraySize(body));
+        rule.body(ClingoUtil.createASTObjectArray(body, clingo_ast_body_literal.class));
+        return rule;
+    }
+    
+    @Override
+    public void updateStatement(clingo_ast_statement ret) {
+        ret.field1().rule(createPointer());
     }
 
     @Override
-    public String toString() {
-        return "" + head + ClingoUtil.printBody(body, " :- ");
+    public StatementType getStatementType() {
+        return StatementType.RULE;
     }
 
 }

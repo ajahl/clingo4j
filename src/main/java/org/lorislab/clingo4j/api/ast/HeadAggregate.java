@@ -20,14 +20,16 @@ import java.util.List;
 import java.util.Optional;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_aggregate;
+import org.lorislab.clingo4j.api.c.clingo_ast_head_aggregate_element;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class HeadAggregate implements HeadLiteralData {
+public class HeadAggregate implements ASTObject<clingo_ast_head_aggregate>, HeadLiteralData {
 
     private final AggregateFunction function;
     private final List<HeadAggregateElement> elements;
@@ -62,11 +64,6 @@ public class HeadAggregate implements HeadLiteralData {
     }
 
     @Override
-    public clingo_ast_head_literal createHeadLiteral() {
-        return ASTToC.visitHeadLiteral(this);
-    }
-
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if (leftGuard.isPresent()) {
@@ -77,6 +74,31 @@ public class HeadAggregate implements HeadLiteralData {
             sb.append(" ").append(rightGuard.get().getOperator()).append(" ").append(rightGuard.get().getTerm());
         }
         return sb.toString();
+    }
+
+    @Override
+    public void updateHeadLiteral(clingo_ast_head_literal ret) {
+        ret.field1().head_aggregate(createPointer());
+    }
+    
+    @Override
+    public clingo_ast_head_aggregate create() {
+        clingo_ast_head_aggregate head_aggregate = new clingo_ast_head_aggregate();
+        if (leftGuard.isPresent()) {
+            head_aggregate.left_guard(leftGuard.get().createPointer());
+        }
+        if (rightGuard.isPresent()) {
+            head_aggregate.right_guard(rightGuard.get().createPointer());
+        }
+        head_aggregate.function(function.getInt());
+        head_aggregate.elements(ClingoUtil.createASTObjectArray(elements, clingo_ast_head_aggregate_element.class));
+        head_aggregate.size(ClingoUtil.arraySize(elements));
+        return head_aggregate;
+    }
+
+    @Override
+    public HeadLiteralType getHeadLiteralType() {
+        return HeadLiteralType.HEAD_AGGREGATE;
     }
     
 }

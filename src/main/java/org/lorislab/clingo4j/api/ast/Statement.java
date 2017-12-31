@@ -17,13 +17,14 @@ package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class Statement {
+public class Statement implements ASTObject<clingo_ast_statement> {
 
     private final Location location;
 
@@ -95,13 +96,20 @@ public class Statement {
         return location;
     }
 
-    public clingo_ast_statement createStatment() {
-        return ASTToC.convStatement(this);
+    @Override
+    public clingo_ast_statement create() {
+        clingo_ast_statement ret = new clingo_ast_statement();
+        ret.type(data.getStatementType().getInt());
+        ret.location(location);
+        data.updateStatement(ret);
+        return ret;
     }
 
     public interface StatementData {
 
-        public clingo_ast_statement createStatment();
+        public void updateStatement(clingo_ast_statement statment);
+
+        public StatementType getStatementType();
 
     }
 

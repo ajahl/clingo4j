@@ -17,15 +17,17 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
+import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_project;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class ProjectAtom implements StatementData {
+public class ProjectAtom implements ASTObject<clingo_ast_project>, StatementData {
 
     private final Term atom;
     private final List<BodyLiteral> body;
@@ -48,13 +50,27 @@ public class ProjectAtom implements StatementData {
     }
 
     @Override
-    public clingo_ast_statement createStatment() {
-        return ASTToC.visit(this);
+    public String toString() {
+        return "#project " + atom + ClingoUtil.printBody(body);
     }
 
     @Override
-    public String toString() {
-        return "#project " + atom + ClingoUtil.printBody(body);
+    public clingo_ast_project create() {
+        clingo_ast_project ret = new clingo_ast_project();
+        ret.atom(atom.create());
+        ret.body(ClingoUtil.createASTObjectArray(body, clingo_ast_body_literal.class));
+        ret.size(ClingoUtil.arraySize(body));
+        return ret;
+    }
+
+    @Override
+    public void updateStatement(clingo_ast_statement ret) {
+        ret.field1().project_atom(createPointer());
+    }
+
+    @Override
+    public StatementType getStatementType() {
+        return StatementType.PROJECT_ATOM;
     }
 
 }

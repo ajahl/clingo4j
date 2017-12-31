@@ -18,13 +18,14 @@ package org.lorislab.clingo4j.api.ast;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_guard;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class CSPGuard {
+public class CSPGuard implements ASTObject<clingo_ast_csp_guard> {
 
     private final ComparisonOperator operator;
 
@@ -52,6 +53,13 @@ public class CSPGuard {
         return "$" + operator + term;
     }
 
+    public clingo_ast_csp_guard create() {
+        clingo_ast_csp_guard ret = new clingo_ast_csp_guard();
+        ret.comparison(operator.getInt());
+        ret.term(term.create());
+        return ret;
+    }
+    
     public static class CSPGuardList extends SpanList<CSPGuard, clingo_ast_csp_guard> {
 
         public CSPGuardList(Pointer<clingo_ast_csp_guard> pointer, long size) {

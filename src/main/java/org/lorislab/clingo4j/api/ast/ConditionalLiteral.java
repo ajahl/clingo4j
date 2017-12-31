@@ -19,15 +19,18 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
+import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_body_literal_type.clingo_ast_body_literal_type_conditional;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_conditional_literal;
+import org.lorislab.clingo4j.api.c.clingo_ast_literal;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class ConditionalLiteral implements BodyLiteralData {
+public class ConditionalLiteral implements ASTObject<clingo_ast_conditional_literal>, BodyLiteralData {
 
     private final Literal literal;
     private final List<Literal> condition;
@@ -35,7 +38,7 @@ public class ConditionalLiteral implements BodyLiteralData {
     public ConditionalLiteral(clingo_ast_conditional_literal lit) {
         this(new Literal(lit.literal()), new Literal.LiteralList(lit.condition(), lit.size()));
     }
-    
+
     public ConditionalLiteral(Literal literal, List<Literal> condition) {
         this.literal = literal;
         this.condition = condition;
@@ -49,16 +52,29 @@ public class ConditionalLiteral implements BodyLiteralData {
         return literal;
     }
 
-    @Override
-    public clingo_ast_body_literal createBodyLiteral() {
-        return ASTToC.visitBodyLiteral(this);
+    public clingo_ast_conditional_literal create() {
+        clingo_ast_conditional_literal ret = new clingo_ast_conditional_literal();
+        ret.literal(literal.create());
+        ret.condition(ClingoUtil.createASTObjectArray(condition, clingo_ast_literal.class));
+        ret.size(ClingoUtil.arraySize(condition));
+        return ret;
     }
 
     @Override
     public String toString() {
         return "" + literal + ClingoUtil.print(condition, " : ", ", ", "", true);
     }
-    
+
+    @Override
+    public void updateBodyLiteral(clingo_ast_body_literal ret) {
+        ret.field1().conditional(createPointer());
+    }
+
+    @Override
+    public BodyLiteralType getBodyLiteralType() {
+        return BodyLiteralType.CONDITIONAL;
+    }
+
     public static class ConditionalLiteralList extends SpanList<ConditionalLiteral, clingo_ast_conditional_literal> {
 
         public ConditionalLiteralList(Pointer<clingo_ast_conditional_literal> pointer, long size) {
@@ -69,7 +85,7 @@ public class ConditionalLiteral implements BodyLiteralData {
         protected ConditionalLiteral getItem(Pointer<clingo_ast_conditional_literal> p) {
             return new ConditionalLiteral(p.get());
         }
-        
+
     }
 
 }

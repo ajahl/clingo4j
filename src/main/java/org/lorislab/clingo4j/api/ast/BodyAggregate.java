@@ -21,14 +21,16 @@ import java.util.Optional;
 import org.lorislab.clingo4j.api.ast.BodyAggregateElement.BodyAggregateElementList;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_aggregate;
+import org.lorislab.clingo4j.api.c.clingo_ast_body_aggregate_element;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class BodyAggregate implements BodyLiteralData {
+public class BodyAggregate implements ASTObject<clingo_ast_body_aggregate>, BodyLiteralData {
 
     private final AggregateFunction function;
     private final List<BodyAggregateElement> elements;
@@ -36,9 +38,9 @@ public class BodyAggregate implements BodyLiteralData {
     private final Optional<AggregateGuard> rightGuard;
 
     public BodyAggregate(clingo_ast_body_aggregate a) {
-        this(EnumValue.valueOfInt(AggregateFunction.class, a.function()), new BodyAggregateElementList(a.elements(), a.size()), ClingoUtil.optional(AggregateGuard::new,a.left_guard()), ClingoUtil.optional(AggregateGuard::new, a.right_guard()));
+        this(EnumValue.valueOfInt(AggregateFunction.class, a.function()), new BodyAggregateElementList(a.elements(), a.size()), ClingoUtil.optional(AggregateGuard::new, a.left_guard()), ClingoUtil.optional(AggregateGuard::new, a.right_guard()));
     }
-    
+
     public BodyAggregate(AggregateFunction function, List<BodyAggregateElement> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {
         this.function = function;
         this.elements = elements;
@@ -63,11 +65,6 @@ public class BodyAggregate implements BodyLiteralData {
     }
 
     @Override
-    public clingo_ast_body_literal createBodyLiteral() {
-        return ASTToC.visitBodyLiteral(this);
-    }
-
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if (leftGuard.isPresent()) {
@@ -75,10 +72,34 @@ public class BodyAggregate implements BodyLiteralData {
         }
         sb.append(" { ").append(ClingoUtil.print(elements, "", "; ", "", false)).append(" }");
         if (rightGuard.isPresent()) {
-           sb.append(" ").append(rightGuard.get().getOperator()).append(" ").append(rightGuard.get().getTerm());
+            sb.append(" ").append(rightGuard.get().getOperator()).append(" ").append(rightGuard.get().getTerm());
         }
         return sb.toString();
     }
-    
-    
+
+    @Override
+    public clingo_ast_body_aggregate create() {
+        clingo_ast_body_aggregate ret = new clingo_ast_body_aggregate();
+        if (leftGuard.isPresent()) {
+            ret.left_guard(leftGuard.get().createPointer());
+        }
+        if (rightGuard.isPresent()) {
+            ret.right_guard(rightGuard.get().createPointer());
+        }
+        ret.function(function.getInt());
+        ret.size(ClingoUtil.arraySize(elements));
+        ret.elements(ClingoUtil.createASTObjectArray(elements, clingo_ast_body_aggregate_element.class));
+        return ret;
+    }
+
+    @Override
+    public void updateBodyLiteral(clingo_ast_body_literal ret) {
+        ret.field1().body_aggregate(createPointer());
+    }
+
+    @Override
+    public BodyLiteralType getBodyLiteralType() {
+        return BodyLiteralType.BODY_AGGREGATE;
+    }
+
 }

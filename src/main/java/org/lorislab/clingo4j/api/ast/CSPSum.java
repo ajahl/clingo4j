@@ -18,14 +18,16 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.ast.CSPProduct.CSPProductList;
+import org.lorislab.clingo4j.api.c.clingo_ast_csp_product_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_sum_term;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class CSPSum {
+public class CSPSum implements ASTObject<clingo_ast_csp_sum_term> {
 
     private final Location location;
 
@@ -57,4 +59,12 @@ public class CSPSum {
         }
     }
 
+    @Override
+    public clingo_ast_csp_sum_term create() {
+        clingo_ast_csp_sum_term ret = new clingo_ast_csp_sum_term();
+        ret.location(location);
+        ret.terms(ClingoUtil.createASTObjectArray(terms, clingo_ast_csp_product_term.class));
+        ret.size(ClingoUtil.arraySize(terms));
+        return ret;
+    }
 }

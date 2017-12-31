@@ -20,14 +20,16 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.ast.TheoryOperatorDefinition.TheoryOperatorDefinitionList;
+import org.lorislab.clingo4j.api.c.clingo_ast_theory_operator_definition;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_definition;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *
  * @author andrej
  */
-public class TheoryTermDefinition {
+public class TheoryTermDefinition implements ASTObject<clingo_ast_theory_term_definition> {
     
     private final Location location;
     private final String name;
@@ -58,6 +60,16 @@ public class TheoryTermDefinition {
     @Override
     public String toString() {
         return name + " {\n" + ClingoUtil.print(operators, "  ", ";\n", "\n", true) + "}";
+    }
+
+    @Override
+    public clingo_ast_theory_term_definition create() {
+        clingo_ast_theory_term_definition ret = new clingo_ast_theory_term_definition();
+        ret.location(location);
+        ret.name(Pointer.pointerToCString(name));
+        ret.operators(ClingoUtil.createASTObjectArray(operators, clingo_ast_theory_operator_definition.class));
+        ret.size(ClingoUtil.arraySize(operators));
+        return ret;
     }
     
     public static class TheoryTermDefinitionList extends SpanList<TheoryTermDefinition, clingo_ast_theory_term_definition> {
