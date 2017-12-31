@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_sign;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_sign.clingo_ast_sign_double_negation;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_sign.clingo_ast_sign_negation;
@@ -24,7 +25,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_sign.clingo_a
  *
  * @author andrej
  */
-public enum Sign {
+public enum Sign implements EnumValue<clingo_ast_sign> {
  
     NONE(clingo_ast_sign_none,""),
     
@@ -32,36 +33,23 @@ public enum Sign {
     
     DOUBLE_NEGATION(clingo_ast_sign_double_negation,"not not");
     
-    private clingo_ast_sign sign;
+    private final clingo_ast_sign sign;
 
-    private String string;
+    private final String string;
     
     private Sign(clingo_ast_sign sign, String string) {
         this.sign = sign;
         this.string = string;
     }
 
-    public clingo_ast_sign getSign() {
+    @Override
+    public clingo_ast_sign getValue() {
         return sign;
     }
-
-    public int getValue() {
-        return (int) sign.value;
-    }
-
+    
     @Override
     public String toString() {
         return string;
     }
     
-    
-    public static Sign valueOfInt(int value) {
-        Sign[] values = Sign.values();
-        for (int i=0; i<values.length; i++) {
-            if (values[i].sign.value == value) {
-                return values[i];
-            }
-        }
-        return null;
-    }
 }

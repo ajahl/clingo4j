@@ -19,12 +19,13 @@ import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_propagator_check_mode;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_propagator_check_mode.clingo_propagator_check_mode_fixpoint;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_propagator_check_mode.clingo_propagator_check_mode_none;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_propagator_check_mode.clingo_propagator_check_mode_total;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public enum PropagatorCheckMode {
+public enum PropagatorCheckMode implements EnumValue<clingo_propagator_check_mode> {
 
     NONE(clingo_propagator_check_mode_none),
     TOTAL(clingo_propagator_check_mode_total),
@@ -36,22 +37,9 @@ public enum PropagatorCheckMode {
         this.mode = mode;
     }
 
-    public clingo_propagator_check_mode getMode() {
+    @Override
+    public clingo_propagator_check_mode getValue() {
         return mode;
     }
 
-    public int getValue() {
-        return (int) mode.value;
-    }
-    
-    public static PropagatorCheckMode createPropagatorCheckMode(int value) {
-        PropagatorCheckMode result = null;
-        PropagatorCheckMode[] values = PropagatorCheckMode.values();
-        for (int i=0; i<values.length && result == null; i++) {
-            if (values[i].getValue() == value) {
-                result = values[i];
-            }
-        }
-        return result;
-    }
 }

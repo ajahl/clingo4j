@@ -53,11 +53,4 @@ public class TheoryGuardDefinition {
         return "{ " + ClingoUtil.print(operators, "", ", ", "", false) + " }, " + term;
     }
 
-    public static Optional<TheoryGuardDefinition> convert(Pointer<clingo_ast_theory_guard_definition> p) {
-        if (p != null && p.get() != null) {
-            return Optional.of(new TheoryGuardDefinition(p.get()));
-        }
-        return Optional.empty();
-    }
-
 }

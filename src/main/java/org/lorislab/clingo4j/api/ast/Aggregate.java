@@ -36,7 +36,7 @@ public class Aggregate implements HeadLiteralData, BodyLiteralData {
     private final Optional<AggregateGuard> rightGuard;
 
     public Aggregate(clingo_ast_aggregate ag) {
-       this(new ConditionalLiteralList(ag.elements(), ag.size()), AggregateGuard.convert(ag.left_guard()), AggregateGuard.convert(ag.right_guard()));
+       this(new ConditionalLiteralList(ag.elements(), ag.size()), ClingoUtil.optional(AggregateGuard::new, ag.left_guard()), ClingoUtil.optional(AggregateGuard::new, ag.right_guard()));
     }
     
     public Aggregate(List<ConditionalLiteral> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {

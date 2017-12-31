@@ -20,25 +20,22 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbol_type.cling
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbol_type.clingo_symbol_type_number;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbol_type.clingo_symbol_type_string;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbol_type.clingo_symbol_type_supremum;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public enum SymbolType {
-    // clingo_symbol_type_infimum,
+public enum SymbolType implements EnumValue<clingo_symbol_type> {
+    
     INFIMUM(clingo_symbol_type_infimum),
     
-    // clingo_symbol_type_number,
     NUMBER(clingo_symbol_type_number),
     
-    // clingo_symbol_type_string,
     STRING(clingo_symbol_type_string),
     
-    // clingo_symbol_type_function,
     FUNCTION(clingo_symbol_type_function),
     
-    // clingo_symbol_type_supremum
     SUPREMUM(clingo_symbol_type_supremum);
     
     private clingo_symbol_type type;
@@ -47,23 +44,9 @@ public enum SymbolType {
         this.type = type;
     }
 
-    public clingo_symbol_type getType() {
+    @Override
+    public clingo_symbol_type getValue() {
         return type;
     }
-    
-    public long getValue() {
-        return type.value;
-    }
-    
-    public static SymbolType createSymbolType(long value) {
-        SymbolType result = null;
-        SymbolType[] types = SymbolType.values();
-        for (int i=0; i<types.length && result == null; i++) {
-            if (types[i].getValue() == value) {
-                result = types[i];
-            }
-        }
-        return result;
-    }
-    
+
 }

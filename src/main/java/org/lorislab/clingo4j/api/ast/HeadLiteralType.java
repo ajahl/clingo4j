@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
+import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_head_literal_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_head_literal_type.clingo_ast_head_literal_type_aggregate;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_head_literal_type.clingo_ast_head_literal_type_disjunction;
@@ -26,7 +28,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_head_literal_
  *
  * @author andrej
  */
-public enum HeadLiteralType {
+public enum HeadLiteralType implements EnumValue<clingo_ast_head_literal_type> {
     
     LITERAL(clingo_ast_head_literal_type_literal),
     DISJUNCTION(clingo_ast_head_literal_type_disjunction),
@@ -40,23 +42,9 @@ public enum HeadLiteralType {
         this.type = type;
     }
 
-    public clingo_ast_head_literal_type getType() {
+    @Override
+    public clingo_ast_head_literal_type getValue() {
         return type;
-    }
-
-    public int getValue() {
-        return (int) type.value;
-    }
-    
-    public static HeadLiteralType valueOfInt(int value) {
-        HeadLiteralType r = null;
-        HeadLiteralType[] values = HeadLiteralType.values();
-        for (int i=0; i<values.length && r == null; i++) {
-            if (values[i].getValue() == value) {
-                r = values[i];
-            }
-        }
-        return r;
     }
     
 }

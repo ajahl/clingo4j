@@ -22,6 +22,7 @@ import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -49,7 +50,7 @@ public class TheoryTerm {
     public TheoryTermType type() throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_theory_atoms_term_type(atoms, id, ret), "Error reading the theory term type!");
-        return TheoryTermType.createTheoryTermType(ret.getInt());
+        return EnumValue.valueOfInt(TheoryTermType.class, ret.getInt());
     }
 
     public int number() throws ClingoException {

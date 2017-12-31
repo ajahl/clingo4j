@@ -17,6 +17,7 @@ package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -30,7 +31,7 @@ public class HeadLiteral {
     private final HeadLiteralData data;
 
     public HeadLiteral(final clingo_ast_head_literal head) {
-        HeadLiteralType type = HeadLiteralType.valueOfInt(head.type());
+        HeadLiteralType type = EnumValue.valueOfInt(HeadLiteralType.class, head.type());
         if (type != null) {
             location = new Location(head.location());
             switch (type) {
@@ -76,7 +77,7 @@ public class HeadLiteral {
 
     public interface HeadLiteralData {
 
-        public clingo_ast_head_literal createHeadLiteral();
+        public clingo_ast_head_literal createHeadLiteral();    
     }
 
     @Override

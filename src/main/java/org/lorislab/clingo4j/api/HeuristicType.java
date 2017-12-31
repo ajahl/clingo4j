@@ -22,12 +22,13 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_heuristic_type.cl
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_heuristic_type.clingo_heuristic_type_level;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_heuristic_type.clingo_heuristic_type_sign;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_heuristic_type.clingo_heuristic_type_true;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public enum HeuristicType {
+public enum HeuristicType implements EnumValue<clingo_heuristic_type> {
 
     LEVEL(clingo_heuristic_type_level, "Level"),
     SIGN(clingo_heuristic_type_sign, "Sign"),
@@ -45,27 +46,14 @@ public enum HeuristicType {
         this.string = string;
     }
 
-    public clingo_heuristic_type getType() {
+    @Override
+    public clingo_heuristic_type getValue() {
         return type;
     }
-
-    public int getValue() {
-        return (int) type.value;
-    }
-
+    
     @Override
     public String toString() {
         return string;
     }
 
-    public static HeuristicType createHeuristicType(int value) {
-        HeuristicType r = null;
-        HeuristicType[] values = HeuristicType.values();
-        for (int i=0; i<values.length && r == null; i++) {
-            if (values[i].getValue() == value) {
-                r = values[i];
-            }
-        }
-        return r;
-    }
 }

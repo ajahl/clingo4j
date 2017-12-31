@@ -72,6 +72,7 @@ import org.lorislab.clingo4j.api.c.clingo_propagator.propagate_callback;
 import org.lorislab.clingo4j.api.c.clingo_propagator.undo_callback;
 import org.lorislab.clingo4j.api.c.clingo_weighted_literal;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -112,7 +113,7 @@ public class Clingo implements AutoCloseable {
             clingo_logger_t log = new clingo_logger_t() {
                 public void apply(int code, Pointer<Byte> message, Pointer<?> data) {
                     try {
-                        logger.warn(WarningCode.createWarningCode(code), message.getCString());
+                        logger.warn(EnumValue.valueOfInt(WarningCode.class, code), message.getCString());
                     } catch (Exception e) {
                         // ignore
                     }
@@ -293,7 +294,7 @@ public class Clingo implements AutoCloseable {
     }
 
     public void assignExternal(Symbol atom, TruthValue value) throws ClingoException {
-        handleError(LIB.clingo_control_assign_external(control.get(), atom.getSymbol(), value.getValue()), "Error clingo assign external!");
+        handleError(LIB.clingo_control_assign_external(control.get(), atom.getSymbol(), value.getInt()), "Error clingo assign external!");
     }
 
     public void releaseExternal(Symbol atom) throws ClingoException {
@@ -304,7 +305,7 @@ public class Clingo implements AutoCloseable {
         if (!value) {
             Pointer<Byte> msg = LIB.clingo_error_message();
             int error = LIB.clingo_error_code();
-            throw new ClingoException(ErrorCode.createErrorCode(error), msg.getCString(), message);
+            throw new ClingoException(EnumValue.valueOfInt(ErrorCode.class, error), msg.getCString(), message);
         }
     }
 
@@ -468,7 +469,7 @@ public class Clingo implements AutoCloseable {
         tmp.external(Pointer.getPointer(new external_callback() {
             @Override
             public boolean apply(int atom, int type, Pointer<?> data) {
-                observer.external(atom, ExternalType.createExternalType(type));
+                observer.external(atom, EnumValue.valueOfInt(ExternalType.class, type));
                 return true;
             }
         }));
@@ -482,7 +483,7 @@ public class Clingo implements AutoCloseable {
         tmp.heuristic(Pointer.getPointer(new heuristic_callback() {
             @Override
             public boolean apply(int atom, int type, int bias, int priority, Pointer<Integer> condition, long size, Pointer<?> data) {
-                observer.heuristic(atom, HeuristicType.createHeuristicType(type), bias, priority, new LiteralIntegerList(condition, size));
+                observer.heuristic(atom, EnumValue.valueOfInt(HeuristicType.class, type), bias, priority, new LiteralIntegerList(condition, size));
                 return true;
             }
         }));
@@ -586,7 +587,7 @@ public class Clingo implements AutoCloseable {
             clingo_logger_t log = new clingo_logger_t() {
                 public void apply(int code, Pointer<Byte> message, Pointer<?> data) {
                     try {
-                        logger.warn(WarningCode.createWarningCode(code), message.getCString());
+                        logger.warn(EnumValue.valueOfInt(WarningCode.class, code), message.getCString());
                     } catch (Exception e) {
                         // ignore
                     }
@@ -611,7 +612,7 @@ public class Clingo implements AutoCloseable {
             clingo_logger_t log = new clingo_logger_t() {
                 public void apply(int code, Pointer<Byte> message, Pointer<?> data) {
                     try {
-                        logger.warn(WarningCode.createWarningCode(code), message.getCString());
+                        logger.warn(EnumValue.valueOfInt(WarningCode.class, code), message.getCString());
                     } catch (Exception e) {
                         // ignore
                     }

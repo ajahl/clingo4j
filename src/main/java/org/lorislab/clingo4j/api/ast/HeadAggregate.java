@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
 import java.util.List;
 import java.util.Optional;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
@@ -34,7 +35,7 @@ public class HeadAggregate implements HeadLiteralData {
     private final Optional<AggregateGuard> rightGuard;
 
     public HeadAggregate(clingo_ast_head_aggregate h) {
-        this(AggregateFunction.valueOfInt(h.function()), new HeadAggregateElement.HeadAggregateElementList(h.elements(), h.size()), AggregateGuard.convert(h.left_guard()), AggregateGuard.convert(h.right_guard()));
+        this(EnumValue.valueOfInt(AggregateFunction.class, h.function()), new HeadAggregateElement.HeadAggregateElementList(h.elements(), h.size()), ClingoUtil.optional(AggregateGuard::new, h.left_guard()), ClingoUtil.optional(AggregateGuard::new, h.right_guard()));
     }
     
     public HeadAggregate(AggregateFunction function, List<HeadAggregateElement> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {

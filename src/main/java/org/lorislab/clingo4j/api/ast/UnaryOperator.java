@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
+import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_unary_operator;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_unary_operator.clingo_ast_unary_operator_absolute;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_unary_operator.clingo_ast_unary_operator_minus;
@@ -24,7 +26,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_unary_operato
  *
  * @author andrej
  */
-public enum UnaryOperator {
+public enum UnaryOperator implements EnumValue<clingo_ast_unary_operator> {
 
     ABSOLUTE(clingo_ast_unary_operator_absolute,"|","|"),
     
@@ -44,12 +46,9 @@ public enum UnaryOperator {
         this.right = right;
     }
 
-    public clingo_ast_unary_operator getOperator() {
+    @Override
+    public clingo_ast_unary_operator getValue() {
         return operator;
-    }
-        
-    public int getValue() {
-        return (int) operator.value;
     }
 
     public String getLeft() {
@@ -59,13 +58,5 @@ public enum UnaryOperator {
     public String getRight() {
         return right;
     }
-    
-    public static UnaryOperator valueOfInt(int value) {
-        for (UnaryOperator t : UnaryOperator.values()) {
-            if (t.operator.value == value) {
-                return t;
-            }
-        }
-        return null;
-    }
+
 }

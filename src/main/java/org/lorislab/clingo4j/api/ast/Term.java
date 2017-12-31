@@ -28,6 +28,7 @@ import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_pool;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_unary_operation;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -41,7 +42,7 @@ public class Term implements LiteralData {
     private TermData data;
 
     public Term(final clingo_ast_term term) {
-        TermType type = TermType.valueOfInt(term.type());
+        TermType type = EnumValue.valueOfInt(TermType.class, term.type());
         if (type != null) {
             location = new Location(term.location());
             switch (type) {
@@ -51,10 +52,10 @@ public class Term implements LiteralData {
                     data = new Variable(term.field1().variable().getCString());
                 case UNARY_OPERATION:
                     clingo_ast_unary_operation op = term.field1().unary_operation().get();
-                    data = new UnaryOperation(UnaryOperator.valueOfInt(op.unary_operator()), new Term(op.argument()));
+                    data = new UnaryOperation(EnumValue.valueOfInt(UnaryOperator.class, op.unary_operator()), new Term(op.argument()));
                 case BINARY_OPERATION:
                     clingo_ast_binary_operation bop = term.field1().binary_operation().get();
-                    data = new BinaryOperation(BinaryOperator.valueOfInt(bop.binary_operator()), new Term(bop.left()), new Term(bop.right()));
+                    data = new BinaryOperation(EnumValue.valueOfInt(BinaryOperator.class, bop.binary_operator()), new Term(bop.left()), new Term(bop.right()));
                 case INTERVAL:
                     clingo_ast_interval inter = term.field1().interval().get();
                     data = new Interval(new Term(inter.left()), new Term(inter.right()));

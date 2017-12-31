@@ -16,9 +16,9 @@
 package org.lorislab.clingo4j.util;
 
 import java.util.List;
-import org.bridj.IntValuedEnum;
+import java.util.Optional;
+import java.util.function.Function;
 import org.bridj.Pointer;
-import org.bridj.ValuedEnum;
 
 /**
  *
@@ -27,6 +27,17 @@ import org.bridj.ValuedEnum;
 public final class ClingoUtil {
 
     private ClingoUtil() {
+    }
+    
+    public static <T, R> Optional<R> optional(Function<T, R> fn, Pointer<T> val) {
+        return Optional.ofNullable(create(fn, val));
+    }
+    
+    public static <T, R> R create(Function<T, R> fn, Pointer<T> val) {
+        if (val != null && val.get() != null) {
+            return fn.apply(val.get());
+        }
+        return null;
     }
 
     public static int arraySize(List data) {
@@ -54,7 +65,7 @@ public final class ClingoUtil {
         }
         return result;
     }
-    
+
     public static <T, E> Pointer<T> createArray(List<E> data, Class<T> clazz, Convertor<T, E> convertor) {
         Pointer<T> result = null;
         if (data != null && !data.isEmpty()) {
@@ -91,11 +102,11 @@ public final class ClingoUtil {
         }
         return sb.toString();
     }
-    
+
     public static String printBody(List list) {
         return printBody(list, " : ");
     }
-    
+
     public static String printBody(List list, String pre) {
         String tmp = "";
         if (list != null && !list.isEmpty()) {

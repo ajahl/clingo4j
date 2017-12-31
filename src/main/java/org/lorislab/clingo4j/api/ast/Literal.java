@@ -27,6 +27,7 @@ import org.lorislab.clingo4j.api.c.clingo_ast_csp_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -41,7 +42,7 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
     private final LiteralData data;
 
     public Literal(clingo_ast_literal lit) {
-        LiteralType type = LiteralType.valueOfInt(lit.type());
+        LiteralType type = EnumValue.valueOfInt(LiteralType.class, lit.type());
         if (type != null) {
             switch (type) {
                 case BOOLEAN:
@@ -52,7 +53,7 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
                     break;
                 case COMPARISON:
                     clingo_ast_comparison com = lit.field1().comparison().get();
-                    data = new Comparison(ComparisonOperator.valueOfInt(com.comparison()), new Term(com.left()), new Term(com.right()));
+                    data = new Comparison(EnumValue.valueOfInt(ComparisonOperator.class, com.comparison()), new Term(com.left()), new Term(com.right()));
                     break;
                 case CSP:
                     clingo_ast_csp_literal csp = lit.field1().csp_literal().get();
@@ -62,7 +63,7 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
                     data = null;
             }
             location = new Location(lit.location());
-            sign = Sign.valueOfInt(lit.sign());
+            sign = EnumValue.valueOfInt(Sign.class, lit.sign());
         } else {
             throw new  RuntimeException("cannot happen");
         }

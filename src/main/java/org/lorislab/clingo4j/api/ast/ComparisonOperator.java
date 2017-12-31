@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_comparison_operator;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_equal;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_comparison_operator.clingo_ast_comparison_operator_greater_equal;
@@ -27,7 +28,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_comparison_op
  *
  * @author andrej
  */
-public enum ComparisonOperator {
+public enum ComparisonOperator implements EnumValue<clingo_ast_comparison_operator> {
  
     GREATER_THAN(clingo_ast_comparison_operator_greater_than,">"),
     
@@ -50,26 +51,14 @@ public enum ComparisonOperator {
         this.string = string;
     }
 
-    public clingo_ast_comparison_operator getOperator() {
-        return operator;
-    }
-
-    public int getValue() {
-        return (int) operator.value;
-    }
-
     @Override
     public String toString() {
         return string;
     }
-    
-    public static ComparisonOperator valueOfInt(int value) {
-        for (ComparisonOperator t : ComparisonOperator.values()) {
-            if (t.operator.value == value) {
-                return t;
-            }
-        }
-        return null;
+
+    @Override
+    public clingo_ast_comparison_operator getValue() {
+        return operator;
     }
     
 }

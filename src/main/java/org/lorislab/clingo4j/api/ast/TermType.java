@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
+import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_term_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_term_type.clingo_ast_term_type_binary_operation;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_term_type.clingo_ast_term_type_external_function;
@@ -29,7 +31,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_term_type.cli
  *
  * @author andrej
  */
-public enum TermType {
+public enum TermType implements EnumValue<clingo_ast_term_type> {
 
     SYMBOL(clingo_ast_term_type_symbol),
     VARIABLE(clingo_ast_term_type_variable),
@@ -40,18 +42,15 @@ public enum TermType {
     EXTERNAL_FUNCTION(clingo_ast_term_type_external_function),
     POOL(clingo_ast_term_type_pool);
 
-    private clingo_ast_term_type type;
+    private final clingo_ast_term_type type;
 
     private TermType(clingo_ast_term_type type) {
         this.type = type;
     }
 
-    public static TermType valueOfInt(int value) {
-        for (TermType t : TermType.values()) {
-            if (t.type.value == value) {
-                return t;
-            }
-        }
-        return null;
+    @Override
+    public clingo_ast_term_type getValue() {
+        return type;
     }
+
 }

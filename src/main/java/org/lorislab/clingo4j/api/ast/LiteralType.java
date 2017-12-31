@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_literal_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_literal_type.clingo_ast_literal_type_boolean;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_literal_type.clingo_ast_literal_type_comparison;
@@ -25,7 +26,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_literal_type.
  *
  * @author andrej
  */
-public enum LiteralType {
+public enum LiteralType implements EnumValue<clingo_ast_literal_type> {
 
     BOOLEAN(clingo_ast_literal_type_boolean),
     SYMBOLIC(clingo_ast_literal_type_symbolic),
@@ -38,18 +39,9 @@ public enum LiteralType {
         this.type = type;
     }
 
-    public clingo_ast_literal_type getType() {
+    @Override
+    public clingo_ast_literal_type getValue() {
         return type;
     }
 
-    public static LiteralType valueOfInt(int value) {
-        LiteralType r = null;
-        LiteralType[] values = LiteralType.values();
-        for (int i=0; i<values.length && r == null; i++) {
-            if (values[i].type.value == value) {
-                r = values[i];
-            }
-        }
-        return r;
-    }
 }

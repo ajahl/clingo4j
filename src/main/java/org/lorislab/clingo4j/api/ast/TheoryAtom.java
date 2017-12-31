@@ -35,7 +35,7 @@ public class TheoryAtom  implements HeadLiteralData, BodyLiteralData {
     private final Optional<TheoryGuard> guard;
         
     public TheoryAtom(clingo_ast_theory_atom a) {
-        this(new Term(a.term()), new TheoryAtomElement.TheoryAtomElementList(a.elements(), a.size()), TheoryGuard.convert(a.guard()));
+        this(new Term(a.term()), new TheoryAtomElement.TheoryAtomElementList(a.elements(), a.size()), ClingoUtil.optional(TheoryGuard::new, a.guard()));
     }
     
     public TheoryAtom(Term term, List<TheoryAtomElement> elements, Optional<TheoryGuard> guard) {

@@ -17,6 +17,7 @@ package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -30,7 +31,7 @@ public class Statement {
     private final StatementData data;
 
     public Statement(clingo_ast_statement stm) {
-        StatementType type = StatementType.valueOfInt(stm.type());
+        StatementType type = EnumValue.valueOfInt(StatementType.class, stm.type());
         if (type != null) {
             location = new Location(stm.location());
             switch (type) {

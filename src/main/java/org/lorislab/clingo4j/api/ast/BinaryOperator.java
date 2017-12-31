@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
+import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_and;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_division;
@@ -29,7 +31,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operat
  *
  * @author andrej
  */
-public enum BinaryOperator {
+public enum BinaryOperator implements EnumValue<clingo_ast_binary_operator> {
     
     XOR(clingo_ast_binary_operator_xor,"^"),
     
@@ -56,25 +58,15 @@ public enum BinaryOperator {
         this.string = string;
     }
 
-    public clingo_ast_binary_operator getOperator() {
-        return operator;
-    }
-    
-    public int getValue() {
-        return (int) operator.value;
-    }
 
     @Override
     public String toString() {
         return string;
     }
 
-    public static BinaryOperator valueOfInt(int value) {
-        for (BinaryOperator t : BinaryOperator.values()) {
-            if (t.operator.value == value) {
-                return t;
-            }
-        }
-        return null;
+    @Override
+    public clingo_ast_binary_operator getValue() {
+        return operator;
     }
+
 }

@@ -20,12 +20,13 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_error.clingo_erro
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_error.clingo_error_logic;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_error.clingo_error_runtime;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_error.clingo_error_unknown;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public enum ErrorCode {
+public enum ErrorCode implements EnumValue<clingo_error> {
 
     RUNTIME(clingo_error_runtime),
     LOGIC(clingo_error_logic),
@@ -38,28 +39,14 @@ public enum ErrorCode {
         this.code = code;
     }
 
-    public clingo_error getCode() {
+    @Override
+    public clingo_error getValue() {
         return code;
-    }
-
-    public int getValue() {
-        return (int) code.value;
     }
 
     @Override
     public String toString() {
         return this.name() + "[" + getValue() + "]";
-    }
-    
-    public static final ErrorCode createErrorCode(int value) {
-        ErrorCode r = null;
-        ErrorCode[] values = ErrorCode.values();
-        for (int i=0; i<values.length && r == null; i++) {
-            if (values[i].getValue() == value) {
-                r = values[i];
-            }
-        }
-        return r;
     }
     
 }

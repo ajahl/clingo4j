@@ -23,13 +23,14 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_show_type.clingo_
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_show_type.clingo_show_type_extra;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_show_type.clingo_show_type_shown;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_show_type.clingo_show_type_terms;
+import org.lorislab.clingo4j.util.EnumValue;
 
 
 /**
  *
  * @author andrej
  */
-public enum ShowType {
+public enum ShowType implements EnumValue<clingo_show_type> {
     
     CSP(clingo_show_type_csp),
             
@@ -51,22 +52,9 @@ public enum ShowType {
         this.type = type;
     }
 
-    public clingo_show_type getType() {
+    @Override
+    public clingo_show_type getValue() {
         return type;
     }
     
-    public long getValue() {
-        return type.value;
-    }
-    
-    public static ShowType createSymbolType(long value) {
-        ShowType result = null;
-        ShowType[] types = ShowType.values();
-        for (int i=0; i<types.length && result == null; i++) {
-            if (types[i].getValue() == value) {
-                result = types[i];
-            }
-        }
-        return result;
-    }        
 }

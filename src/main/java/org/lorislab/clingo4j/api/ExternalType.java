@@ -20,12 +20,13 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_external_type.cli
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_external_type.clingo_external_type_free;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_external_type.clingo_external_type_release;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_external_type.clingo_external_type_true;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public enum ExternalType {
+public enum ExternalType implements EnumValue<clingo_external_type> {
     
     FREE(clingo_external_type_free, "Free"),
     TRUE(clingo_external_type_true, "True"),
@@ -41,12 +42,9 @@ public enum ExternalType {
         this.string = string;
     }
 
-    public clingo_external_type getType() {
+    @Override
+    public clingo_external_type getValue() {
         return type;
-    }
-
-    public int getValue() {
-        return (int) type.value;
     }
 
     @Override
@@ -54,14 +52,4 @@ public enum ExternalType {
         return string;
     }
     
-    public static ExternalType createExternalType(int value) {
-        ExternalType r = null;
-        ExternalType[] values = ExternalType.values();
-        for (int i=0; i<values.length && r == null; i++) {
-            if (values[i].getValue() == value) {
-                r = values[i];
-            }
-        }
-        return r;
-    }
 }

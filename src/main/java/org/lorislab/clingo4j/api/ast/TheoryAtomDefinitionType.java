@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_atom_definition_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_atom_definition_type.clingo_ast_theory_atom_definition_type_any;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_atom_definition_type.clingo_ast_theory_atom_definition_type_body;
@@ -25,7 +26,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_atom_d
  *
  * @author andrej
  */
-public enum TheoryAtomDefinitionType {
+public enum TheoryAtomDefinitionType implements EnumValue<clingo_ast_theory_atom_definition_type> {
 
     HEAD(clingo_ast_theory_atom_definition_type_head, "head"),
     BODY(clingo_ast_theory_atom_definition_type_body, "body"),
@@ -41,25 +42,14 @@ public enum TheoryAtomDefinitionType {
         this.string = string;
     }
 
-    public clingo_ast_theory_atom_definition_type getType() {
-        return type;
-    }
-
-    public int getValue() {
-        return (int) type.value;
-    }
-
     @Override
     public String toString() {
         return string;
     }
 
-    public static TheoryAtomDefinitionType valueOfInt(int value) {
-        for (TheoryAtomDefinitionType t : TheoryAtomDefinitionType.values()) {
-            if (t.type.value == value) {
-                return t;
-            }
-        }
-        return null;
+    @Override
+    public clingo_ast_theory_atom_definition_type getValue() {
+        return type;
     }
+    
 }

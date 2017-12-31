@@ -19,12 +19,13 @@ import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_truth_value;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_truth_value.clingo_truth_value_false;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_truth_value.clingo_truth_value_free;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_truth_value.clingo_truth_value_true;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public enum TruthValue {
+public enum TruthValue implements EnumValue<clingo_truth_value> {
 
     FREE(clingo_truth_value_free,"Free"),
     TRUE(clingo_truth_value_true,"True"),
@@ -39,27 +40,14 @@ public enum TruthValue {
         this.string = string;
     }
 
-    public clingo_truth_value getType() {
-        return type;
-    }
-
-    public int getValue() {
-        return (int) type.value;
-    }
-
     @Override
     public String toString() {
         return string;
     }
-   
-    public static TruthValue createTruthValue(int value) {
-        TruthValue r = null;
-        TruthValue[] values = TruthValue.values();
-        for (int i=0; i<values.length && r == null; i++) {
-            if (values[i].getValue() == value) {
-                r = values[i];
-            }
-        }
-        return r;
+
+    @Override
+    public clingo_truth_value getValue() {
+        return type;
     }
+   
 }

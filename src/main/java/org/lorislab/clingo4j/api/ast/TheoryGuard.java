@@ -51,11 +51,4 @@ public class TheoryGuard {
         return operatorName + " " + term;
     }
     
-   public static Optional<TheoryGuard> convert(Pointer<clingo_ast_theory_guard> p)  {
-        if (p != null && p.get() != null) {
-            return Optional.of(new TheoryGuard(p.get()));
-        }
-        return Optional.empty();
-    }
-    
 }

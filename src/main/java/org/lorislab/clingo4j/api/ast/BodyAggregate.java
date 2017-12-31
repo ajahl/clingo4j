@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
 import java.util.List;
 import java.util.Optional;
 import org.lorislab.clingo4j.api.ast.BodyAggregateElement.BodyAggregateElementList;
@@ -35,7 +36,7 @@ public class BodyAggregate implements BodyLiteralData {
     private final Optional<AggregateGuard> rightGuard;
 
     public BodyAggregate(clingo_ast_body_aggregate a) {
-        this(AggregateFunction.valueOfInt(a.function()), new BodyAggregateElementList(a.elements(), a.size()), AggregateGuard.convert(a.left_guard()), AggregateGuard.convert(a.right_guard()));
+        this(EnumValue.valueOfInt(AggregateFunction.class, a.function()), new BodyAggregateElementList(a.elements(), a.size()), ClingoUtil.optional(AggregateGuard::new,a.left_guard()), ClingoUtil.optional(AggregateGuard::new, a.right_guard()));
     }
     
     public BodyAggregate(AggregateFunction function, List<BodyAggregateElement> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {

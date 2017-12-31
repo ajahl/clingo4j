@@ -27,6 +27,7 @@ import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -48,14 +49,9 @@ public class Symbol implements TermData, TheoryTermData {
         return symbol;
     }
 
-    
-//    public Pointer<Long> getPointer() {
-//        return pointer;
-//    }
-
     public SymbolType getType() {
         int type = LIB.clingo_symbol_type(symbol);
-        return SymbolType.createSymbolType(type);
+        return EnumValue.valueOfInt(SymbolType.class, type);
     }
 
     public boolean isNegative() throws ClingoException {

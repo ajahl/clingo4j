@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.SpanList;
@@ -32,7 +33,7 @@ public class BodyLiteral {
     private final BodyLiteralData data;
 
     public BodyLiteral(clingo_ast_body_literal lit) {
-        BodyLiteralType type = BodyLiteralType.valueOfInt(lit.type());
+        BodyLiteralType type = EnumValue.valueOfInt(BodyLiteralType.class, lit.type());
         if (type != null) {
             switch (type) {
                 case LITERAL:
@@ -57,7 +58,7 @@ public class BodyLiteral {
                     data = null;
             }
             location = new Location(lit.location());
-            sign = Sign.valueOfInt(lit.sign());
+            sign = EnumValue.valueOfInt(Sign.class, lit.sign());
         } else {
             throw new RuntimeException("cannot happen");
         }

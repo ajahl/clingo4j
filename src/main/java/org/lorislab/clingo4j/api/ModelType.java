@@ -19,12 +19,13 @@ import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model_type.clingo_model_type_brave_consequences;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model_type.clingo_model_type_cautious_consequences;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model_type.clingo_model_type_stable_model;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public enum ModelType {
+public enum ModelType implements EnumValue<clingo_model_type> {
 
     STABLE_MODEL(clingo_model_type_stable_model),
     BRAVE_CONSEQUENCES(clingo_model_type_brave_consequences),
@@ -36,23 +37,9 @@ public enum ModelType {
         this.type = type;
     }
 
-    public clingo_model_type getType() {
+    @Override
+    public clingo_model_type getValue() {
         return type;
-    }
-
-    public long getValue() {
-        return type.value;
-    }
-
-    public static ModelType createModelType(long value) {
-        ModelType result = null;
-        ModelType[] types = ModelType.values();
-        for (int i = 0; i < types.length && result == null; i++) {
-            if (types[i].getValue() == value) {
-                result = types[i];
-            }
-        }
-        return result;
     }
 
 }

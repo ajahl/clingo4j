@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
+import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_operator_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_operator_type.clingo_ast_theory_operator_type_binary_left;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_operator_type.clingo_ast_theory_operator_type_binary_right;
@@ -24,40 +26,28 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_operat
  *
  * @author andrej
  */
-public enum TheoryOperatorType {
+public enum TheoryOperatorType implements EnumValue<clingo_ast_theory_operator_type> {
     
     UNARY(clingo_ast_theory_operator_type_unary,"unary"),
     BINARY_LEFT(clingo_ast_theory_operator_type_binary_left,"binary, left"),
     BINARY_RIGHT(clingo_ast_theory_operator_type_binary_right,"binary, right");
              
-    private clingo_ast_theory_operator_type type;
-    private String string;
+    private final clingo_ast_theory_operator_type type;
+    private final String string;
 
     private TheoryOperatorType(clingo_ast_theory_operator_type type, String string) {
         this.type = type;
         this.string = string;
     }
 
-    public String getString() {
-        return string;
-    }
-
-    public int getValue() {
-        return (int) type.value;
+    @Override
+    public clingo_ast_theory_operator_type getValue() {
+        return type;
     }
 
     @Override
     public String toString() {
         return string;
-    }
-    
-    public static TheoryOperatorType valueOfInt(int value) {
-        for (TheoryOperatorType t : TheoryOperatorType.values()) {
-            if (t.type.value == value) {
-                return t;
-            }
-        }
-        return null;
     }
     
 }

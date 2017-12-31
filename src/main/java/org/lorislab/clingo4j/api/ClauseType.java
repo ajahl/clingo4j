@@ -15,17 +15,19 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_clause_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_clause_type.clingo_clause_type_learnt;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_clause_type.clingo_clause_type_static;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_clause_type.clingo_clause_type_volatile;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_clause_type.clingo_clause_type_volatile_static;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public enum ClauseType {
+public enum ClauseType implements EnumValue<clingo_clause_type> {
     
     LEARNT(clingo_clause_type_learnt, "Learnt"),
     STATIC(clingo_clause_type_static, "Static"),
@@ -41,7 +43,8 @@ public enum ClauseType {
         this.string = string;
     }
 
-    public clingo_clause_type getType() {
+    @Override
+    public clingo_clause_type getValue() {
         return type;
     }
 
@@ -50,7 +53,4 @@ public enum ClauseType {
         return string;
     }
 
-    public int getValue() {
-        return (int) type.value;
-    }
 }

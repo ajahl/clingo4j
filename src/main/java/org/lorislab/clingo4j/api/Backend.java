@@ -64,7 +64,7 @@ public class Backend {
     }
 
     public void external(int atom, ExternalType type) throws ClingoException {
-        handleError(LIB.clingo_backend_external(pointer, atom, type.getValue()), "Error extarnal backend!");
+        handleError(LIB.clingo_backend_external(pointer, atom, type.getInt()), "Error extarnal backend!");
     }
 
     public void assume(List<Integer> lits) throws ClingoException {
@@ -74,7 +74,7 @@ public class Backend {
 
     public void heuristic(int atom, HeuristicType type, int bias, int priority, List<Integer> condition) throws ClingoException {
         LiteralIntegerList tmp = Literal.toLiteralList(condition);
-        handleError(LIB.clingo_backend_heuristic(pointer, atom, type.getValue(), bias, priority, tmp.getPointer(), tmp.size()), "Error heuristic to the backend!");
+        handleError(LIB.clingo_backend_heuristic(pointer, atom, type.getInt(), bias, priority, tmp.getPointer(), tmp.size()), "Error heuristic to the backend!");
     }
 
     public void acycEdge(int node_u, int node_v, List<Integer> condition) throws ClingoException {

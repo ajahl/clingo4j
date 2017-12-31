@@ -18,6 +18,7 @@ package org.lorislab.clingo4j.api.ast;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.api.c.clingo_ast_script;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -29,7 +30,7 @@ public class Script implements StatementData {
     private final String code;
 
     public Script(clingo_ast_script s) {
-        this(ScriptType.valueOfInt(s.type()), s.code().getCString());
+        this(EnumValue.valueOfInt(ScriptType.class, s.type()), s.code().getCString());
     }
     
     public Script(ScriptType type, String code) {

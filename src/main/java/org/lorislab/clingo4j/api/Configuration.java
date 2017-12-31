@@ -20,6 +20,7 @@ import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -47,7 +48,7 @@ public class Configuration {
     public ConfigurationType getType() throws ClingoException {
         Pointer<Integer> type = Pointer.allocateInt();
         handleError(LIB.clingo_configuration_type(pointer, key, type), "Error reading the configuration type!");
-        return ConfigurationType.createConfigurationType(type.getInt());
+        return EnumValue.valueOfInt(ConfigurationType.class, type.getInt());
     }
 
     public boolean isAssigned() throws ClingoException {

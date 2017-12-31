@@ -15,16 +15,18 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration_type.clingo_configuration_type_array;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration_type.clingo_configuration_type_map;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration_type.clingo_configuration_type_value;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public enum ConfigurationType {
+public enum ConfigurationType implements EnumValue<clingo_configuration_type> {
     
     VALUE(clingo_configuration_type_value),
     
@@ -37,24 +39,9 @@ public enum ConfigurationType {
     private ConfigurationType(clingo_configuration_type type) {
         this.type = type;
     }
-
-    public clingo_configuration_type getType() {
+    
+    @Override
+    public clingo_configuration_type getValue() {
         return type;
     }
-    
-    public int getValue() {
-        return (int) type.value;
-    }
-    
-    public static ConfigurationType createConfigurationType(int value) {
-        ConfigurationType result = null;
-        ConfigurationType[] values = ConfigurationType.values();
-        for (int i=0; i<values.length && result == null; i++) {
-            if (values[i].type.value == value) {
-                result = values[i];
-            }
-        }
-        return result;
-    }
-    
 }

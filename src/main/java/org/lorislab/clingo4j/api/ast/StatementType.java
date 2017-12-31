@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_statement_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_statement_type.clingo_ast_statement_type_const;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_statement_type.clingo_ast_statement_type_edge;
@@ -34,7 +35,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_statement_typ
  *
  * @author andrej
  */
-public enum StatementType {
+public enum StatementType implements EnumValue<clingo_ast_statement_type> {
     
     RULE(clingo_ast_statement_type_rule),
     CONST(clingo_ast_statement_type_const),
@@ -57,20 +58,9 @@ public enum StatementType {
         this.type = type;
     }
 
-    public clingo_ast_statement_type getType() {
+    @Override
+    public clingo_ast_statement_type getValue() {
         return type;
     }
-    
-    public int getValue() {
-        return (int)  type.value;
-    }
-    
-    public static StatementType valueOfInt(int value) {
-        for(StatementType t : StatementType.values()) {
-            if (t.type.value == value) {
-                return t;
-            }
-        }
-        return null;
-    }
+   
 }

@@ -18,6 +18,7 @@ package org.lorislab.clingo4j.api.ast;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_guard;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -30,7 +31,7 @@ public class CSPGuard {
     private final CSPSum term;
 
     public CSPGuard(clingo_ast_csp_guard csp) {
-        this(ComparisonOperator.valueOfInt(csp.comparison()), new CSPSum(csp.term()));
+        this(EnumValue.valueOfInt(ComparisonOperator.class, csp.comparison()), new CSPSum(csp.term()));
     }
     
     public CSPGuard(ComparisonOperator operator, CSPSum term) {

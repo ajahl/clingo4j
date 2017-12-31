@@ -20,12 +20,13 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistics_type.c
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistics_type.clingo_statistics_type_empty;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistics_type.clingo_statistics_type_map;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistics_type.clingo_statistics_type_value;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public enum StatisticsType {
+public enum StatisticsType implements EnumValue<clingo_statistics_type>  {
     
     EMPTY(clingo_statistics_type_empty),
     VALUE(clingo_statistics_type_value),
@@ -38,18 +39,9 @@ public enum StatisticsType {
         this.type = type;
     }
 
-    public clingo_statistics_type getType() {
+    @Override
+    public clingo_statistics_type getValue() {
         return type;
     }
-    
-    public static StatisticsType createStatisticsType(int type) {
-        StatisticsType result = null;
-        StatisticsType[] types = StatisticsType.values();
-        for (int i=0; i<types.length && result == null; i++) {
-            if (types[i].type.value == type) {
-                result = types[i];
-            }
-        }
-        return result;
-    }
+
 }

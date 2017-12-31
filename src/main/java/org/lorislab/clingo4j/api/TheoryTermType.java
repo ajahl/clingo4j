@@ -22,12 +22,13 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_term_type.
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_term_type.clingo_theory_term_type_set;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_term_type.clingo_theory_term_type_symbol;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_term_type.clingo_theory_term_type_tuple;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public enum TheoryTermType {
+public enum TheoryTermType implements EnumValue<clingo_theory_term_type> {
 
     TUPLE(clingo_theory_term_type_tuple),
     LIST(clingo_theory_term_type_list),
@@ -42,22 +43,9 @@ public enum TheoryTermType {
         this.type = type;
     }
 
-    public clingo_theory_term_type getType() {
+    @Override
+    public clingo_theory_term_type getValue() {
         return type;
     }
-    
-    public int getValue() {
-        return (int) type.value;
-    }
-    
-    public static TheoryTermType createTheoryTermType(int value) {
-        TheoryTermType r = null;
-        TheoryTermType[] values = TheoryTermType.values();
-        for (int i=0; i<values.length && r == null; i++) {
-            if (values[i].getValue() == value) {
-                r = values[i];
-            }
-        }
-        return r;
-    }
+
 }

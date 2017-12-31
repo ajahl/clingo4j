@@ -19,6 +19,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_operator_definition;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -32,7 +33,7 @@ public class TheoryOperatorDefinition {
     private final TheoryOperatorType type;
 
     public TheoryOperatorDefinition(clingo_ast_theory_operator_definition d) {
-        this(new Location(d.location()), d.name().getCString(), d.priority(), TheoryOperatorType.valueOfInt(d.type()));
+        this(new Location(d.location()), d.name().getCString(), d.priority(), EnumValue.valueOfInt(TheoryOperatorType.class, d.type()));
     }
     
     public TheoryOperatorDefinition(Location location, String name, int priority, TheoryOperatorType type) {

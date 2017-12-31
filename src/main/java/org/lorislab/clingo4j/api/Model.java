@@ -22,6 +22,7 @@ import static org.lorislab.clingo4j.api.Clingo.LIB;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_control;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -42,7 +43,7 @@ public class Model {
     public ModelType type() throws ClingoException {
         Pointer<Integer> type = Pointer.allocateInt();
         handleError(LIB.clingo_model_type(pointer, type), "Error reading the model type");
-        return ModelType.createModelType(type.get());
+        return EnumValue.valueOfInt(ModelType.class, type.get());
     }
 
     public List<Symbol> symbols() throws ClingoException {
@@ -52,18 +53,16 @@ public class Model {
     public List<Symbol> symbols(ShowType type) throws ClingoException {
         List<Symbol> result = null;
 
-        int show = (int) type.getValue();
-
         // determine the number of (shown) symbols in the model    
         Pointer<SizeT> size = Pointer.allocateSizeT();
-        handleError(LIB.clingo_model_symbols_size(pointer, show, size), "Error reading size of symbols of the model");
+        handleError(LIB.clingo_model_symbols_size(pointer, type.getInt(), size), "Error reading size of symbols of the model");
 
         if (0 < size.getLong()) {
             // allocate required memory to hold all the symbols
             Pointer<Long> atoms = Pointer.allocateLongs(size.getLong());
 
             // retrieve the symbols in the model
-            handleError(LIB.clingo_model_symbols(pointer, show, atoms, size.getLong()), "Error read the model symbols");
+            handleError(LIB.clingo_model_symbols(pointer, type.getInt(), atoms, size.getLong()), "Error read the model symbols");
 
             result = new Symbol.SymbolList(atoms, size.getLong());
         }

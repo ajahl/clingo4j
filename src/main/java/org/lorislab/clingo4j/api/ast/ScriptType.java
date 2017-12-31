@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
+import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_script_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_script_type.clingo_ast_script_type_lua;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_script_type.clingo_ast_script_type_python;
@@ -23,7 +25,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_script_type.c
  *
  * @author andrej
  */
-public enum ScriptType {
+public enum ScriptType implements EnumValue<clingo_ast_script_type> {
 
     LUA(clingo_ast_script_type_lua, "lua"),
     PYTHON(clingo_ast_script_type_python, "python");
@@ -37,25 +39,14 @@ public enum ScriptType {
         this.string = string;
     }
 
-    public clingo_ast_script_type getType() {
-        return type;
-    }
-
-    public int getValue() {
-        return (int) type.value;
-    }
-
     @Override
     public String toString() {
         return string;
     }
 
-    public static ScriptType valueOfInt(int value) {
-        for (ScriptType t : ScriptType.values()) {
-            if (t.type.value == value) {
-                return t;
-            }
-        }
-        return null;
+    @Override
+    public clingo_ast_script_type getValue() {
+        return type;
     }
+
 }

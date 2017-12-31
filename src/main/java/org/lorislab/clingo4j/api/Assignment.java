@@ -19,6 +19,7 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_assignment;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -51,7 +52,7 @@ public class Assignment {
     public TruthValue truthValue(int literal) throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_assignment_truth_value(pointer, literal, ret), "Error reading the assignment truth value!");
-        return TruthValue.createTruthValue(ret.getInt());
+        return EnumValue.valueOfInt(TruthValue.class, ret.getInt());
     }
 
     public int level(int lit) throws ClingoException {

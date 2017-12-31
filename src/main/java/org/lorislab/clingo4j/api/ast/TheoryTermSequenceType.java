@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
+import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_list;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_set;
@@ -24,13 +26,11 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_t
  *
  * @author andrej
  */
-public enum TheoryTermSequenceType {
+public enum TheoryTermSequenceType implements EnumValue<clingo_ast_theory_term_type> {
 
-    TUPLE(0,"(",")", clingo_ast_theory_term_type_tuple),
-    LIST(1, "[","]", clingo_ast_theory_term_type_list),
-    SET(2, "{","}", clingo_ast_theory_term_type_set);
-
-    private final int value;
+    TUPLE("(",")", clingo_ast_theory_term_type_tuple),
+    LIST("[","]", clingo_ast_theory_term_type_list),
+    SET("{","}", clingo_ast_theory_term_type_set);
 
     private final clingo_ast_theory_term_type type;
     
@@ -38,21 +38,17 @@ public enum TheoryTermSequenceType {
     
     private final String right;
     
-    private TheoryTermSequenceType(int value, String left, String right, clingo_ast_theory_term_type type) {
-        this.value = value;
+    private TheoryTermSequenceType(String left, String right, clingo_ast_theory_term_type type) {
         this.left = left;
         this.right = right;
         this.type = type;
     }
 
-    public int getValue() {
-        return value;
-    }
-
-    public clingo_ast_theory_term_type getType() {
+    @Override
+    public clingo_ast_theory_term_type getValue() {
         return type;
     }
-
+    
     public String getRight() {
         return right;
     }

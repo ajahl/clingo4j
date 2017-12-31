@@ -68,7 +68,7 @@ public class PropagateControl {
     public boolean add_clause(List<Integer> clause, ClauseType type) throws ClingoException {
         LiteralIntegerList list = Literal.toLiteralList(clause);
         Pointer<Boolean> ret = Pointer.allocateBoolean();
-        handleError(LIB.clingo_propagate_control_add_clause(pointer, list.getPointer(), list.size(), type.getValue(), ret), "Error add the clause to the propagete control!");
+        handleError(LIB.clingo_propagate_control_add_clause(pointer, list.getPointer(), list.size(), type.getInt(), ret), "Error add the clause to the propagete control!");
         return ret.get();
     }
 

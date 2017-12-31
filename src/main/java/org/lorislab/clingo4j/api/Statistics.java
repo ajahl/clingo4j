@@ -19,6 +19,7 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistic;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -52,7 +53,7 @@ public class Statistics {
     public StatisticsType getType() throws ClingoException {
         Pointer<Integer> value = Pointer.allocateInt();
         handleError(LIB.clingo_statistics_type(pointer, key, value), "Error reading the statistric type!");
-        return StatisticsType.createStatisticsType(value.getInt());
+        return EnumValue.valueOfInt(StatisticsType.class, value.getInt());
     }
 
     public Pointer<clingo_statistic> getPointer() {

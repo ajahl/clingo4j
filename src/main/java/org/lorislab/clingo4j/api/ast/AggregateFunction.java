@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
+import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_function;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_count;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_max;
@@ -26,7 +28,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_fun
  *
  * @author andrej
  */
-public enum AggregateFunction {
+public enum AggregateFunction implements EnumValue<clingo_ast_aggregate_function> {
     
     COUNT(clingo_ast_aggregate_function_count,"#count"),
     SUM(clingo_ast_aggregate_function_sum,"#sum"),
@@ -43,25 +45,14 @@ public enum AggregateFunction {
         this.string = string;
     }
 
-    public clingo_ast_aggregate_function getFunction() {
-        return function;
-    }
-
-    public int getValue() {
-        return (int) function.value;
-    }
-
     @Override
     public String toString() {
         return string;
     }
-    
-    public static AggregateFunction valueOfInt(int value) {
-        for (AggregateFunction t :  AggregateFunction.values())  {
-            if (t.function.value == value) {
-                return t;
-            }
-        }
-        return null;
+
+    @Override
+    public clingo_ast_aggregate_function getValue() {
+        return function;
     }
+    
 }

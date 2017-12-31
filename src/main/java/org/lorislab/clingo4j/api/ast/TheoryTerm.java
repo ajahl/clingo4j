@@ -23,6 +23,7 @@ import org.lorislab.clingo4j.api.c.clingo_ast_theory_function;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_array;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -36,7 +37,7 @@ public class TheoryTerm {
     private final TheoryTermData data;
 
     public TheoryTerm(clingo_ast_theory_term t) {
-        TheoryTermType type = TheoryTermType.valueOfInt(t.type());
+        TheoryTermType type = EnumValue.valueOfInt(TheoryTermType.class, t.type());
         if (type != null) {
             location = new Location(t.location());
             switch (type) {

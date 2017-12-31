@@ -153,7 +153,7 @@ public class ASTToC {
 
     static clingo_ast_term visitTerm(final UnaryOperation x) {
         clingo_ast_unary_operation uo = new clingo_ast_unary_operation();
-        uo.unary_operator(x.getUnaryOperator().getValue());
+        uo.unary_operator(x.getUnaryOperator().getInt());
         uo.argument(convTerm(x.getArgument()));
         clingo_ast_term ret = createAstTerm(clingo_ast_term_type_unary_operation);
         ret.field1().unary_operation(Pointer.getPointer(uo));
@@ -162,7 +162,7 @@ public class ASTToC {
 
     static clingo_ast_term visitTerm(final BinaryOperation x) {
         clingo_ast_binary_operation bo = new clingo_ast_binary_operation();
-        bo.binary_operator(x.getOperator().getValue());
+        bo.binary_operator(x.getOperator().getInt());
         bo.left(convTerm(x.getLeft()));
         bo.right(convTerm(x.getRight()));
         clingo_ast_term ret = createAstTerm(clingo_ast_term_type_binary_operation);
@@ -254,7 +254,7 @@ public class ASTToC {
         clingo_ast_theory_term_array a = new clingo_ast_theory_term_array();
         a.terms(ClingoUtil.createArray(term.getTerms(), clingo_ast_theory_term.class, ASTToC::convTheoryTerm));
         a.size(ClingoUtil.arraySize(term.getTerms()));
-        clingo_ast_theory_term ret = createTheoryTerm(term.getType().getType());
+        clingo_ast_theory_term ret = createTheoryTerm(term.getType().getValue());
         ret.field1().set(Pointer.getPointer(a));
         return ret;
     }
@@ -286,7 +286,7 @@ public class ASTToC {
 
     static clingo_ast_csp_guard convCSPGuard(CSPGuard x) {
         clingo_ast_csp_guard ret = new clingo_ast_csp_guard();
-        ret.comparison(x.getOperator().getValue());
+        ret.comparison(x.getOperator().getInt());
         ret.term(convCSPAdd(x.getTerm()));
         return ret;
     }
@@ -312,7 +312,7 @@ public class ASTToC {
 
     static clingo_ast_literal visit(Comparison x) {
         clingo_ast_comparison com = new clingo_ast_comparison();
-        com.comparison(x.getOperator().getValue());
+        com.comparison(x.getOperator().getInt());
         com.left(convTerm(x.getLeft()));
         com.right(convTerm(x.getRight()));
         clingo_ast_literal ret = createLiteral(clingo_ast_literal_type_comparison);
@@ -340,7 +340,7 @@ public class ASTToC {
         Pointer<clingo_ast_aggregate_guard> result = null;
         if (guard.isPresent()) {
             clingo_ast_aggregate_guard g = new clingo_ast_aggregate_guard();
-            g.comparison(guard.get().getOperator().getValue());
+            g.comparison(guard.get().getOperator().getInt());
             g.term(convTerm(guard.get().getTerm()));
             result = Pointer.getPointer(g);
         }
@@ -452,7 +452,7 @@ public class ASTToC {
         clingo_ast_head_aggregate head_aggregate = new clingo_ast_head_aggregate();
         head_aggregate.left_guard(convAggregateGuard(x.getLeftGuard()));
         head_aggregate.right_guard(convAggregateGuard(x.getRightGuard()));
-        head_aggregate.function(x.getFunction().getValue());
+        head_aggregate.function(x.getFunction().getInt());
         head_aggregate.elements(ClingoUtil.createArray(x.getElements(), clingo_ast_head_aggregate_element.class, ASTToC::convHeadAggregateElement));
         head_aggregate.size(ClingoUtil.arraySize(x.getElements()));
         clingo_ast_head_literal ret = createAstHeadLiteral(clingo_ast_head_literal_type_head_aggregate);
@@ -500,7 +500,7 @@ public class ASTToC {
         clingo_ast_body_aggregate body_aggregate = new clingo_ast_body_aggregate();
         body_aggregate.left_guard(convAggregateGuard(x.getLeftGuard()));
         body_aggregate.right_guard(convAggregateGuard(x.getRightGuard()));
-        body_aggregate.function(x.getFunction().getValue());
+        body_aggregate.function(x.getFunction().getInt());
         body_aggregate.size(ClingoUtil.arraySize(x.getElements()));
         body_aggregate.elements(ClingoUtil.createArray(x.getElements(), clingo_ast_body_aggregate_element.class, ASTToC::convBodyAggregateElement));
         clingo_ast_body_literal ret = createAstBodyLiteral(clingo_ast_body_literal_type_disjoint);
@@ -526,13 +526,13 @@ public class ASTToC {
     static clingo_ast_body_literal convBodyLiteral(BodyLiteral x) {
         clingo_ast_body_literal t = x.getData().createBodyLiteral();
         t.location(x.getLocation());
-        t.sign(x.getSign().getValue());
+        t.sign(x.getSign().getInt());
         return t;
     }
 
     static clingo_ast_theory_operator_definition convTheoryOperatorDefinition(TheoryOperatorDefinition x) {
         clingo_ast_theory_operator_definition ret = new clingo_ast_theory_operator_definition();
-        ret.type(x.getType().getValue());
+        ret.type(x.getType().getInt());
         ret.priority(x.getPriority());
         ret.location(x.getLocation());
         ret.name(Pointer.pointerToCString(x.getName()));
@@ -561,7 +561,7 @@ public class ASTToC {
         ret.name(Pointer.pointerToCString(x.getName()));
         ret.arity(x.getArity());
         ret.location(x.getLocation());
-        ret.type(x.getType().getValue());
+        ret.type(x.getType().getInt());
         ret.elements(Pointer.pointerToCString(x.getElements()));
         if (x.getGuard().isPresent()) {
             ret.guard(Pointer.getPointer(convTheoryGuardDefinition(x.getGuard().get())));
@@ -630,7 +630,7 @@ public class ASTToC {
 
     static clingo_ast_statement visit(Script x) {
         clingo_ast_script script = new clingo_ast_script();
-        script.type(x.getType().getValue());
+        script.type(x.getType().getInt());
         script.code(Pointer.pointerToCString(x.getCode()));
         clingo_ast_statement ret = createAstStatement(clingo_ast_statement_type_script);
         ret.field1().script(Pointer.getPointer(script));

@@ -23,7 +23,6 @@ import org.bridj.Pointer;
 import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration;
-import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 
 /**

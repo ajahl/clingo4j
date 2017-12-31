@@ -15,9 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
-import java.util.Optional;
-import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_ast_aggregate_guard;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -30,7 +29,7 @@ public class AggregateGuard {
     private final Term term;    
 
     public AggregateGuard(clingo_ast_aggregate_guard g) {
-        this(ComparisonOperator.valueOfInt(g.comparison()), new Term(g.term()));
+        this(EnumValue.valueOfInt(ComparisonOperator.class, g.comparison()), new Term(g.term()));
     }
     
     public AggregateGuard(ComparisonOperator comparison, Term term) {
@@ -44,13 +43,6 @@ public class AggregateGuard {
 
     public Term getTerm() {
         return term;
-    }
-    
-    public static Optional<AggregateGuard> convert(Pointer<clingo_ast_aggregate_guard> p)  {
-        if (p != null && p.get() != null) {
-            return Optional.of(new AggregateGuard(p.get()));
-        }
-        return Optional.empty();
     }
     
 }

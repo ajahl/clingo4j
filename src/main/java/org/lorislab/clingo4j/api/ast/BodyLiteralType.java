@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_body_literal_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_body_literal_type.clingo_ast_body_literal_type_aggregate;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_body_literal_type.clingo_ast_body_literal_type_body_aggregate;
@@ -27,7 +28,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_body_literal_
  *
  * @author andrej
  */
-public enum BodyLiteralType {
+public enum BodyLiteralType implements EnumValue<clingo_ast_body_literal_type> {
 
     LITERAL(clingo_ast_body_literal_type_literal),
     CONDITIONAL(clingo_ast_body_literal_type_conditional),
@@ -42,12 +43,9 @@ public enum BodyLiteralType {
         this.type = type;
     }
 
-    public static BodyLiteralType valueOfInt(int value) {
-        for (BodyLiteralType t : BodyLiteralType.values()) {
-            if (t.type.value == value) {
-                return t;
-            }
-        }
-        return null;
+    @Override
+    public clingo_ast_body_literal_type getValue() {
+        return type;
     }
+
 }

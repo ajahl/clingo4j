@@ -25,12 +25,13 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_warning.clingo_wa
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_warning.clingo_warning_other;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_warning.clingo_warning_runtime_error;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_warning.clingo_warning_variable_unbounded;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public enum WarningCode {
+public enum WarningCode implements EnumValue<clingo_warning> {
     
     OPERATION_UNDEFINED(clingo_warning_operation_undefined),
     RUNTIME_ERROR(clingo_warning_runtime_error),
@@ -46,28 +47,14 @@ public enum WarningCode {
         this.code = code;
     }
 
-    public clingo_warning getCode() {
+    @Override
+    public clingo_warning getValue() {
         return code;
     }
 
-    public int getValue() {
-        return (int) code.value;
-    }
-    
-    public static WarningCode createWarningCode(int value) {
-        WarningCode result = null;
-        WarningCode[] values = WarningCode.values();
-        for (int i=0; i<values.length && result == null; i++) {
-            if (values[i].getValue() == value) {
-                result = values[i];
-            }
-        }
-        return result;
-    }
-    
     @Override
     public String toString() {
-        Pointer<Byte> tmp = LIB.clingo_warning_string(getValue());
+        Pointer<Byte> tmp = LIB.clingo_warning_string(getInt());
         return tmp.getCString();
     }
     

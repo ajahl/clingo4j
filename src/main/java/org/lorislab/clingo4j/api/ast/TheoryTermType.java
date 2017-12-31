@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.util.EnumValue;
+import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_function;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_type.clingo_ast_theory_term_type_list;
@@ -28,7 +30,7 @@ import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_term_t
  *
  * @author andrej
  */
-public enum TheoryTermType {
+public enum TheoryTermType implements EnumValue<clingo_ast_theory_term_type> {
 
     SYMBOL(clingo_ast_theory_term_type_symbol),
     VARIABLE(clingo_ast_theory_term_type_variable),
@@ -44,16 +46,9 @@ public enum TheoryTermType {
         this.type = type;
     }
 
-    public clingo_ast_theory_term_type getType() {
+    @Override
+    public clingo_ast_theory_term_type getValue() {
         return type;
     }
-
-    public static TheoryTermType valueOfInt(int value) {
-        for (TheoryTermType t : TheoryTermType.values()) {
-            if (t.type.value == value) {
-                return t;
-            }
-        }
-        return null;
-    }
+    
 }

@@ -20,6 +20,8 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom_definition;
+import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -35,7 +37,7 @@ public class TheoryAtomDefinition {
     private final Optional<TheoryGuardDefinition> guard;    
 
     public TheoryAtomDefinition(clingo_ast_theory_atom_definition d) {
-        this(new Location(d.location()), TheoryAtomDefinitionType.valueOfInt(d.type()), d.name().getCString(), d.arity(), d.elements().getCString(), TheoryGuardDefinition.convert(d.guard()));
+        this(new Location(d.location()), EnumValue.valueOfInt(TheoryAtomDefinitionType.class, d.type()), d.name().getCString(), d.arity(), d.elements().getCString(), ClingoUtil.optional(TheoryGuardDefinition::new, d.guard()));
     }
     
     public TheoryAtomDefinition(Location location, TheoryAtomDefinitionType type, String name, int arity, String elements, Optional<TheoryGuardDefinition> guard) {

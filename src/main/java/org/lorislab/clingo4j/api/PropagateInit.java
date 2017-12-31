@@ -21,6 +21,7 @@ import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_propagate_init;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbolic_atoms;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -65,11 +66,11 @@ public class PropagateInit {
     }
 
     public PropagatorCheckMode getCheckMode() {
-        return PropagatorCheckMode.createPropagatorCheckMode(LIB.clingo_propagate_init_get_check_mode(pointer));
+        return EnumValue.valueOfInt(PropagatorCheckMode.class, LIB.clingo_propagate_init_get_check_mode(pointer));
     }
 
     public void setCheckMode(PropagatorCheckMode mode) {
-        LIB.clingo_propagate_init_set_check_mode(pointer, mode.getValue());
+        LIB.clingo_propagate_init_set_check_mode(pointer, mode.getInt());
     }
 
 }
