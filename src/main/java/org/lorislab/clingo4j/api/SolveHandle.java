@@ -23,21 +23,16 @@ import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_handle;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
 
 /**
  *
  * @author andrej
  */
-public class SolveHandle implements Iterable<Model> {
-
-    private final Pointer<clingo_solve_handle> pointer;
+public class SolveHandle extends AbstractPointerObject<clingo_solve_handle> implements Iterable<Model> {
 
     public SolveHandle(Pointer<clingo_solve_handle> pointer) {
-        this.pointer = pointer;
-    }
-
-    public Pointer<clingo_solve_handle> getPointer() {
-        return pointer;
+        super(pointer);
     }
 
     public boolean waitHandle(double timeout) {

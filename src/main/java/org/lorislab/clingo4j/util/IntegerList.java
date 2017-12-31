@@ -21,15 +21,15 @@ import org.bridj.Pointer;
  *
  * @author andrej
  */
-public class StringList extends SpanList<String, Pointer<Byte>>{
+public class IntegerList extends SpanList<Integer, Integer>{
 
-    public StringList(Pointer<Pointer<Byte>> pointer, long size) {
+    public IntegerList(Pointer<Integer> pointer, long size) {
         super(pointer, size);
     }
 
     @Override
-    protected String getItem(Pointer<Pointer<Byte>> p) {
-        return p.getCString();
+    protected Integer getItem(Pointer<Integer> p) {
+        return p.get();
     }
     
 }

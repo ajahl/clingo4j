@@ -21,22 +21,17 @@ import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_propagate_init;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbolic_atoms;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class PropagateInit {
-
-    private final Pointer<clingo_propagate_init> pointer;
+public class PropagateInit extends AbstractPointerObject<clingo_propagate_init> {
 
     public PropagateInit(Pointer<clingo_propagate_init> pointer) {
-        this.pointer = pointer;
-    }
-
-    public Pointer<clingo_propagate_init> getPointer() {
-        return pointer;
+        super(pointer);
     }
 
     public int solverLiteral(int lit) throws ClingoException {

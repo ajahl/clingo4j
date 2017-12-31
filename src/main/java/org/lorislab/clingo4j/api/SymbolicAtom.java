@@ -19,24 +19,19 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbolic_atoms;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
 
 /**
  *
  * @author andrej
  */
-public class SymbolicAtom {
-    
-    private final Pointer<clingo_symbolic_atoms> atoms;
+public class SymbolicAtom extends AbstractPointerObject<clingo_symbolic_atoms> {
     
     private final long iterator;
 
     public SymbolicAtom(Pointer<clingo_symbolic_atoms> atoms, long iterator) {
-        this.atoms = atoms;
+        super(atoms);
         this.iterator = iterator;
-    }
-
-    public Pointer<clingo_symbolic_atoms> getAtoms() {
-        return atoms;
     }
 
     public long getIterator() {
@@ -45,25 +40,25 @@ public class SymbolicAtom {
     
     public Symbol getSymbol() throws  ClingoException {
         Pointer<Long> symbol = Pointer.allocateLong();
-        handleError(LIB.clingo_symbolic_atoms_symbol(atoms, iterator, symbol), "Error readint the atoms symbol!");
+        handleError(LIB.clingo_symbolic_atoms_symbol(pointer, iterator, symbol), "Error readint the atoms symbol!");
         return new Symbol(symbol);
     }
     
     public int getLiteral() throws ClingoException {
         Pointer<Integer> literal = Pointer.allocateInt();
-        handleError(LIB.clingo_symbolic_atoms_literal(atoms, iterator, literal), "Error reading the atoms litral!");
+        handleError(LIB.clingo_symbolic_atoms_literal(pointer, iterator, literal), "Error reading the atoms litral!");
         return literal.get();
     }
     
     public boolean isFact() throws ClingoException {
         Pointer<Boolean> ret = Pointer.allocateBoolean();
-        handleError(LIB.clingo_symbolic_atoms_is_fact(atoms, iterator, ret), "Error reading the symbol atom is fact!");
+        handleError(LIB.clingo_symbolic_atoms_is_fact(pointer, iterator, ret), "Error reading the symbol atom is fact!");
         return ret.get();        
     }
     
     public boolean isExternal() throws ClingoException {
         Pointer<Boolean> ret = Pointer.allocateBoolean();
-        handleError(LIB.clingo_symbolic_atoms_is_external(atoms, iterator, ret), "Error reading he symbol atom is external!");
+        handleError(LIB.clingo_symbolic_atoms_is_external(pointer, iterator, ret), "Error reading he symbol atom is external!");
         return ret.get();
     }
    

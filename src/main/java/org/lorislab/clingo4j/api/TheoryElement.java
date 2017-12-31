@@ -15,32 +15,28 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.util.SpanList;
 import java.util.List;
 import org.bridj.Pointer;
 import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
-import org.lorislab.clingo4j.api.ast.Literal.LiteralIntegerList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.IntegerList;
 
 /**
  *
  * @author andrej
  */
-public class TheoryElement {
+public class TheoryElement extends AbstractPointerObject<clingo_theory_atoms> {
 
-    private Pointer<clingo_theory_atoms> atoms;
-
-    private int id;
+    private final int id;
 
     public TheoryElement(Pointer<clingo_theory_atoms> atoms, int id) {
-        this.atoms = atoms;
+        super(atoms);
         this.id = id;
-    }
-
-    public Pointer<clingo_theory_atoms> getAtoms() {
-        return atoms;
     }
 
     public int getId() {
@@ -50,29 +46,29 @@ public class TheoryElement {
     public List<TheoryTerm> tuple() throws ClingoException {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> size = Pointer.allocateSizeT();
-        handleError(LIB.clingo_theory_atoms_element_tuple(atoms, id, ret, size), "Error reading theory element tuple!");
-        return new TheoryTerm.TheoryTermAtomList(atoms, ret.get(), size.getInt());
+        handleError(LIB.clingo_theory_atoms_element_tuple(pointer, id, ret, size), "Error reading theory element tuple!");
+        return new TheoryTerm.TheoryTermAtomList(pointer, ret.get(), size.getInt());
     }
 
     public List<Integer> condition() throws ClingoException {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> size = Pointer.allocateSizeT();
-        handleError(LIB.clingo_theory_atoms_element_condition(atoms, id, ret, size), "Error reading the theory elements condition!");
-        return new LiteralIntegerList(ret.get(), size.getInt());
+        handleError(LIB.clingo_theory_atoms_element_condition(pointer, id, ret, size), "Error reading the theory elements condition!");
+        return new IntegerList(ret.get(), size.getInt());
     }
 
     public int conditionId() throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
-        handleError(LIB.clingo_theory_atoms_element_condition_id(atoms, id, ret), "Error reading the theory element condition id!");
+        handleError(LIB.clingo_theory_atoms_element_condition_id(pointer, id, ret), "Error reading the theory element condition id!");
         return ret.get();
     }
 
     @Override
     public String toString() {
         Pointer<SizeT> size = Pointer.allocateSizeT();
-        handleRuntimeError(LIB.clingo_theory_atoms_element_to_string_size(atoms, id, size), "Error reading to string size!");
+        handleRuntimeError(LIB.clingo_theory_atoms_element_to_string_size(pointer, id, size), "Error reading to string size!");
         Pointer<Byte> string = Pointer.allocateByte();
-        handleRuntimeError(LIB.clingo_theory_atoms_element_to_string(atoms, id, string, size.getLong()), "Error reading the theory element string");
+        handleRuntimeError(LIB.clingo_theory_atoms_element_to_string(pointer, id, string, size.getLong()), "Error reading the theory element string");
         return string.getCString();
     }
 

@@ -21,24 +21,19 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.ast.Literal;
-import org.lorislab.clingo4j.api.ast.Literal.LiteralIntegerList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_control;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbolic_atoms;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.IntegerList;
 
 /**
  *
  * @author andrej
  */
-public class SolveControl {
-
-    private final Pointer<clingo_solve_control> pointer;
+public class SolveControl extends AbstractPointerObject<clingo_solve_control> {
 
     public SolveControl(Pointer<clingo_solve_control> pointer) {
-        this.pointer = pointer;
-    }
-
-    public Pointer<clingo_solve_control> getPointer() {
-        return pointer;
+        super(pointer);
     }
 
     public SymbolicAtoms symbolicAtoms() throws ClingoException {
@@ -56,6 +51,7 @@ public void addSymbolicLiterallause(List<SymbolicLiteral> clause) throws ClingoE
     for (SymbolicLiteral item : clause) {
         
     }
+    //TODO: Missing implementation
 //    std::vector<literal_t> lits;
 //    auto atoms = symbolic_atoms();
 //    for (auto &x : clause) {
@@ -70,8 +66,8 @@ public void addSymbolicLiterallause(List<SymbolicLiteral> clause) throws ClingoE
 }
 
     public void addClause(List<Integer> clause) throws ClingoException {
-        LiteralIntegerList tmp = Literal.toLiteralList(clause);
         if (clause != null) {
+            IntegerList tmp = Literal.toLiteralList(clause);
             handleError(LIB.clingo_solve_control_add_clause(pointer, tmp.getPointer(), tmp.size()), "Error solve control add clause");
         }
     }

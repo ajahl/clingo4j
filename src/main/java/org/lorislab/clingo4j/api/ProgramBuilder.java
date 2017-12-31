@@ -20,23 +20,18 @@ import static org.lorislab.clingo4j.api.Clingo.LIB;
 import org.lorislab.clingo4j.api.ast.Statement;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_program_builder;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
 
 /**
  *
  * @author andrej
  */
-public class ProgramBuilder {
+public class ProgramBuilder extends AbstractPointerObject<clingo_program_builder> {
     
-    private final  Pointer<clingo_program_builder> pointer;
-
     public ProgramBuilder(Pointer<clingo_program_builder> pointer) {
-        this.pointer = pointer;
+        super(pointer);
     }
 
-    public Pointer<clingo_program_builder> getPointer() {
-        return pointer;
-    }
-        
     public void begin() throws ClingoException {
         handleError(LIB.clingo_program_builder_begin(pointer), "Error program builder begin!");
     }

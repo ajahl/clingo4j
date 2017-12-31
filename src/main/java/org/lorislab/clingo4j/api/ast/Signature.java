@@ -19,7 +19,7 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.ClingoException;
-import org.lorislab.clingo4j.api.SpanList;
+import org.lorislab.clingo4j.util.SpanList;
 
 /**
  *

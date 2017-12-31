@@ -20,20 +20,19 @@ import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class Configuration {
-
-    protected final Pointer<clingo_configuration> pointer;
+public class Configuration extends AbstractPointerObject<clingo_configuration> {
 
     protected final int key;
 
     public Configuration(Pointer<clingo_configuration> pointer, int key) {
-        this.pointer = pointer;
+        super(pointer);
         this.key = key;
     }
 

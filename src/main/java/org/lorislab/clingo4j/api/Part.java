@@ -29,10 +29,6 @@ public class Part {
     
     private clingo_part part;
 
-    public Part(clingo_part part) {
-        this.part = part;
-    }
-
     public Part(String name) {
         part = new clingo_part();        
         part.name(Pointer.pointerToCString(name));

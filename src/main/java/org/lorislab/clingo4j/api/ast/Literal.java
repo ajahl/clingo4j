@@ -18,7 +18,7 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
-import org.lorislab.clingo4j.api.SpanList;
+import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
@@ -28,6 +28,7 @@ import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.util.ClingoUtil;
 import org.lorislab.clingo4j.util.EnumValue;
+import org.lorislab.clingo4j.util.IntegerList;
 
 /**
  *
@@ -112,32 +113,19 @@ public class Literal implements BodyLiteralData, HeadLiteralData {
         return "" + sign + data;
     }
 
-    public static LiteralIntegerList toLiteralList(List<Integer> list) {
+    public static IntegerList toLiteralList(List<Integer> list) {
         if (list == null) {
             return null;
         }
-        if (list instanceof LiteralIntegerList) {
-            return (LiteralIntegerList) list;
+        if (list instanceof IntegerList) {
+            return (IntegerList) list;
         }
         if (list.isEmpty()) {
             return null;
         }
         int size = ClingoUtil.arraySize(list);
         Pointer<Integer> tmp = ClingoUtil.createArray(list, Integer.class);
-        return new LiteralIntegerList(tmp, size);
-    }
-
-    public static class LiteralIntegerList extends SpanList<Integer, Integer> {
-
-        public LiteralIntegerList(Pointer<Integer> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected Integer getItem(Pointer<Integer> p) {
-            return p.getInt();
-        }
-
+        return new IntegerList(tmp, size);
     }
 
     public static class LiteralList extends SpanList<Literal, clingo_ast_literal> {

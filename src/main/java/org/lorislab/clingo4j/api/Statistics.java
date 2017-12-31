@@ -19,20 +19,19 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_statistic;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class Statistics {
-
-    protected final Pointer<clingo_statistic> pointer;
+public class Statistics extends AbstractPointerObject<clingo_statistic> {
 
     protected final long key;
 
     public Statistics(Pointer<clingo_statistic> pointer, long key) {
-        this.pointer = pointer;
+        super(pointer);
         this.key = key;
     }
 

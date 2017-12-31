@@ -18,7 +18,7 @@ package org.lorislab.clingo4j.api.ast;
 import org.lorislab.clingo4j.util.EnumValue;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
-import org.lorislab.clingo4j.api.SpanList;
+import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 
 /**

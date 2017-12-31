@@ -17,7 +17,7 @@ package org.lorislab.clingo4j.api.ast;
 
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
-import org.lorislab.clingo4j.api.SpanList;
+import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.Symbol;
 import org.lorislab.clingo4j.api.ast.Literal.LiteralData;
 import org.lorislab.clingo4j.api.ast.Term.TermData;

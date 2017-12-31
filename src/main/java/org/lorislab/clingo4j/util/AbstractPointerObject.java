@@ -20,16 +20,25 @@ import org.bridj.Pointer;
 /**
  *
  * @author andrej
+ * @param <T>
  */
-public class StringList extends SpanList<String, Pointer<Byte>>{
+public abstract class AbstractPointerObject<T> {
+    
+    protected final Pointer<T> pointer;
 
-    public StringList(Pointer<Pointer<Byte>> pointer, long size) {
-        super(pointer, size);
+    public AbstractPointerObject(Pointer<T> pointer) {
+        this.pointer = pointer;
     }
 
-    @Override
-    protected String getItem(Pointer<Pointer<Byte>> p) {
-        return p.getCString();
+    public Pointer<T> getPointer() {
+        return pointer;
     }
     
+    public T getPointerValue() {
+        return pointer.get();
+    }
+    
+    public boolean isNull() {
+        return pointer == null || pointer.get() == null;
+    }
 }

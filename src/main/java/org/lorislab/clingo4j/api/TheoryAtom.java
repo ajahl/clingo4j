@@ -23,23 +23,19 @@ import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.api.TheoryElement.TheoryElementList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
 
 /**
  *
  * @author andrej
  */
-public class TheoryAtom {
+public class TheoryAtom extends AbstractPointerObject<clingo_theory_atoms> {
 
-    private final Pointer<clingo_theory_atoms> atoms;
     private final int id;
 
     public TheoryAtom(Pointer<clingo_theory_atoms> atoms, int id) {
-        this.atoms = atoms;
+        super(atoms);
         this.id = id;
-    }
-
-    public Pointer<clingo_theory_atoms> getAtoms() {
-        return atoms;
     }
 
     public int getId() {
@@ -49,33 +45,33 @@ public class TheoryAtom {
     public List<TheoryElement> elements() throws ClingoException {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> n = Pointer.allocateSizeT();
-        handleError(LIB.clingo_theory_atoms_atom_elements(atoms, id, ret, n), "Error reading the theory atom elements!");
-        return new TheoryElementList(atoms, ret.get(), n.getInt());
+        handleError(LIB.clingo_theory_atoms_atom_elements(pointer, id, ret, n), "Error reading the theory atom elements!");
+        return new TheoryElementList(pointer, ret.get(), n.getInt());
     }
 
     public TheoryTerm term() throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
-        handleError(LIB.clingo_theory_atoms_atom_term(atoms, id, ret), "Error reading the theory atom term!");
-        return new TheoryTerm(atoms, ret.getInt());
+        handleError(LIB.clingo_theory_atoms_atom_term(pointer, id, ret), "Error reading the theory atom term!");
+        return new TheoryTerm(pointer, ret.getInt());
     }
 
     public boolean hasGuard() throws ClingoException {
         Pointer<Boolean> ret = Pointer.allocateBoolean();
-        handleError(LIB.clingo_theory_atoms_atom_has_guard(atoms, id, ret), "Error reading the theory atom has guard!");
+        handleError(LIB.clingo_theory_atoms_atom_has_guard(pointer, id, ret), "Error reading the theory atom has guard!");
         return ret.get();
     }
 
     public int literal() throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
-        handleError(LIB.clingo_theory_atoms_atom_literal(atoms, id, ret), "Error reading the theory atom literal!");
+        handleError(LIB.clingo_theory_atoms_atom_literal(pointer, id, ret), "Error reading the theory atom literal!");
         return ret.getInt();
     }
 
     public TheoryAtomGuard guard() throws ClingoException {
         Pointer<Pointer<Byte>> name = Pointer.allocatePointer(Byte.class);
         Pointer<Integer> term = Pointer.allocateInt();
-        handleError(LIB.clingo_theory_atoms_atom_guard(atoms, id, name, term), "Error reading the theory atom guard!");
-        return new TheoryAtomGuard(name.get().getWideCString(), new TheoryTerm(atoms, term.get()));
+        handleError(LIB.clingo_theory_atoms_atom_guard(pointer, id, name, term), "Error reading the theory atom guard!");
+        return new TheoryAtomGuard(name.get().getWideCString(), new TheoryTerm(pointer, term.get()));
     }
 
     public static class TheoryAtomGuard {
@@ -102,9 +98,9 @@ public class TheoryAtom {
     @Override
     public String toString() {
         Pointer<SizeT> size = Pointer.allocateSizeT();
-        handleRuntimeError(LIB.clingo_theory_atoms_atom_to_string_size(atoms, id, size), "Error reading to string size!");
+        handleRuntimeError(LIB.clingo_theory_atoms_atom_to_string_size(pointer, id, size), "Error reading to string size!");
         Pointer<Byte> string = Pointer.allocateByte();
-        handleRuntimeError(LIB.clingo_theory_atoms_atom_to_string(atoms, id, string, size.getLong()), "Error reading theory atom string");
+        handleRuntimeError(LIB.clingo_theory_atoms_atom_to_string(pointer, id, string, size.getLong()), "Error reading theory atom string");
         return string.getCString();
     }
 }

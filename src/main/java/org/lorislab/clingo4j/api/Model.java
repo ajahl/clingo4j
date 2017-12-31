@@ -22,22 +22,18 @@ import static org.lorislab.clingo4j.api.Clingo.LIB;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_control;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class Model {
+public class Model extends AbstractPointerObject<clingo_model>{
 
-    private final Pointer<clingo_model> pointer;
 
     public Model(Pointer<clingo_model> pointer) {
-        this.pointer = pointer;
-    }
-
-    public Pointer<clingo_model> getPointer() {
-        return pointer;
+        super(pointer);
     }
 
     public ModelType type() throws ClingoException {

@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.util.SpanList;
 import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_weighted_literal;
@@ -24,7 +25,7 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  *
  * @author andrej
  */
-public class WeightedLiteral extends clingo_weighted_literal {
+public class WeightedLiteral {
     
     private final clingo_weighted_literal literal;
 

@@ -20,29 +20,24 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.ast.Literal;
-import org.lorislab.clingo4j.api.ast.Literal.LiteralIntegerList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_backend;
 import org.lorislab.clingo4j.api.c.clingo_weighted_literal;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.IntegerList;
 
 /**
  *
  * @author andrej
  */
-public class Backend {
-
-    private final Pointer<clingo_backend> pointer;
+public class Backend extends AbstractPointerObject<clingo_backend> {
 
     public Backend(Pointer<clingo_backend> pointer) {
-        this.pointer = pointer;
-    }
-
-    public Pointer<clingo_backend> getPointer() {
-        return pointer;
+        super(pointer);
     }
 
     public void rule(boolean choice, List<Integer> head, List<Integer> body) throws ClingoException {
-        LiteralIntegerList tmp = Literal.toLiteralList(body);
+        IntegerList tmp = Literal.toLiteralList(body);
         Pointer<Integer> h = ClingoUtil.createArray(head, Integer.class);
         handleError(LIB.clingo_backend_rule(pointer, choice, h, head.size(), tmp.getPointer(), tmp.size()), "Error rule to the backend!");
     }
@@ -68,17 +63,17 @@ public class Backend {
     }
 
     public void assume(List<Integer> lits) throws ClingoException {
-        LiteralIntegerList tmp = Literal.toLiteralList(lits);
+        IntegerList tmp = Literal.toLiteralList(lits);
         handleError(LIB.clingo_backend_assume(pointer, tmp.getPointer(), tmp.size()), "Error assume to the backend!");
     }
 
     public void heuristic(int atom, HeuristicType type, int bias, int priority, List<Integer> condition) throws ClingoException {
-        LiteralIntegerList tmp = Literal.toLiteralList(condition);
+        IntegerList tmp = Literal.toLiteralList(condition);
         handleError(LIB.clingo_backend_heuristic(pointer, atom, type.getInt(), bias, priority, tmp.getPointer(), tmp.size()), "Error heuristic to the backend!");
     }
 
     public void acycEdge(int node_u, int node_v, List<Integer> condition) throws ClingoException {
-        LiteralIntegerList tmp = Literal.toLiteralList(condition);
+        IntegerList tmp = Literal.toLiteralList(condition);
         handleError(LIB.clingo_backend_acyc_edge(pointer, node_u, node_v, tmp.getPointer(), tmp.size()), "Error acyc edge on the backend!");
     }
 

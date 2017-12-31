@@ -20,23 +20,18 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.ast.Literal;
-import org.lorislab.clingo4j.api.ast.Literal.LiteralIntegerList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_propagate_control;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.IntegerList;
 
 /**
  *
  * @author andrej
  */
-public class PropagateControl {
-
-    private final Pointer<clingo_propagate_control> pointer;
+public class PropagateControl extends AbstractPointerObject<clingo_propagate_control> {
 
     public PropagateControl(Pointer<clingo_propagate_control> pointer) {
-        this.pointer = pointer;
-    }
-
-    public Pointer<clingo_propagate_control> getPointer() {
-        return pointer;
+        super(pointer);
     }
 
     public int threadId() {
@@ -66,7 +61,7 @@ public class PropagateControl {
     }
 
     public boolean add_clause(List<Integer> clause, ClauseType type) throws ClingoException {
-        LiteralIntegerList list = Literal.toLiteralList(clause);
+        IntegerList list = Literal.toLiteralList(clause);
         Pointer<Boolean> ret = Pointer.allocateBoolean();
         handleError(LIB.clingo_propagate_control_add_clause(pointer, list.getPointer(), list.size(), type.getInt(), ret), "Error add the clause to the propagete control!");
         return ret.get();
