@@ -40,7 +40,7 @@ public class TheoryAtoms extends AbstractPointerObject<clingo_theory_atoms> impl
     public Iterator<TheoryAtom> iterator() {
         return new Iterator<TheoryAtom>() {
             private int index = 0;
-            private int size = size();
+            private final int size = size();
 
             @Override
             public boolean hasNext() {
