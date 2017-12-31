@@ -24,4 +24,5 @@ public interface SolveEventHandler {
     public boolean onModel(Model model);
     
     public void onFinish(SolveResult result);
+    
 }
