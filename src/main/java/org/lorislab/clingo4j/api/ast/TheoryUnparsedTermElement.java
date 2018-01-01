@@ -21,6 +21,7 @@ import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term_element;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.StringList;
 
 /**
@@ -64,16 +65,8 @@ public class TheoryUnparsedTermElement implements ASTObject<clingo_ast_theory_un
         return ret;
     }
 
-    public static class TheoryUnparsedTermElementList extends SpanList<TheoryUnparsedTermElement, clingo_ast_theory_unparsed_term_element> {
-
-        public TheoryUnparsedTermElementList(Pointer<clingo_ast_theory_unparsed_term_element> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected TheoryUnparsedTermElement getItem(Pointer<clingo_ast_theory_unparsed_term_element> p) {
-            return new TheoryUnparsedTermElement(p.get());
-        }
-
+    public static List<TheoryUnparsedTermElement> list(Pointer<clingo_ast_theory_unparsed_term_element> pointer, long size) {
+        return new DefaultList<>(TheoryUnparsedTermElement::new, pointer, size);
     }
+
 }

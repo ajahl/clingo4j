@@ -29,6 +29,7 @@ import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.api.ast.TermType;
 import org.lorislab.clingo4j.api.ast.TheoryTermType;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
@@ -84,7 +85,7 @@ public class Symbol implements TermData, TheoryTermData {
         Pointer<Pointer<Long>> args = Pointer.allocatePointer(Long.class);
         Pointer<SizeT> args_size = Pointer.allocateSizeT();
         handleError(LIB.clingo_symbol_arguments(symbol, args, args_size), "Error reading the symbol arguments!");
-        return new SymbolList(args.get(), args_size.getInt());
+        return Symbol.list(args.get(), args_size.getInt());
     }
 
     public long getHash() {
@@ -196,17 +197,8 @@ public class Symbol implements TermData, TheoryTermData {
         return TheoryTermType.SYMBOL;
     }
     
-    public static class SymbolList extends SpanList<Symbol, Long> {
-
-        public SymbolList(Pointer<Long> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected Symbol getItem(Pointer<Long> p) {
-            return new Symbol(p);
-        }
-
+    public static List<Symbol> list(Pointer<Long> pointer, long size) {
+        return new DefaultList<>(Symbol::new, pointer, size);
     }
 
 }

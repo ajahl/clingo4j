@@ -32,6 +32,10 @@ public class CSPLiteral implements ASTObject<clingo_ast_csp_literal>, LiteralDat
 
     private final List<CSPGuard> guards;
 
+    public CSPLiteral(clingo_ast_csp_literal csp) {
+        this(new CSPSum(csp.term()), CSPGuard.list(csp.guards(), csp.size()));
+    }
+    
     public CSPLiteral(CSPSum term, List<CSPGuard> guards) {
         this.term = term;
         this.guards = guards;

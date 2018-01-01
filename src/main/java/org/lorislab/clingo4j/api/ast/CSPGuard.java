@@ -15,10 +15,12 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_guard;
 import org.lorislab.clingo4j.util.ASTObject;
+import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
@@ -60,16 +62,8 @@ public class CSPGuard implements ASTObject<clingo_ast_csp_guard> {
         return ret;
     }
     
-    public static class CSPGuardList extends SpanList<CSPGuard, clingo_ast_csp_guard> {
-
-        public CSPGuardList(Pointer<clingo_ast_csp_guard> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected CSPGuard getItem(Pointer<clingo_ast_csp_guard> p) {
-            return new CSPGuard(p.get());
-        }
+    public static List<CSPGuard> list(Pointer<clingo_ast_csp_guard> pointer, long size) {
+        return new DefaultList<>(CSPGuard::new, pointer, size);
     }
     
 }

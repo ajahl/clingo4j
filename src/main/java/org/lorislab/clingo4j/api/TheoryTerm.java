@@ -65,25 +65,18 @@ public class TheoryTerm extends AbstractPointerObject<clingo_theory_atoms> {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> n = Pointer.allocateSizeT();
         handleError(LIB.clingo_theory_atoms_term_arguments(pointer, id, ret, n), "Error reading the theory teram arguments!");
-        return new TheoryTermAtomList(pointer, ret.get(), id);
+        return list(pointer, ret.get(), id);
     }
 
-    public static class TheoryTermAtomList extends SpanList<TheoryTerm, Integer> {
-
-        private final Pointer<clingo_theory_atoms> atoms;
-
-        public TheoryTermAtomList(Pointer<clingo_theory_atoms> atoms, Pointer<Integer> pointer, long size) {
-            super(pointer, size);
-            this.atoms = atoms;
-        }
-
-        @Override
-        protected TheoryTerm getItem(Pointer<Integer> p) {
-            return new TheoryTerm(atoms, p.getInt());
-        }
-
+    public static List<TheoryTerm> list(final Pointer<clingo_theory_atoms> atoms, Pointer<Integer> pointer, long size) {
+        return new SpanList<TheoryTerm, Integer>(pointer, size) {
+            @Override
+            protected TheoryTerm getItem(Pointer<Integer> p) {
+                return new TheoryTerm(atoms, p.getInt());
+            }
+        };
     }
-
+    
     @Override
     public String toString() {
         Pointer<SizeT> size = Pointer.allocateSizeT();

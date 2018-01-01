@@ -32,6 +32,10 @@ public class TheoryTermSequence implements ASTObject<clingo_ast_theory_term_arra
 
     private final List<TheoryTerm> terms;
 
+    public TheoryTermSequence(TheoryTermSequenceType type, clingo_ast_theory_term_array t) {
+        this(type, TheoryTerm.list(t.terms(), t.size()));
+    }
+    
     public TheoryTermSequence(TheoryTermSequenceType type, List<TheoryTerm> terms) {
         this.type = type;
         this.terms = terms;

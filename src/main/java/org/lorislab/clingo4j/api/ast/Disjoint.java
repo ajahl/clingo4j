@@ -31,7 +31,7 @@ public class Disjoint implements ASTObject<clingo_ast_disjoint>, BodyLiteralData
     private final List<DisjointElement> elements;
 
     public Disjoint(clingo_ast_disjoint d) {
-        this(new DisjointElement.DisjointElementList(d.elements(), d.size()));
+        this(DisjointElement.list(d.elements(), d.size()));
     }
 
     public Disjoint(List<DisjointElement> elements) {

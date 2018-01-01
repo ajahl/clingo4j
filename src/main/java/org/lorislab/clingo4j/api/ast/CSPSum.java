@@ -17,7 +17,6 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.Location;
-import org.lorislab.clingo4j.api.ast.CSPProduct.CSPProductList;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_sum_term;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
@@ -33,7 +32,7 @@ public class CSPSum implements ASTObject<clingo_ast_csp_sum_term> {
     private final List<CSPProduct> terms;
 
     public CSPSum(clingo_ast_csp_sum_term term) {
-        this(new Location(term.location()), new CSPProductList(term.terms(), term.size()));
+        this(new Location(term.location()), CSPProduct.list(term.terms(), term.size()));
     }
 
     public CSPSum(Location location, List<CSPProduct> terms) {

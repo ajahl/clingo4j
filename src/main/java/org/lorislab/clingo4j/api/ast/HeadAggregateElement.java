@@ -21,6 +21,7 @@ import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_aggregate_element;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.DefaultList;
 
 /**
  *
@@ -32,7 +33,7 @@ public class HeadAggregateElement implements ASTObject<clingo_ast_head_aggregate
     private final ConditionalLiteral condition;
     
     public HeadAggregateElement(clingo_ast_head_aggregate_element e) {
-        this(new Term.TermList(e.tuple(), e.tuple_size()), new ConditionalLiteral(e.conditional_literal()));
+        this(Term.list(e.tuple(), e.tuple_size()), new ConditionalLiteral(e.conditional_literal()));
     }
     
     public HeadAggregateElement(List<Term> tuple, ConditionalLiteral condition) {
@@ -62,16 +63,8 @@ public class HeadAggregateElement implements ASTObject<clingo_ast_head_aggregate
         return ret;
     }
     
-    public static class HeadAggregateElementList extends SpanList<HeadAggregateElement, clingo_ast_head_aggregate_element> {
-
-        public HeadAggregateElementList(Pointer<clingo_ast_head_aggregate_element> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected HeadAggregateElement getItem(Pointer<clingo_ast_head_aggregate_element> p) {
-            return new HeadAggregateElement(p.get());
-        }
-        
+    public static List<HeadAggregateElement> list(Pointer<clingo_ast_head_aggregate_element> pointer, long size) {
+        return new DefaultList<>(HeadAggregateElement::new, pointer, size);
     }
+    
 }

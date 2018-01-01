@@ -19,22 +19,17 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_assignment;
+import org.lorislab.clingo4j.util.AbstractPointerObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class Assignment {
-
-    private final Pointer<clingo_assignment> pointer;
+public class Assignment extends AbstractPointerObject<clingo_assignment> {
 
     public Assignment(Pointer<clingo_assignment> pointer) {
-        this.pointer = pointer;
-    }
-
-    public Pointer<clingo_assignment> getPointer() {
-        return pointer;
+        super(pointer);
     }
 
     public boolean hasConflict() {

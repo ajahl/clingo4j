@@ -33,7 +33,7 @@ public class Edge implements ASTObject<clingo_ast_edge>, StatementData {
     private final List<BodyLiteral> body;
 
     public Edge(clingo_ast_edge e) {
-        this(new Term(e.u()), new Term(e.v()), new BodyLiteral.BodyLiteralList(e.body(), e.size()));
+        this(new Term(e.u()), new Term(e.v()), BodyLiteral.list(e.body(), e.size()));
     }
         
     public Edge(Term u, Term v, List<BodyLiteral> body) {

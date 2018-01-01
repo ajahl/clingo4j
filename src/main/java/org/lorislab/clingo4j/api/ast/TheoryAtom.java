@@ -36,7 +36,7 @@ public class TheoryAtom implements ASTObject<clingo_ast_theory_atom>, HeadLitera
     private final Optional<TheoryGuard> guard;
 
     public TheoryAtom(clingo_ast_theory_atom a) {
-        this(new Term(a.term()), new TheoryAtomElement.TheoryAtomElementList(a.elements(), a.size()), ASTObject.optional(TheoryGuard::new, a.guard()));
+        this(new Term(a.term()), TheoryAtomElement.list(a.elements(), a.size()), ASTObject.optional(TheoryGuard::new, a.guard()));
     }
 
     public TheoryAtom(Term term, List<TheoryAtomElement> elements, Optional<TheoryGuard> guard) {

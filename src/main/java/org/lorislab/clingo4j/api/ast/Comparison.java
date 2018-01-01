@@ -15,11 +15,11 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
-import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Literal.LiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_comparison;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.util.ASTObject;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -31,6 +31,10 @@ public class Comparison implements ASTObject<clingo_ast_comparison>, LiteralData
     private final Term left;
     private final Term right;
 
+    public Comparison(clingo_ast_comparison com) {
+        this(EnumValue.valueOfInt(ComparisonOperator.class, com.comparison()), new Term(com.left()), new Term(com.right()));
+    }
+    
     public Comparison(ComparisonOperator comparison, Term left, Term right) {
         this.operator = comparison;
         this.left = left;

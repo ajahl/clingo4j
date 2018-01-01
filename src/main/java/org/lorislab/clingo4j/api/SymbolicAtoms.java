@@ -23,7 +23,6 @@ import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.api.ast.Signature;
-import org.lorislab.clingo4j.api.ast.Signature.SignatureList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbolic_atoms;
 import org.lorislab.clingo4j.util.AbstractPointerObject;
 
@@ -48,7 +47,7 @@ public class SymbolicAtoms extends AbstractPointerObject<clingo_symbolic_atoms> 
         handleError(LIB.clingo_symbolic_atoms_signatures_size(pointer, n), "Error reading the symbolic atoms signatures size!");
         Pointer<Long> signatures = Pointer.allocateLongs(n.getLong());
         handleError(LIB.clingo_symbolic_atoms_signatures(pointer, signatures, n.getLong()), "Error reading the symbolic atoms signatures!");
-        return new SignatureList(signatures, n.getLong());
+        return Signature.list(signatures, n.getLong());
     }
 
     public SymbolicAtom find(Symbol atom) throws ClingoException {

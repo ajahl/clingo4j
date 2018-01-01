@@ -34,7 +34,7 @@ public class Minimize implements ASTObject<clingo_ast_minimize>, StatementData {
     private final List<BodyLiteral> body;
 
     public Minimize(clingo_ast_minimize m) {
-        this(new Term(m.weight()), new Term(m.priority()), new  Term.TermList(m.tuple(), m.tuple_size()), new BodyLiteral.BodyLiteralList(m.body(), m.body_size()));
+        this(new Term(m.weight()), new Term(m.priority()), Term.list(m.tuple(), m.tuple_size()), BodyLiteral.list(m.body(), m.body_size()));
     }
         
     public Minimize(Term weight, Term priority, List<Term> tuple, List<BodyLiteral> body) {

@@ -16,7 +16,6 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
-import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralList;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.api.c.clingo_ast_heuristic;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
@@ -36,7 +35,7 @@ public class Heuristic implements ASTObject<clingo_ast_heuristic>, StatementData
     private final Term modifier;    
 
     public Heuristic(clingo_ast_heuristic h) {
-        this(new Term(h.atom()), new BodyLiteralList(h.body(), h.size()), new Term(h.bias()), new Term(h.priority()), new Term(h.modifier()));
+        this(new Term(h.atom()), BodyLiteral.list(h.body(), h.size()), new Term(h.bias()), new Term(h.priority()), new Term(h.modifier()));
     }
     
     public Heuristic(Term atom, List<BodyLiteral> body, Term bias, Term priority, Term modifier) {

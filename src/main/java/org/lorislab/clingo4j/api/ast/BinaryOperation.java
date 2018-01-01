@@ -15,11 +15,11 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
-import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_binary_operation;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.util.ASTObject;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -33,6 +33,10 @@ public class BinaryOperation implements ASTObject<clingo_ast_binary_operation>, 
     
     private final Term right;
 
+    public BinaryOperation(clingo_ast_binary_operation t) {
+        this(EnumValue.valueOfInt(BinaryOperator.class, t.binary_operator()), new Term(t.left()), new Term(t.right()));
+    }
+    
     public BinaryOperation(BinaryOperator operator, Term left, Term right) {
         this.operator = operator;
         this.left = left;

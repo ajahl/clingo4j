@@ -60,7 +60,7 @@ public class Model extends AbstractPointerObject<clingo_model>{
             // retrieve the symbols in the model
             handleError(LIB.clingo_model_symbols(pointer, type.getInt(), atoms, size.getLong()), "Error read the model symbols");
 
-            result = new Symbol.SymbolList(atoms, size.getLong());
+            result = Symbol.list(atoms, size.getLong());
         }
         return result;
     }

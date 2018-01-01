@@ -18,8 +18,6 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
-import org.lorislab.clingo4j.api.ast.TheoryAtomDefinition.TheoryAtomDefinitionList;
-import org.lorislab.clingo4j.api.ast.TheoryTermDefinition.TheoryTermDefinitionList;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_definition;
 import org.lorislab.clingo4j.util.ASTObject;
@@ -36,7 +34,7 @@ public class TheoryDefinition implements ASTObject<clingo_ast_theory_definition>
     private final List<TheoryAtomDefinition> atoms;
 
     public TheoryDefinition(clingo_ast_theory_definition d) {
-        this(d.name().getCString(), new TheoryTermDefinitionList(d.terms(), d.terms_size()), new TheoryAtomDefinitionList(d.atoms(), d.atoms_size()));
+        this(d.name().getCString(), TheoryTermDefinition.list(d.terms(), d.terms_size()), TheoryAtomDefinition.list(d.atoms(), d.atoms_size()));
     }
     
     public TheoryDefinition(String name, List<TheoryTermDefinition> terms, List<TheoryAtomDefinition> atoms) {

@@ -32,7 +32,7 @@ public class External implements ASTObject<clingo_ast_external>, StatementData {
     private final List<BodyLiteral> body;
 
     public External(clingo_ast_external e) {
-        this(new Term(e.atom()), new BodyLiteral.BodyLiteralList(e.body(), e.size()));
+        this(new Term(e.atom()), BodyLiteral.list(e.body(), e.size()));
     }
     
     public External(Term atom, List<BodyLiteral> body) {

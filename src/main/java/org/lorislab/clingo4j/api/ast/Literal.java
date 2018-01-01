@@ -18,7 +18,6 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
-import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
@@ -28,6 +27,7 @@ import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.EnumValue;
 import org.lorislab.clingo4j.util.IntegerList;
 
@@ -54,12 +54,10 @@ public class Literal implements ASTObject<clingo_ast_literal>, BodyLiteralData, 
                     data = new Term(lit.field1().symbol().get());
                     break;
                 case COMPARISON:
-                    clingo_ast_comparison com = lit.field1().comparison().get();
-                    data = new Comparison(EnumValue.valueOfInt(ComparisonOperator.class, com.comparison()), new Term(com.left()), new Term(com.right()));
+                    data = new Comparison(lit.field1().comparison().get());
                     break;
                 case CSP:
-                    clingo_ast_csp_literal csp = lit.field1().csp_literal().get();
-                    data = new CSPLiteral(new CSPSum(csp.term()), new CSPGuard.CSPGuardList(csp.guards(), csp.size()));
+                    data = new CSPLiteral(lit.field1().csp_literal().get());
                     break;
                 default:
                     data = null;
@@ -145,17 +143,8 @@ public class Literal implements ASTObject<clingo_ast_literal>, BodyLiteralData, 
         return new IntegerList(tmp, size);
     }
 
-    public static class LiteralList extends SpanList<Literal, clingo_ast_literal> {
-
-        public LiteralList(Pointer<clingo_ast_literal> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected Literal getItem(Pointer<clingo_ast_literal> p) {
-            return new Literal(p.get());
-        }
-
+    public static List<Literal> list(Pointer<clingo_ast_literal> pointer, long size) {
+        return new DefaultList<>(Literal::new, pointer, size);
     }
-
+ 
 }

@@ -32,7 +32,7 @@ public class Rule implements ASTObject<clingo_ast_rule>, StatementData {
     private final List<BodyLiteral> body;
 
     public Rule(clingo_ast_rule r) {
-        this(new HeadLiteral(r.head()), new BodyLiteral.BodyLiteralList(r.body(), r.size()));
+        this(new HeadLiteral(r.head()), BodyLiteral.list(r.body(), r.size()));
     }
     
     public Rule(HeadLiteral head, List<BodyLiteral> body) {

@@ -26,6 +26,10 @@ public class ProjectSignature implements StatementData {
     
     private final Signature signature;
 
+    public ProjectSignature(long signature) {
+        this(new Signature(signature));
+    }
+    
     public ProjectSignature(Signature signature) {
         this.signature = signature;
     }

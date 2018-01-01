@@ -28,12 +28,16 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  * @author andrej
  */
 public class Function implements ASTObject<clingo_ast_function>, TermData {
- 
+
     private final String name;
-    
+
     private final List<Term> arguments;
-    
+
     private final boolean external;
+
+    public Function(clingo_ast_function efn, boolean external) {
+        this(efn.name().getCString(), Term.list(efn.arguments(), efn.size()), external);
+    }
 
     public Function(String name, List<Term> arguments, boolean external) {
         this.name = name;
@@ -78,6 +82,5 @@ public class Function implements ASTObject<clingo_ast_function>, TermData {
         fn.size(ASTObject.size(arguments));
         return fn;
     }
-       
-    
+
 }

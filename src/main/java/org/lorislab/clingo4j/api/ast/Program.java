@@ -17,7 +17,6 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.bridj.Pointer;
-import org.lorislab.clingo4j.api.ast.Id.IdList;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.api.c.clingo_ast_program;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
@@ -34,7 +33,7 @@ public class Program implements ASTObject<clingo_ast_program>, StatementData {
     private final List<Id> parameters;
 
     public Program(clingo_ast_program p) {
-        this(p.name().getCString(), new IdList(p.parameters(), p.size()));
+        this(p.name().getCString(), Id.list(p.parameters(), p.size()));
     }
     
     public Program(String name, List<Id> parameters) {

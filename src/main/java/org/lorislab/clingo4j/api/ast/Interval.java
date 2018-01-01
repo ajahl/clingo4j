@@ -15,7 +15,6 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
-import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_interval;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
@@ -31,6 +30,10 @@ public class Interval implements ASTObject<clingo_ast_interval>, TermData {
     
     private final Term right;
 
+    public Interval(clingo_ast_interval t) {
+       this(new Term(t.left()), new Term(t.right()));
+    }
+    
     public Interval(Term left, Term right) {
         this.left = left;
         this.right = right;

@@ -32,7 +32,7 @@ public class ProjectAtom implements ASTObject<clingo_ast_project>, StatementData
     private final List<BodyLiteral> body;
 
     public ProjectAtom(clingo_ast_project p) {
-        this(new Term(p.atom()), new BodyLiteral.BodyLiteralList(p.body(), p.size()));
+        this(new Term(p.atom()), BodyLiteral.list(p.body(), p.size()));
     }
     
     public ProjectAtom(Term atom, List<BodyLiteral> body) {

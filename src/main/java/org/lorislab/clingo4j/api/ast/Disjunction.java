@@ -31,7 +31,7 @@ public class Disjunction implements ASTObject<clingo_ast_disjunction>, HeadLiter
     private final List<ConditionalLiteral> elements;
 
     public Disjunction(clingo_ast_disjunction dis) {
-        this(new ConditionalLiteral.ConditionalLiteralList(dis.elements(), dis.size()));
+        this(ConditionalLiteral.list(dis.elements(), dis.size()));
     }
     
     public Disjunction(List<ConditionalLiteral> elements) {

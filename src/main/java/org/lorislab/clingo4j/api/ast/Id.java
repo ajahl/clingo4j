@@ -15,11 +15,13 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_id;
 import org.lorislab.clingo4j.util.ASTObject;
+import org.lorislab.clingo4j.util.DefaultList;
 
 /**
  *
@@ -61,16 +63,8 @@ public class Id implements ASTObject<clingo_ast_id> {
         return tmp;
     }
 
-    public static class IdList extends SpanList<Id, clingo_ast_id> {
-
-        public IdList(Pointer<clingo_ast_id> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected Id getItem(Pointer<clingo_ast_id> p) {
-            return new Id(p.get());
-        }
-
+    public static List<Id> list(Pointer<clingo_ast_id> pointer, long size) {
+        return new DefaultList<>(Id::new, pointer, size);
     }
+   
 }

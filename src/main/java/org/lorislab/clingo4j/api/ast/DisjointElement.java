@@ -18,11 +18,10 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
-import org.lorislab.clingo4j.util.SpanList;
-import org.lorislab.clingo4j.api.ast.Literal.LiteralList;
 import org.lorislab.clingo4j.api.c.clingo_ast_disjoint_element;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.DefaultList;
 
 /**
  *
@@ -36,7 +35,7 @@ public class DisjointElement implements ASTObject<clingo_ast_disjoint_element> {
     private final List<Literal> condition;
 
     public DisjointElement(clingo_ast_disjoint_element e) {
-        this(new Location(e.location()), new Term.TermList(e.tuple(), e.tuple_size()), new CSPSum(e.term()), new LiteralList(e.condition(), e.condition_size()));
+        this(new Location(e.location()),Term.list(e.tuple(), e.tuple_size()), new CSPSum(e.term()), Literal.list(e.condition(), e.condition_size()));
     }
     
     public DisjointElement(Location location, List<Term> tuple, CSPSum term, List<Literal> condition) {
@@ -79,17 +78,8 @@ public class DisjointElement implements ASTObject<clingo_ast_disjoint_element> {
         return ret;
     }
     
-    public static class DisjointElementList extends SpanList<DisjointElement, clingo_ast_disjoint_element> {
-
-        public DisjointElementList(Pointer<clingo_ast_disjoint_element> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected DisjointElement getItem(Pointer<clingo_ast_disjoint_element> p) {
-            return new DisjointElement(p.get());
-        }
-        
+    public static List<DisjointElement> list(Pointer<clingo_ast_disjoint_element> pointer, long size) {
+        return new DefaultList<>(DisjointElement::new, pointer, size);
     }
     
 }

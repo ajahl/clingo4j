@@ -70,7 +70,7 @@ public class Statement implements ASTObject<clingo_ast_statement> {
                     data = new ProjectAtom(stm.field1().project_atom().get());
                     break;
                 case PROJECT_ATOM_SIGNATURE:
-                    data = new ProjectSignature(new Signature(stm.field1().project_signature()));
+                    data = new ProjectSignature(stm.field1().project_signature());
                     break;
                 case THEORY_DEFINITION:
                     data = new TheoryDefinition(stm.field1().theory_definition().get());

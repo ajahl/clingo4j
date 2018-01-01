@@ -15,12 +15,14 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import java.util.List;
 import org.lorislab.clingo4j.util.EnumValue;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.util.ASTObject;
+import org.lorislab.clingo4j.util.DefaultList;
 
 /**
  *
@@ -105,16 +107,8 @@ public class BodyLiteral implements ASTObject<clingo_ast_body_literal> {
         return "" + sign + data;
     }
 
-    public static class BodyLiteralList extends SpanList<BodyLiteral, clingo_ast_body_literal> {
-
-        public BodyLiteralList(Pointer<clingo_ast_body_literal> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected BodyLiteral getItem(Pointer<clingo_ast_body_literal> p) {
-            return new BodyLiteral(p.get());
-        }
-
+    public static List<BodyLiteral> list(Pointer<clingo_ast_body_literal> pointer, long size) {
+        return new DefaultList<>(BodyLiteral::new, pointer, size);
     }
+
 }

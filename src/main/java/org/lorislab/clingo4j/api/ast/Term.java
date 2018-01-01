@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.util.SpanList;
@@ -29,6 +30,7 @@ import org.lorislab.clingo4j.api.c.clingo_ast_pool;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_unary_operation;
 import org.lorislab.clingo4j.util.ASTObject;
+import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
@@ -54,28 +56,22 @@ public class Term implements ASTObject<clingo_ast_term>, LiteralData {
                     data = new Variable(term.field1().variable().getCString());
                     break;
                 case UNARY_OPERATION:
-                    clingo_ast_unary_operation op = term.field1().unary_operation().get();
-                    data = new UnaryOperation(EnumValue.valueOfInt(UnaryOperator.class, op.unary_operator()), new Term(op.argument()));
+                    data = new UnaryOperation(term.field1().unary_operation().get());
                     break;
                 case BINARY_OPERATION:
-                    clingo_ast_binary_operation bop = term.field1().binary_operation().get();
-                    data = new BinaryOperation(EnumValue.valueOfInt(BinaryOperator.class, bop.binary_operator()), new Term(bop.left()), new Term(bop.right()));
+                    data = new BinaryOperation(term.field1().binary_operation().get());
                     break;
                 case INTERVAL:
-                    clingo_ast_interval inter = term.field1().interval().get();
-                    data = new Interval(new Term(inter.left()), new Term(inter.right()));
+                    data = new Interval(term.field1().interval().get());
                     break;
                 case FUNCTION:
-                    clingo_ast_function fn = term.field1().function().get();
-                    data = new Function(fn.name().getCString(), new TermList(fn.arguments(), fn.size()), false);
+                    data = new Function(term.field1().function().get(), false);
                     break;
                 case EXTERNAL_FUNCTION:
-                    clingo_ast_function efn = term.field1().external_function().get();
-                    data = new Function(efn.name().getCString(), new TermList(efn.arguments(), efn.size()), true);
+                    data = new Function(term.field1().external_function().get(), true);
                     break;
                 case POOL:
-                    clingo_ast_pool p = term.field1().pool().get();
-                    data = new Pool(new TermList(p.arguments(), p.size()));
+                    data = new Pool(term.field1().pool().get());
                     break;
                 default:
                     data = null;
@@ -126,17 +122,8 @@ public class Term implements ASTObject<clingo_ast_term>, LiteralData {
         return "" + data;
     }
 
-    public static class TermList extends SpanList<Term, clingo_ast_term> {
-
-        public TermList(Pointer<clingo_ast_term> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected Term getItem(Pointer<clingo_ast_term> p) {
-            return new Term(p.get());
-        }
-
+    public static List<Term> list(Pointer<clingo_ast_term> pointer, long size) {
+        return new DefaultList<>(Term::new, pointer, size);
     }
 
 }

@@ -17,7 +17,6 @@ package org.lorislab.clingo4j.api;
 
 import java.util.List;
 import org.bridj.Pointer;
-import org.lorislab.clingo4j.api.Symbol.SymbolList;
 import org.lorislab.clingo4j.api.c.clingo_part;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -54,7 +53,7 @@ public class Part {
     }
     
     public List<Symbol> getParameters() {
-        return new SymbolList(part.params(), (int) part.size());
+        return Symbol.list(part.params(), (int) part.size());
     }
     
     private static clingo_part getPartFrom(Part part) {

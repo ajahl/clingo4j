@@ -36,7 +36,7 @@ public class HeadAggregate implements ASTObject<clingo_ast_head_aggregate>, Head
     private final Optional<AggregateGuard> rightGuard;
 
     public HeadAggregate(clingo_ast_head_aggregate h) {
-        this(EnumValue.valueOfInt(AggregateFunction.class, h.function()), new HeadAggregateElement.HeadAggregateElementList(h.elements(), h.size()), ASTObject.optional(AggregateGuard::new, h.left_guard()), ASTObject.optional(AggregateGuard::new, h.right_guard()));
+        this(EnumValue.valueOfInt(AggregateFunction.class, h.function()), HeadAggregateElement.list(h.elements(), h.size()), ASTObject.optional(AggregateGuard::new, h.left_guard()), ASTObject.optional(AggregateGuard::new, h.right_guard()));
     }
 
     public HeadAggregate(AggregateFunction function, List<HeadAggregateElement> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {

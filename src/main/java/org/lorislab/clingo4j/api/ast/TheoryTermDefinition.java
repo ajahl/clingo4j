@@ -18,11 +18,10 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
-import org.lorislab.clingo4j.util.SpanList;
-import org.lorislab.clingo4j.api.ast.TheoryOperatorDefinition.TheoryOperatorDefinitionList;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_definition;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.DefaultList;
 
 /**
  *
@@ -35,7 +34,7 @@ public class TheoryTermDefinition implements ASTObject<clingo_ast_theory_term_de
     private final List<TheoryOperatorDefinition> operators;    
 
     public TheoryTermDefinition(clingo_ast_theory_term_definition d) {
-        this(new Location(d.location()), d.name().getCString(), new TheoryOperatorDefinitionList(d.operators(), d.size()));
+        this(new Location(d.location()), d.name().getCString(), TheoryOperatorDefinition.list(d.operators(), d.size()));
     }
     
     public TheoryTermDefinition(Location location, String name, List<TheoryOperatorDefinition> operators) {
@@ -71,16 +70,8 @@ public class TheoryTermDefinition implements ASTObject<clingo_ast_theory_term_de
         return ret;
     }
     
-    public static class TheoryTermDefinitionList extends SpanList<TheoryTermDefinition, clingo_ast_theory_term_definition> {
-
-        public TheoryTermDefinitionList(Pointer<clingo_ast_theory_term_definition> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected TheoryTermDefinition getItem(Pointer<clingo_ast_theory_term_definition> p) {
-            return new TheoryTermDefinition(p.get());
-        }
-        
+    public static List<TheoryTermDefinition> list(Pointer<clingo_ast_theory_term_definition> pointer, long size) {
+        return new DefaultList<>(TheoryTermDefinition::new, pointer, size);
     }
+    
 }

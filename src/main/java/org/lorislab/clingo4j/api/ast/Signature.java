@@ -15,11 +15,12 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import java.util.List;
 import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.ClingoException;
-import org.lorislab.clingo4j.util.SpanList;
+import org.lorislab.clingo4j.util.DefaultList;
 
 /**
  *
@@ -94,17 +95,8 @@ public class Signature {
     }
     
     
-    
-    public static class SignatureList extends SpanList<Signature, Long> {
-
-        public SignatureList(Pointer<Long> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected Signature getItem(Pointer<Long> p) {
-            return new Signature(p.get());
-        }
-        
+    public static List<Signature> list(Pointer<Long> pointer, long size) {
+        return new DefaultList<>(Signature::new, pointer, size);
     }
+ 
 }

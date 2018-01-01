@@ -15,7 +15,6 @@
  */
 package org.lorislab.clingo4j.api;
 
-import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_clause_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_clause_type.clingo_clause_type_learnt;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_clause_type.clingo_clause_type_static;

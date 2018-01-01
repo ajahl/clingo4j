@@ -21,7 +21,6 @@ import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
-import org.lorislab.clingo4j.api.TheoryElement.TheoryElementList;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
 import org.lorislab.clingo4j.util.AbstractPointerObject;
 
@@ -46,7 +45,7 @@ public class TheoryAtom extends AbstractPointerObject<clingo_theory_atoms> {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> n = Pointer.allocateSizeT();
         handleError(LIB.clingo_theory_atoms_atom_elements(pointer, id, ret, n), "Error reading the theory atom elements!");
-        return new TheoryElementList(pointer, ret.get(), n.getInt());
+        return TheoryElement.list(pointer, ret.get(), n.getInt());
     }
 
     public TheoryTerm term() throws ClingoException {

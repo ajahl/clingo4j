@@ -30,6 +30,10 @@ public class Pool implements ASTObject<clingo_ast_pool>, TermData {
 
     private final List<Term> arguments;
 
+    public Pool(clingo_ast_pool t) {
+        this(Term.list(t.arguments(), t.size()));
+    }
+    
     public Pool(List<Term> arguments) {
         this.arguments = arguments;
     }

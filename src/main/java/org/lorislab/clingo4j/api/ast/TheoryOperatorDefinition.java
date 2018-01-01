@@ -15,11 +15,12 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
-import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_operator_definition;
 import org.lorislab.clingo4j.util.ASTObject;
+import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
@@ -75,16 +76,8 @@ public class TheoryOperatorDefinition implements ASTObject<clingo_ast_theory_ope
         return ret;
     }
     
-    public static class TheoryOperatorDefinitionList extends SpanList<TheoryOperatorDefinition, clingo_ast_theory_operator_definition> {
-
-        public TheoryOperatorDefinitionList(Pointer<clingo_ast_theory_operator_definition> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected TheoryOperatorDefinition getItem(Pointer<clingo_ast_theory_operator_definition> p) {
-            return new TheoryOperatorDefinition(p.get());
-        }
-    
+    public static List<TheoryOperatorDefinition> list(Pointer<clingo_ast_theory_operator_definition> pointer, long size) {
+        return new DefaultList<>(TheoryOperatorDefinition::new, pointer, size);
     }
+
 }

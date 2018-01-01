@@ -24,6 +24,7 @@ import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
 import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.IntegerList;
 
 /**
@@ -47,7 +48,7 @@ public class TheoryElement extends AbstractPointerObject<clingo_theory_atoms> {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> size = Pointer.allocateSizeT();
         handleError(LIB.clingo_theory_atoms_element_tuple(pointer, id, ret, size), "Error reading theory element tuple!");
-        return new TheoryTerm.TheoryTermAtomList(pointer, ret.get(), size.getInt());
+        return TheoryTerm.list(pointer, ret.get(), size.getInt());
     }
 
     public List<Integer> condition() throws ClingoException {
@@ -72,19 +73,13 @@ public class TheoryElement extends AbstractPointerObject<clingo_theory_atoms> {
         return string.getCString();
     }
 
-    public static class TheoryElementList extends SpanList<TheoryElement, Integer> {
-
-        private Pointer<clingo_theory_atoms> atoms;
-
-        public TheoryElementList(Pointer<clingo_theory_atoms> atoms, Pointer<Integer> pointer, long size) {
-            super(pointer, size);
-            this.atoms = atoms;
-        }
-
-        @Override
-        protected TheoryElement getItem(Pointer<Integer> p) {
-            return new TheoryElement(atoms, p.getInt());
-        }
-
-    }    
+    public static List<TheoryElement> list(final Pointer<clingo_theory_atoms> atoms, Pointer<Integer> pointer, long size) {    
+        return new SpanList<TheoryElement, Integer>(pointer, size) {
+            @Override
+            protected TheoryElement getItem(Pointer<Integer> p) {
+                return new TheoryElement(atoms, p.getInt());
+            }
+        };
+    }
+   
 }

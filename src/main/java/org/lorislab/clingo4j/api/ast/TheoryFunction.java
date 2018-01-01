@@ -33,6 +33,10 @@ public class TheoryFunction implements ASTObject<clingo_ast_theory_function>, Th
 
     private final List<TheoryTerm> arguments;
 
+    public TheoryFunction(clingo_ast_theory_function t) {
+        this(t.name().getCString(), TheoryTerm.list(t.arguments(), t.size()));
+    }
+
     public TheoryFunction(String name, List<TheoryTerm> arguments) {
         this.name = name;
         this.arguments = arguments;

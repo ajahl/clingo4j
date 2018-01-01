@@ -19,17 +19,22 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_unary_operation;
+import org.lorislab.clingo4j.util.ASTObject;
+import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class UnaryOperation implements TermData {
+public class UnaryOperation implements ASTObject<clingo_ast_unary_operation>, TermData {
     
     private final UnaryOperator unaryOperator;
     
     private final Term argument;
 
+    public UnaryOperation(clingo_ast_unary_operation op) {
+        this(EnumValue.valueOfInt(UnaryOperator.class, op.unary_operator()), new Term(op.argument()));
+    }
     public UnaryOperation(UnaryOperator unaryOperator, Term argument) {
         this.unaryOperator = unaryOperator;
         this.argument = argument;
@@ -50,15 +55,20 @@ public class UnaryOperation implements TermData {
 
     @Override
     public void updateTerm(clingo_ast_term ret) {
-        clingo_ast_unary_operation uo = new clingo_ast_unary_operation();
-        uo.unary_operator(unaryOperator.getInt());
-        uo.argument(argument.create());
-        ret.field1().unary_operation(Pointer.getPointer(uo));
+        ret.field1().unary_operation(createPointer());
     }
 
     @Override
     public TermType getTermType() {
         return TermType.UNARY_OPERATION;
+    }
+
+    @Override
+    public clingo_ast_unary_operation create() {
+        clingo_ast_unary_operation uo = new clingo_ast_unary_operation();
+        uo.unary_operator(unaryOperator.getInt());
+        uo.argument(argument.create());
+        return uo;
     }
     
 }

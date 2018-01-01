@@ -20,8 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.bridj.BridJ;
 import org.bridj.Pointer;
-import org.lorislab.clingo4j.api.Symbol.SymbolList;
-import org.lorislab.clingo4j.api.WeightedLiteral.WeightedLiteralList;
 import org.lorislab.clingo4j.api.ast.Statement;
 import org.lorislab.clingo4j.api.c.ClingoLibrary;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_callback_t;
@@ -179,7 +177,7 @@ public class Clingo implements AutoCloseable {
 
                     String name = cname.getCString();
                     Location loc = new Location(clocation);
-                    List<Symbol> symbols = new SymbolList(carguments, carguments_size);
+                    List<Symbol> symbols = Symbol.list(carguments, carguments_size);
 
                     boolean result = true;
                     try {
@@ -426,14 +424,14 @@ public class Clingo implements AutoCloseable {
         tmp.weight_rule(Pointer.getPointer(new weight_rule_callback() {
             @Override
             public boolean apply(boolean choice, Pointer<Integer> head, long head_size, int lower_bound, Pointer<clingo_weighted_literal> body, long body_size, Pointer<?> data) {
-                observer.weightRule(choice, new IntegerList(head, head_size), lower_bound, new WeightedLiteralList(body, body_size));
+                observer.weightRule(choice, new IntegerList(head, head_size), lower_bound, WeightedLiteral.list(body, body_size));
                 return true;
             }
         }));
         tmp.minimize(Pointer.getPointer(new minimize_callback() {
             @Override
             public boolean apply(int priority, Pointer<clingo_weighted_literal> literals, long size, Pointer<?> data) {
-                observer.minimize(priority, new WeightedLiteralList(literals, size));
+                observer.minimize(priority, WeightedLiteral.list(literals, size));
                 return true;
             }
         }));

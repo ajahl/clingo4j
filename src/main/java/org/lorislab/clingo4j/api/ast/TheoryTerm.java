@@ -15,15 +15,13 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
-import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.Symbol;
-import org.lorislab.clingo4j.api.c.clingo_ast_theory_function;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
-import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_array;
-import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term;
 import org.lorislab.clingo4j.util.ASTObject;
+import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
@@ -49,24 +47,19 @@ public class TheoryTerm implements ASTObject<clingo_ast_theory_term> {
                     data = new Variable(t.field1().variable().getCString());
                     break;
                 case LIST:
-                    clingo_ast_theory_term_array a = t.field1().list().get();
-                    data = new TheoryTermSequence(TheoryTermSequenceType.LIST, new TheoryTermList(a.terms(), a.size()));
+                    data = new TheoryTermSequence(TheoryTermSequenceType.LIST, t.field1().tuple().get());
                     break;
                 case SET:
-                    clingo_ast_theory_term_array s = t.field1().set().get();
-                    data = new TheoryTermSequence(TheoryTermSequenceType.SET, new TheoryTermList(s.terms(), s.size()));
+                    data = new TheoryTermSequence(TheoryTermSequenceType.SET, t.field1().tuple().get());
                     break;
                 case TUPLE:
-                    clingo_ast_theory_term_array x = t.field1().tuple().get();
-                    data = new TheoryTermSequence(TheoryTermSequenceType.TUPLE, new TheoryTermList(x.terms(), x.size()));
+                    data = new TheoryTermSequence(TheoryTermSequenceType.TUPLE, t.field1().tuple().get());
                     break;
                 case FUNCTIONS:
-                    clingo_ast_theory_function fn = t.field1().function().get();
-                    data = new TheoryFunction(fn.name().getCString(), new TheoryTermList(fn.arguments(), fn.size()));
+                    data = new TheoryFunction(t.field1().function().get());
                     break;
                 case UNPARSED_TERM:
-                    clingo_ast_theory_unparsed_term un = t.field1().unparsed_term().get();
-                    data = new TheoryUnparsedTerm(new TheoryUnparsedTermElement.TheoryUnparsedTermElementList(un.elements(), un.size()));
+                    data = new TheoryUnparsedTerm(t.field1().unparsed_term().get());
                     break;
                 default:
                     data = null;
@@ -110,17 +103,8 @@ public class TheoryTerm implements ASTObject<clingo_ast_theory_term> {
         return "" + data;
     }
 
-    public static class TheoryTermList extends SpanList<TheoryTerm, clingo_ast_theory_term> {
-
-        public TheoryTermList(Pointer<clingo_ast_theory_term> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected TheoryTerm getItem(Pointer<clingo_ast_theory_term> p) {
-            return new TheoryTerm(p.get());
-        }
-
+    public static List<TheoryTerm> list(Pointer<clingo_ast_theory_term> pointer, long size) {
+        return new DefaultList<>(TheoryTerm::new, pointer, size);
     }
 
 }

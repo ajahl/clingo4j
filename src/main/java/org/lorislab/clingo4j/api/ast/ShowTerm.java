@@ -33,7 +33,7 @@ public class ShowTerm implements ASTObject<clingo_ast_show_term>, StatementData 
     private final boolean csp;
 
     public ShowTerm(clingo_ast_show_term t) {
-        this(new Term(t.term()), new BodyLiteral.BodyLiteralList(t.body(), t.size()), t.csp());
+        this(new Term(t.term()), BodyLiteral.list(t.body(), t.size()), t.csp());
     }
     
     public ShowTerm(Term term, List<BodyLiteral> body, boolean csp) {

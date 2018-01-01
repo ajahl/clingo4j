@@ -30,6 +30,10 @@ public class TheoryUnparsedTerm implements ASTObject<clingo_ast_theory_unparsed_
 
     private final List<TheoryUnparsedTermElement> elements;
 
+    public TheoryUnparsedTerm(clingo_ast_theory_unparsed_term t) {
+        this(TheoryUnparsedTermElement.list(t.elements(), t.size()));
+    }
+    
     public TheoryUnparsedTerm(List<TheoryUnparsedTermElement> elements) {
         this.elements = elements;
     }

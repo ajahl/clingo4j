@@ -20,6 +20,7 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_weighted_literal;
 import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.DefaultList;
 
 /**
  *
@@ -55,16 +56,8 @@ public class WeightedLiteral {
         return ClingoUtil.createArray(list, clingo_weighted_literal.class, WeightedLiteral::get);
     }
     
-    public static class WeightedLiteralList extends SpanList<WeightedLiteral, clingo_weighted_literal> {
-
-        public WeightedLiteralList(Pointer<clingo_weighted_literal> pointer, long size) {
-            super(pointer, size);
-        }
-
-        @Override
-        protected WeightedLiteral getItem(Pointer<clingo_weighted_literal> p) {
-            return new WeightedLiteral(p.get());
-        }
-        
+    public static List<WeightedLiteral> list(Pointer<clingo_weighted_literal> pointer, long size) {
+        return new DefaultList<>(WeightedLiteral::new, pointer, size);
     }
+
 }
