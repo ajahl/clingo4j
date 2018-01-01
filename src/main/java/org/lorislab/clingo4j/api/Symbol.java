@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.api.enums.SymbolType;
 import org.lorislab.clingo4j.util.SpanList;
 import java.util.List;
 import org.bridj.Pointer;
@@ -26,8 +27,8 @@ import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
-import org.lorislab.clingo4j.api.ast.TermType;
-import org.lorislab.clingo4j.api.ast.TheoryTermType;
+import org.lorislab.clingo4j.api.ast.enums.TermType;
+import org.lorislab.clingo4j.api.ast.enums.TheoryTermType;
 import org.lorislab.clingo4j.util.ClingoUtil;
 import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.EnumValue;

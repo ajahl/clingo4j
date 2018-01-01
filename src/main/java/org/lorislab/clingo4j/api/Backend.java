@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.api.enums.ExternalType;
+import org.lorislab.clingo4j.api.enums.HeuristicType;
 import java.util.List;
 import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;

@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.api.ast.enums.ScriptType;
+import org.lorislab.clingo4j.api.ast.enums.StatementType;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.api.c.clingo_ast_script;

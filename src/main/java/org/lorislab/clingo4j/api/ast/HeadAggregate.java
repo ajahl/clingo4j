@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.api.ast.enums.AggregateFunction;
+import org.lorislab.clingo4j.api.ast.enums.HeadLiteralType;
 import org.lorislab.clingo4j.util.EnumValue;
 import java.util.List;
 import java.util.Optional;

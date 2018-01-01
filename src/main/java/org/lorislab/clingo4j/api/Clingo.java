@@ -15,7 +15,17 @@
  */
 package org.lorislab.clingo4j.api;
 
-import org.lorislab.clingo4j.api.ast.StatementCallback;
+import org.lorislab.clingo4j.api.callback.Propagator;
+import org.lorislab.clingo4j.api.callback.ProgramBuilderCallback;
+import org.lorislab.clingo4j.api.callback.SolveEventHandler;
+import org.lorislab.clingo4j.api.callback.GroundCallback;
+import org.lorislab.clingo4j.api.callback.GroundProgramObserver;
+import org.lorislab.clingo4j.api.enums.ErrorCode;
+import org.lorislab.clingo4j.api.enums.ExternalType;
+import org.lorislab.clingo4j.api.enums.HeuristicType;
+import org.lorislab.clingo4j.api.enums.TruthValue;
+import org.lorislab.clingo4j.api.enums.WarningCode;
+import org.lorislab.clingo4j.api.ast.callback.StatementCallback;
 import java.util.Arrays;
 import java.util.List;
 import org.bridj.BridJ;

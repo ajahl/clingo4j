@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.api.enums.TheoryTermType;
 import org.lorislab.clingo4j.util.SpanList;
 import java.util.List;
 import org.bridj.Pointer;

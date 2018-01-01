@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.api.enums.ModelType;
+import org.lorislab.clingo4j.api.enums.ShowType;
 import java.util.List;
 import org.bridj.Pointer;
 import org.bridj.SizeT;

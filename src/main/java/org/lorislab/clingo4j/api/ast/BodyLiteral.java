@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.api.ast.enums.BodyLiteralType;
+import org.lorislab.clingo4j.api.ast.enums.Sign;
 import java.util.List;
 import org.lorislab.clingo4j.util.EnumValue;
 import org.bridj.Pointer;

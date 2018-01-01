@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.api.enums.TruthValue;
 import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;

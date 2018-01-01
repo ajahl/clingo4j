@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.api.callback.GroundCallback;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.api.enums.ErrorCode;
+
 /**
  *
  * @author andrej

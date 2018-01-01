@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
+import org.lorislab.clingo4j.api.ast.enums.TheoryAtomDefinitionType;
 import java.util.List;
 import java.util.Optional;
 import org.bridj.Pointer;

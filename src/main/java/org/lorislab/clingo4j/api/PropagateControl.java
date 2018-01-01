@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api;
 
+import org.lorislab.clingo4j.api.enums.ClauseType;
 import java.util.List;
 import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
