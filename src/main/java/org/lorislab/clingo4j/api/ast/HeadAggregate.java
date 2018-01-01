@@ -39,7 +39,7 @@ public class HeadAggregate implements ASTObject<clingo_ast_head_aggregate>, Head
     public HeadAggregate(clingo_ast_head_aggregate h) {
         this(EnumValue.valueOfInt(AggregateFunction.class, h.function()), new HeadAggregateElement.HeadAggregateElementList(h.elements(), h.size()), ClingoUtil.optional(AggregateGuard::new, h.left_guard()), ClingoUtil.optional(AggregateGuard::new, h.right_guard()));
     }
-    
+
     public HeadAggregate(AggregateFunction function, List<HeadAggregateElement> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {
         this.function = function;
         this.elements = elements;
@@ -80,18 +80,14 @@ public class HeadAggregate implements ASTObject<clingo_ast_head_aggregate>, Head
     public void updateHeadLiteral(clingo_ast_head_literal ret) {
         ret.field1().head_aggregate(createPointer());
     }
-    
+
     @Override
     public clingo_ast_head_aggregate create() {
         clingo_ast_head_aggregate head_aggregate = new clingo_ast_head_aggregate();
-        if (leftGuard.isPresent()) {
-            head_aggregate.left_guard(leftGuard.get().createPointer());
-        }
-        if (rightGuard.isPresent()) {
-            head_aggregate.right_guard(rightGuard.get().createPointer());
-        }
+        head_aggregate.left_guard(ASTObject.optionalPointer(leftGuard));
+        head_aggregate.right_guard(ASTObject.optionalPointer(rightGuard));
         head_aggregate.function(function.getInt());
-        head_aggregate.elements(ClingoUtil.createASTObjectArray(elements, clingo_ast_head_aggregate_element.class));
+        head_aggregate.elements(ASTObject.array(elements, clingo_ast_head_aggregate_element.class));
         head_aggregate.size(ClingoUtil.arraySize(elements));
         return head_aggregate;
     }
@@ -100,5 +96,5 @@ public class HeadAggregate implements ASTObject<clingo_ast_head_aggregate>, Head
     public HeadLiteralType getHeadLiteralType() {
         return HeadLiteralType.HEAD_AGGREGATE;
     }
-    
+
 }

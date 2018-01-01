@@ -80,7 +80,7 @@ public class Heuristic implements ASTObject<clingo_ast_heuristic>, StatementData
         ret.bias(bias.create());
         ret.priority(priority.create());
         ret.modifier(modifier.create());
-        ret.body(ClingoUtil.createASTObjectArray(body, clingo_ast_body_literal.class));
+        ret.body(ASTObject.array(body, clingo_ast_body_literal.class));
         ret.size(ClingoUtil.arraySize(body));
         return ret;
     }

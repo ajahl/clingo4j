@@ -16,7 +16,6 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.util.EnumValue;
-import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_and;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_binary_operator.clingo_ast_binary_operator_division;

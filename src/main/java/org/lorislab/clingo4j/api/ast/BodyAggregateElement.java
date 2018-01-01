@@ -58,9 +58,9 @@ public class BodyAggregateElement implements ASTObject<clingo_ast_body_aggregate
     @Override
     public clingo_ast_body_aggregate_element create() {
         clingo_ast_body_aggregate_element ret = new clingo_ast_body_aggregate_element();
-        ret.tuple(ClingoUtil.createASTObjectArray(tuple, clingo_ast_term.class));
+        ret.tuple(ASTObject.array(tuple, clingo_ast_term.class));
         ret.tuple_size(ClingoUtil.arraySize(tuple));
-        ret.condition(ClingoUtil.createASTObjectArray(condition, clingo_ast_literal.class));
+        ret.condition(ASTObject.array(condition, clingo_ast_literal.class));
         ret.condition_size(ClingoUtil.arraySize(condition));
         return ret;
     }

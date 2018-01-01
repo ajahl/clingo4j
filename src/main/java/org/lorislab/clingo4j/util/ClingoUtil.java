@@ -79,19 +79,6 @@ public final class ClingoUtil {
         }
         return result;
     }
-
-    public static <T extends NativeObject, E extends ASTObject<T>> Pointer<T> createASTObjectArray(List<E> data, Class<T> clazz) {
-        Pointer<T> result = null;
-        if (data != null && !data.isEmpty()) {
-            result = Pointer.allocateArray(clazz, data.size());
-            Pointer<T> iter = result;
-            for (E item : data) {
-                iter.set(item.create());
-                iter = iter.next();
-            }
-        }
-        return result;
-    }
     
     public static Pointer<Pointer<Byte>> createStringArray(List<String> data) {
         Pointer<Pointer<Byte>> result = null;

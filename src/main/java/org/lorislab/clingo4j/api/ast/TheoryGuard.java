@@ -15,7 +15,6 @@
  */
 package org.lorislab.clingo4j.api.ast;
 
-import java.util.Optional;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_guard;
 import org.lorislab.clingo4j.util.ASTObject;

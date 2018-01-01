@@ -57,7 +57,7 @@ public class HeadAggregateElement implements ASTObject<clingo_ast_head_aggregate
     @Override
     public clingo_ast_head_aggregate_element create() {
         clingo_ast_head_aggregate_element ret = new clingo_ast_head_aggregate_element();
-        ret.tuple(ClingoUtil.createASTObjectArray(tuple, clingo_ast_term.class));
+        ret.tuple(ASTObject.array(tuple, clingo_ast_term.class));
         ret.tuple_size(ClingoUtil.arraySize(tuple));
         ret.conditional_literal(condition.create());
         return ret;

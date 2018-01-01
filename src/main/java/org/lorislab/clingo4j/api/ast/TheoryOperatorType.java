@@ -16,7 +16,6 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.util.EnumValue;
-import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_operator_type;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_operator_type.clingo_ast_theory_operator_type_binary_left;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_theory_operator_type.clingo_ast_theory_operator_type_binary_right;

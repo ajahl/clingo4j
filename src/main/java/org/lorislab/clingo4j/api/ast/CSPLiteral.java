@@ -21,6 +21,7 @@ import org.lorislab.clingo4j.api.ast.Literal.LiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_guard;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -58,7 +59,7 @@ public class CSPLiteral implements LiteralData {
     public void updateLiteral(clingo_ast_literal ret) {
         clingo_ast_csp_literal csp = new clingo_ast_csp_literal();
         csp.term(term.create());
-        csp.guards(ClingoUtil.createASTObjectArray(guards, clingo_ast_csp_guard.class));
+        csp.guards(ASTObject.array(guards, clingo_ast_csp_guard.class));
         csp.size(ClingoUtil.arraySize(guards));
         ret.field1().csp_literal(Pointer.getPointer(csp));
     }

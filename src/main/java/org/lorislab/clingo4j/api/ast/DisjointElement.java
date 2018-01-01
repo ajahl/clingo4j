@@ -73,10 +73,10 @@ public class DisjointElement implements ASTObject<clingo_ast_disjoint_element> {
     public clingo_ast_disjoint_element create() {
         clingo_ast_disjoint_element ret = new clingo_ast_disjoint_element();
         ret.location(location);
-        ret.tuple(ClingoUtil.createASTObjectArray(tuple, clingo_ast_term.class));
+        ret.tuple(ASTObject.array(tuple, clingo_ast_term.class));
         ret.tuple_size(ClingoUtil.arraySize(tuple));
         ret.term(term.create());
-        ret.condition(ClingoUtil.createASTObjectArray(condition, clingo_ast_literal.class));
+        ret.condition(ASTObject.array(condition, clingo_ast_literal.class));
         ret.condition_size(ClingoUtil.arraySize(condition));
         return ret;
     }

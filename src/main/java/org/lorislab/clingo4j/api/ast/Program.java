@@ -60,7 +60,7 @@ public class Program implements ASTObject<clingo_ast_program>, StatementData {
     public clingo_ast_program create() {
         clingo_ast_program ret = new  clingo_ast_program();
         ret.name(Pointer.pointerToCString(name));
-        ret.parameters(ClingoUtil.createASTObjectArray(parameters, clingo_ast_id.class));
+        ret.parameters(ASTObject.array(parameters, clingo_ast_id.class));
         ret.size(ClingoUtil.arraySize(parameters));
         return ret;
     }

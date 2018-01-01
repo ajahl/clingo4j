@@ -65,7 +65,7 @@ public class ShowTerm implements ASTObject<clingo_ast_show_term>, StatementData 
         clingo_ast_show_term ret = new clingo_ast_show_term();
         ret.csp(csp);
         ret.term(term.create());
-        ret.body(ClingoUtil.createASTObjectArray(body, clingo_ast_body_literal.class));
+        ret.body(ASTObject.array(body, clingo_ast_body_literal.class));
         ret.size(ClingoUtil.arraySize(body));
         return ret;
     }

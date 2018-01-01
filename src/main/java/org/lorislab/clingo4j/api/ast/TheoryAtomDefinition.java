@@ -35,12 +35,12 @@ public class TheoryAtomDefinition implements ASTObject<clingo_ast_theory_atom_de
     private final String name;
     private final int arity;
     private final String elements;
-    private final Optional<TheoryGuardDefinition> guard;    
+    private final Optional<TheoryGuardDefinition> guard;
 
     public TheoryAtomDefinition(clingo_ast_theory_atom_definition d) {
         this(new Location(d.location()), EnumValue.valueOfInt(TheoryAtomDefinitionType.class, d.type()), d.name().getCString(), d.arity(), d.elements().getCString(), ClingoUtil.optional(TheoryGuardDefinition::new, d.guard()));
     }
-    
+
     public TheoryAtomDefinition(Location location, TheoryAtomDefinitionType type, String name, int arity, String elements, Optional<TheoryGuardDefinition> guard) {
         this.location = location;
         this.type = type;
@@ -93,12 +93,10 @@ public class TheoryAtomDefinition implements ASTObject<clingo_ast_theory_atom_de
         ret.location(location);
         ret.type(type.getInt());
         ret.elements(Pointer.pointerToCString(elements));
-        if (guard.isPresent()) {
-            ret.guard(guard.get().createPointer());
-        }
+        ret.guard(ASTObject.optionalPointer(guard));
         return ret;
     }
-    
+
     public static class TheoryAtomDefinitionList extends SpanList<TheoryAtomDefinition, clingo_ast_theory_atom_definition> {
 
         public TheoryAtomDefinitionList(Pointer<clingo_ast_theory_atom_definition> pointer, long size) {
@@ -109,6 +107,6 @@ public class TheoryAtomDefinition implements ASTObject<clingo_ast_theory_atom_de
         protected TheoryAtomDefinition getItem(Pointer<clingo_ast_theory_atom_definition> p) {
             return new TheoryAtomDefinition(p.get());
         }
-        
+
     }
 }

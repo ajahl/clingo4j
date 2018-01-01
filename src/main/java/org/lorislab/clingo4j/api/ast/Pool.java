@@ -20,6 +20,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_pool;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -49,7 +50,7 @@ public class Pool implements TermData {
     @Override
     public void updateTerm(clingo_ast_term ret) {
         clingo_ast_pool pool = new clingo_ast_pool();
-        pool.arguments(ClingoUtil.createASTObjectArray(arguments, clingo_ast_term.class));
+        pool.arguments(ASTObject.array(arguments, clingo_ast_term.class));
         pool.size(ClingoUtil.arraySize(arguments));
         ret.field1().pool(Pointer.getPointer(pool));
     }

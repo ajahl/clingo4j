@@ -51,7 +51,7 @@ public class Disjoint implements ASTObject<clingo_ast_disjoint>, BodyLiteralData
     public clingo_ast_disjoint create() {
         clingo_ast_disjoint ret = new clingo_ast_disjoint();
         ret.size(ClingoUtil.arraySize(elements));
-        ret.elements(ClingoUtil.createASTObjectArray(elements, clingo_ast_disjoint_element.class));
+        ret.elements(ASTObject.array(elements, clingo_ast_disjoint_element.class));
         return ret;
     }
 

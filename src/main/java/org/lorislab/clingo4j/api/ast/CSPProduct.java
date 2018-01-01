@@ -72,11 +72,7 @@ public class CSPProduct implements ASTObject<clingo_ast_csp_product_term> {
     public clingo_ast_csp_product_term create() {
         clingo_ast_csp_product_term ret = new clingo_ast_csp_product_term();
         ret.location(location);
-        if (variable.isPresent()) {
-            ret.variable(variable.get().createPointer());
-        } else {
-            ret.variable(null);
-        }
+        ret.variable(ASTObject.optionalPointer(variable));
         ret.coefficient(coefficient.create());
         return ret;
     }

@@ -80,15 +80,11 @@ public class BodyAggregate implements ASTObject<clingo_ast_body_aggregate>, Body
     @Override
     public clingo_ast_body_aggregate create() {
         clingo_ast_body_aggregate ret = new clingo_ast_body_aggregate();
-        if (leftGuard.isPresent()) {
-            ret.left_guard(leftGuard.get().createPointer());
-        }
-        if (rightGuard.isPresent()) {
-            ret.right_guard(rightGuard.get().createPointer());
-        }
+        ret.left_guard(ASTObject.optionalPointer(leftGuard));
+        ret.right_guard(ASTObject.optionalPointer(rightGuard));
         ret.function(function.getInt());
         ret.size(ClingoUtil.arraySize(elements));
-        ret.elements(ClingoUtil.createASTObjectArray(elements, clingo_ast_body_aggregate_element.class));
+        ret.elements(ASTObject.array(elements, clingo_ast_body_aggregate_element.class));
         return ret;
     }
 

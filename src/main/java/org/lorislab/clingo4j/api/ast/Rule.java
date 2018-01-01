@@ -58,7 +58,7 @@ public class Rule implements ASTObject<clingo_ast_rule>, StatementData {
         clingo_ast_rule rule = new clingo_ast_rule();
         rule.head(head.create());
         rule.size(ClingoUtil.arraySize(body));
-        rule.body(ClingoUtil.createASTObjectArray(body, clingo_ast_body_literal.class));
+        rule.body(ASTObject.array(body, clingo_ast_body_literal.class));
         return rule;
     }
     

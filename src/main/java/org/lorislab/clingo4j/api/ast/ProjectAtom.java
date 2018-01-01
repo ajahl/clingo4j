@@ -58,7 +58,7 @@ public class ProjectAtom implements ASTObject<clingo_ast_project>, StatementData
     public clingo_ast_project create() {
         clingo_ast_project ret = new clingo_ast_project();
         ret.atom(atom.create());
-        ret.body(ClingoUtil.createASTObjectArray(body, clingo_ast_body_literal.class));
+        ret.body(ASTObject.array(body, clingo_ast_body_literal.class));
         ret.size(ClingoUtil.arraySize(body));
         return ret;
     }

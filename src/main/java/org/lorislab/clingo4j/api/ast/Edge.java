@@ -65,7 +65,7 @@ public class Edge implements ASTObject<clingo_ast_edge>, StatementData {
         clingo_ast_edge ret = new clingo_ast_edge();
         ret.u(u.create());
         ret.v(v.create());
-        ret.body(ClingoUtil.createASTObjectArray(body, clingo_ast_body_literal.class));
+        ret.body(ASTObject.array(body, clingo_ast_body_literal.class));
         ret.size(ClingoUtil.arraySize(body));
         return ret;
     }

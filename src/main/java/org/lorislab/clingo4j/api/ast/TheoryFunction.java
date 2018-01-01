@@ -55,7 +55,7 @@ public class TheoryFunction implements ASTObject<clingo_ast_theory_function>, Th
     public clingo_ast_theory_function create() {
         clingo_ast_theory_function fun = new clingo_ast_theory_function();
         fun.name(Pointer.pointerToCString(name));
-        fun.arguments(ClingoUtil.createASTObjectArray(arguments, clingo_ast_theory_term.class));
+        fun.arguments(ASTObject.array(arguments, clingo_ast_theory_term.class));
         fun.size(ClingoUtil.arraySize(arguments));
         return fun;
     }

@@ -79,17 +79,9 @@ public class Aggregate implements ASTObject<clingo_ast_aggregate>, HeadLiteralDa
     @Override
     public clingo_ast_aggregate create() {
         clingo_ast_aggregate ret = new clingo_ast_aggregate();
-        if (leftGuard.isPresent()) {
-            ret.left_guard(leftGuard.get().createPointer());
-        } else {
-            ret.left_guard(null);
-        }
-        if (rightGuard.isPresent()) {
-            ret.right_guard(rightGuard.get().createPointer());
-        } else {
-            ret.right_guard(null);
-        }
-        ret.elements(ClingoUtil.createASTObjectArray(elements, clingo_ast_conditional_literal.class));
+        ret.left_guard(ASTObject.optionalPointer(leftGuard));
+        ret.right_guard(ASTObject.optionalPointer(rightGuard));
+        ret.elements(ASTObject.array(elements, clingo_ast_conditional_literal.class));
         ret.size(ClingoUtil.arraySize(elements));
         return ret;
     }

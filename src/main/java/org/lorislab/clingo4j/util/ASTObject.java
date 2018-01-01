@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.util;
 
+import java.util.List;
 import java.util.Optional;
 import org.bridj.NativeObject;
 import org.bridj.Pointer;
@@ -26,24 +27,37 @@ import org.bridj.Pointer;
  */
 public interface ASTObject<T extends NativeObject> {
     
-    public T create();
+    public abstract T create();
     
     default Pointer<T> createPointer() {
         return Pointer.getPointer(create());
     }
     
-    public static <K extends NativeObject> K optional(Optional<ASTObject<K>> item) {
+    public static <K extends NativeObject> K optional(Optional<? extends ASTObject<K>> item) {
         if (item.isPresent()) {
             return item.get().create();
         }
         return null;
     }
     
-    public static <K extends NativeObject> Pointer<K> optionalPointer(Optional<ASTObject<K>> item) {
+    public static <K extends NativeObject> Pointer<K> optionalPointer(Optional<? extends ASTObject<K>> item) {
         if (item.isPresent()) {
             return item.get().createPointer();
         }
         return null;
     }
+    
+    public static <T extends NativeObject, E extends ASTObject<T>> Pointer<T> array(List<E> data, Class<T> clazz) {
+        Pointer<T> result = null;
+        if (data != null && !data.isEmpty()) {
+            result = Pointer.allocateArray(clazz, data.size());
+            Pointer<T> iter = result;
+            for (E item : data) {
+                iter.set(item.create());
+                iter = iter.next();
+            }
+        }
+        return result;
+    }    
     
 }

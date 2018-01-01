@@ -20,6 +20,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_function;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -63,7 +64,7 @@ public class Function implements TermData {
     public void updateTerm(clingo_ast_term ret) {
         clingo_ast_function fn = new clingo_ast_function();
         fn.name(Pointer.pointerToCString(name));
-        fn.arguments(ClingoUtil.createASTObjectArray(arguments, clingo_ast_term.class));
+        fn.arguments(ASTObject.array(arguments, clingo_ast_term.class));
         fn.size(ClingoUtil.arraySize(arguments));
         ret.field1().function(Pointer.getPointer(fn));
     }

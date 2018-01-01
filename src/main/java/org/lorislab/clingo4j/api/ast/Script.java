@@ -17,7 +17,6 @@ package org.lorislab.clingo4j.api.ast;
 
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
-import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_statement_type.clingo_ast_statement_type_script;
 import org.lorislab.clingo4j.api.c.clingo_ast_script;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ASTObject;

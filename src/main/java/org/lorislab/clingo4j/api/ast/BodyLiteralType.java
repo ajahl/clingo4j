@@ -37,7 +37,7 @@ public enum BodyLiteralType implements EnumValue<clingo_ast_body_literal_type> {
     THEORY_ATOM(clingo_ast_body_literal_type_theory_atom),
     DISJOINT(clingo_ast_body_literal_type_disjoint);
 
-    private clingo_ast_body_literal_type type;
+    private final clingo_ast_body_literal_type type;
 
     private BodyLiteralType(clingo_ast_body_literal_type type) {
         this.type = type;
