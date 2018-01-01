@@ -42,31 +42,26 @@ public class SolveControl extends AbstractPointerObject<clingo_solve_control> {
         return new SymbolicAtoms(ret.get());
     }
 
-public void addSymbolicLiterallause(List<SymbolicLiteral> clause) throws ClingoException {
-    if (clause == null || clause.isEmpty()) {
-        return;
+    public void addSymbolicLiterallause(List<SymbolicLiteral> clause) throws ClingoException {
+        if (clause == null || clause.isEmpty()) {
+            return;
+        }
+        List<Integer> list = new ArrayList<>(clause.size());
+        SymbolicAtoms atoms = symbolicAtoms();
+        for (SymbolicLiteral x : clause) {
+            SymbolicAtom aa = atoms.find(x.symbol());
+            if (aa != null) {
+                int lit = aa.getLiteral();
+                list.add(x.isPositive() ? lit : -lit);
+            } else if (x.isNegative()) {
+                return;
+            }
+        }
+        addClause(list);
     }
-    List<Integer> list = new ArrayList<>(clause.size());
-    SymbolicAtoms atoms = symbolicAtoms();
-    for (SymbolicLiteral item : clause) {
-        
-    }
-    //TODO: Missing implementation
-//    std::vector<literal_t> lits;
-//    auto atoms = symbolic_atoms();
-//    for (auto &x : clause) {
-//        auto it = atoms.find(x.symbol());
-//        if (it != atoms.end()) {
-//            auto lit = it->literal();
-//            lits.emplace_back(x.is_positive() ? lit : -lit);
-//        }
-//        else if (x.is_negative()) { return; }
-//    }
-//    add_clause(LiteralSpan{lits});
-}
 
     public void addClause(List<Integer> clause) throws ClingoException {
-        if (clause != null) {
+        if (clause != null && !clause.isEmpty()) {
             IntegerList tmp = Literal.toLiteralList(clause);
             handleError(LIB.clingo_solve_control_add_clause(pointer, tmp.getPointer(), tmp.size()), "Error solve control add clause");
         }
