@@ -21,7 +21,6 @@ import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_conditional_literal;
-import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -54,8 +53,8 @@ public class ConditionalLiteral implements ASTObject<clingo_ast_conditional_lite
     public clingo_ast_conditional_literal create() {
         clingo_ast_conditional_literal ret = new clingo_ast_conditional_literal();
         ret.literal(literal.create());
-        ret.condition(ASTObject.array(condition, clingo_ast_literal.class));
-        ret.size(ClingoUtil.arraySize(condition));
+        ret.condition(ASTObject.array(condition));
+        ret.size(ASTObject.size(condition));
         return ret;
     }
 

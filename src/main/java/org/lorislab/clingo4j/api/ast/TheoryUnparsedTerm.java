@@ -19,7 +19,6 @@ import java.util.List;
 import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term;
-import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term_element;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -55,8 +54,8 @@ public class TheoryUnparsedTerm implements ASTObject<clingo_ast_theory_unparsed_
     @Override
     public clingo_ast_theory_unparsed_term create() {
         clingo_ast_theory_unparsed_term ret = new clingo_ast_theory_unparsed_term();
-        ret.elements(ASTObject.array(elements, clingo_ast_theory_unparsed_term_element.class));
-        ret.size(ClingoUtil.arraySize(elements));
+        ret.elements(ASTObject.array(elements));
+        ret.size(ASTObject.size(elements));
         return ret;
     }
     

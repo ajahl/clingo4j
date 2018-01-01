@@ -17,10 +17,8 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
-import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_minimize;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
-import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -82,10 +80,10 @@ public class Minimize implements ASTObject<clingo_ast_minimize>, StatementData {
         clingo_ast_minimize ret = new clingo_ast_minimize();
         ret.weight(weight.create());
         ret.priority(priority.create());
-        ret.tuple(ASTObject.array(tuple, clingo_ast_term.class));
-        ret.tuple_size(ClingoUtil.arraySize(tuple));
-        ret.body(ASTObject.array(body, clingo_ast_body_literal.class));
-        ret.body_size(ClingoUtil.arraySize(body));
+        ret.tuple(ASTObject.array(tuple));
+        ret.tuple_size(ASTObject.size(tuple));
+        ret.body(ASTObject.array(body));
+        ret.body_size(ASTObject.size(body));
         return ret;
     }
 

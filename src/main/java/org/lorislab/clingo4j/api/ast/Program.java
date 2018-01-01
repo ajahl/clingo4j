@@ -19,7 +19,6 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Id.IdList;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
-import org.lorislab.clingo4j.api.c.clingo_ast_id;
 import org.lorislab.clingo4j.api.c.clingo_ast_program;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ASTObject;
@@ -60,8 +59,8 @@ public class Program implements ASTObject<clingo_ast_program>, StatementData {
     public clingo_ast_program create() {
         clingo_ast_program ret = new  clingo_ast_program();
         ret.name(Pointer.pointerToCString(name));
-        ret.parameters(ASTObject.array(parameters, clingo_ast_id.class));
-        ret.size(ClingoUtil.arraySize(parameters));
+        ret.parameters(ASTObject.array(parameters));
+        ret.size(ASTObject.size(parameters));
         return ret;
     }
 

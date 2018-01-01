@@ -59,7 +59,7 @@ public class TheoryUnparsedTermElement implements ASTObject<clingo_ast_theory_un
     public clingo_ast_theory_unparsed_term_element create() {
         clingo_ast_theory_unparsed_term_element ret = new clingo_ast_theory_unparsed_term_element();
         ret.term(term.create());
-        ret.size(ClingoUtil.arraySize(operators));
+        ret.size(ASTObject.size(operators));
         ret.operators(ClingoUtil.createStringArray(operators));
         return ret;
     }

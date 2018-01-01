@@ -18,7 +18,6 @@ package org.lorislab.clingo4j.api.ast;
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralList;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
-import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_heuristic;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ASTObject;
@@ -80,8 +79,8 @@ public class Heuristic implements ASTObject<clingo_ast_heuristic>, StatementData
         ret.bias(bias.create());
         ret.priority(priority.create());
         ret.modifier(modifier.create());
-        ret.body(ASTObject.array(body, clingo_ast_body_literal.class));
-        ret.size(ClingoUtil.arraySize(body));
+        ret.body(ASTObject.array(body));
+        ret.size(ASTObject.size(body));
         return ret;
     }
 

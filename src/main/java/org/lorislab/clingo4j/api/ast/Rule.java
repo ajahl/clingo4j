@@ -17,7 +17,6 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
-import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_rule;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ASTObject;
@@ -54,11 +53,12 @@ public class Rule implements ASTObject<clingo_ast_rule>, StatementData {
         return "" + head + ClingoUtil.printBody(body, " :- ");
     }
 
+    @Override
     public clingo_ast_rule create() {
         clingo_ast_rule rule = new clingo_ast_rule();
         rule.head(head.create());
-        rule.size(ClingoUtil.arraySize(body));
-        rule.body(ASTObject.array(body, clingo_ast_body_literal.class));
+        rule.size(ASTObject.size(body));
+        rule.body(ASTObject.array(body));
         return rule;
     }
     

@@ -21,9 +21,7 @@ import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.api.ast.TheoryAtomDefinition.TheoryAtomDefinitionList;
 import org.lorislab.clingo4j.api.ast.TheoryTermDefinition.TheoryTermDefinitionList;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
-import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom_definition;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_definition;
-import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_definition;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -98,10 +96,10 @@ public class TheoryDefinition implements ASTObject<clingo_ast_theory_definition>
     public clingo_ast_theory_definition create() {
         clingo_ast_theory_definition ret = new clingo_ast_theory_definition();
         ret.name(Pointer.pointerToCString(name));
-        ret.terms(ASTObject.array(terms, clingo_ast_theory_term_definition.class));
-        ret.terms_size(ClingoUtil.arraySize(terms));
-        ret.atoms(ASTObject.array(atoms, clingo_ast_theory_atom_definition.class));
-        ret.atoms_size(ClingoUtil.arraySize(atoms));
+        ret.terms(ASTObject.array(terms));
+        ret.terms_size(ASTObject.size(terms));
+        ret.atoms(ASTObject.array(atoms));
+        ret.atoms_size(ASTObject.size(atoms));
         return ret;
     }
 

@@ -17,7 +17,6 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
-import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_edge;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ASTObject;
@@ -65,8 +64,8 @@ public class Edge implements ASTObject<clingo_ast_edge>, StatementData {
         clingo_ast_edge ret = new clingo_ast_edge();
         ret.u(u.create());
         ret.v(v.create());
-        ret.body(ASTObject.array(body, clingo_ast_body_literal.class));
-        ret.size(ClingoUtil.arraySize(body));
+        ret.body(ASTObject.array(body));
+        ret.size(ASTObject.size(body));
         return ret;
     }
 

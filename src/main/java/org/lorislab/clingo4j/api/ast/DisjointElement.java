@@ -21,8 +21,6 @@ import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.ast.Literal.LiteralList;
 import org.lorislab.clingo4j.api.c.clingo_ast_disjoint_element;
-import org.lorislab.clingo4j.api.c.clingo_ast_literal;
-import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -73,11 +71,11 @@ public class DisjointElement implements ASTObject<clingo_ast_disjoint_element> {
     public clingo_ast_disjoint_element create() {
         clingo_ast_disjoint_element ret = new clingo_ast_disjoint_element();
         ret.location(location);
-        ret.tuple(ASTObject.array(tuple, clingo_ast_term.class));
-        ret.tuple_size(ClingoUtil.arraySize(tuple));
+        ret.tuple(ASTObject.array(tuple));
+        ret.tuple_size(ASTObject.size(tuple));
         ret.term(term.create());
-        ret.condition(ASTObject.array(condition, clingo_ast_literal.class));
-        ret.condition_size(ClingoUtil.arraySize(condition));
+        ret.condition(ASTObject.array(condition));
+        ret.condition_size(ASTObject.size(condition));
         return ret;
     }
     

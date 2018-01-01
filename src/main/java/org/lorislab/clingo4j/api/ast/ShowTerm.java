@@ -17,7 +17,6 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
-import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_show_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ASTObject;
@@ -65,8 +64,8 @@ public class ShowTerm implements ASTObject<clingo_ast_show_term>, StatementData 
         clingo_ast_show_term ret = new clingo_ast_show_term();
         ret.csp(csp);
         ret.term(term.create());
-        ret.body(ASTObject.array(body, clingo_ast_body_literal.class));
-        ret.size(ClingoUtil.arraySize(body));
+        ret.body(ASTObject.array(body));
+        ret.size(ASTObject.size(body));
         return ret;
     }
 

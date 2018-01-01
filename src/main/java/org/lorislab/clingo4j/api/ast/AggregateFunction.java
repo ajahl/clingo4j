@@ -16,7 +16,6 @@
 package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.util.EnumValue;
-import org.bridj.ValuedEnum;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_function;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_count;
 import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_aggregate_function.clingo_ast_aggregate_function_max;

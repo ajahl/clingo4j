@@ -20,7 +20,6 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.ast.TheoryOperatorDefinition.TheoryOperatorDefinitionList;
-import org.lorislab.clingo4j.api.c.clingo_ast_theory_operator_definition;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_definition;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
@@ -67,8 +66,8 @@ public class TheoryTermDefinition implements ASTObject<clingo_ast_theory_term_de
         clingo_ast_theory_term_definition ret = new clingo_ast_theory_term_definition();
         ret.location(location);
         ret.name(Pointer.pointerToCString(name));
-        ret.operators(ASTObject.array(operators, clingo_ast_theory_operator_definition.class));
-        ret.size(ClingoUtil.arraySize(operators));
+        ret.operators(ASTObject.array(operators));
+        ret.size(ASTObject.size(operators));
         return ret;
     }
     

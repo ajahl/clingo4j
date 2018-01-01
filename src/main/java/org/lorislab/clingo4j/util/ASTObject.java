@@ -15,8 +15,12 @@
  */
 package org.lorislab.clingo4j.util;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import org.bridj.NativeList;
 import org.bridj.NativeObject;
 import org.bridj.Pointer;
 
@@ -26,11 +30,35 @@ import org.bridj.Pointer;
  * @param <T>
  */
 public interface ASTObject<T extends NativeObject> {
-    
+
     public abstract T create();
-    
+
     default Pointer<T> createPointer() {
         return Pointer.getPointer(create());
+    }
+
+    default Class<T> getNativeClass() {
+        Type[] genericInterfaces = getClass().getGenericInterfaces();
+        for (Type t : genericInterfaces) {
+            if (t instanceof ParameterizedType) {
+                Type rt = ((ParameterizedType) t).getRawType();
+                if (rt.equals(ASTObject.class)) {
+                    return (Class<T>) ((ParameterizedType) t).getActualTypeArguments()[0];
+                }
+            }
+        }
+        return null;
+    }
+
+    public static <T, R> Optional<R> optional(Function<T, R> fn, Pointer<T> val) {
+        return Optional.ofNullable(create(fn, val));
+    }
+    
+    public static <T, R> R create(Function<T, R> fn, Pointer<T> val) {
+        if (val != null && val.get() != null) {
+            return fn.apply(val.get());
+        }
+        return null;
     }
     
     public static <K extends NativeObject> K optional(Optional<? extends ASTObject<K>> item) {
@@ -39,25 +67,36 @@ public interface ASTObject<T extends NativeObject> {
         }
         return null;
     }
-    
+
     public static <K extends NativeObject> Pointer<K> optionalPointer(Optional<? extends ASTObject<K>> item) {
         if (item.isPresent()) {
             return item.get().createPointer();
         }
         return null;
     }
-    
-    public static <T extends NativeObject, E extends ASTObject<T>> Pointer<T> array(List<E> data, Class<T> clazz) {
-        Pointer<T> result = null;
+
+    public static <T extends NativeObject, E extends ASTObject<T>> Pointer<T> array(List<E> data) {
         if (data != null && !data.isEmpty()) {
-            result = Pointer.allocateArray(clazz, data.size());
-            Pointer<T> iter = result;
-            for (E item : data) {
-                iter.set(item.create());
-                iter = iter.next();
-            }
+            E tmp = data.get(0);
+            return ASTObject.array2(data, tmp.getNativeClass());
         }
-        return result;
-    }    
+        return null;
+    }
+
+    public static <T extends NativeObject, E extends ASTObject<T>> Pointer<T> array2(List<E> data, Class<T> clazz) {
+        if (data != null && !data.isEmpty()) {
+            NativeList<T> tmp = Pointer.allocateList(clazz, data.size());
+            data.forEach(t -> tmp.add(t.create()));
+            return (Pointer<T>) tmp.getPointer();
+        }
+        return null;
+    }
+
+    public static int size(List data) {
+        if (data != null) {
+            return data.size();
+        }
+        return 0;
+    }
     
 }

@@ -17,7 +17,6 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.Statement.StatementData;
-import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_external;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ASTObject;
@@ -58,8 +57,8 @@ public class External implements ASTObject<clingo_ast_external>, StatementData {
     public clingo_ast_external create() {
         clingo_ast_external ret = new clingo_ast_external();
         ret.atom(atom.create());
-        ret.body(ASTObject.array(body, clingo_ast_body_literal.class));
-        ret.size(ClingoUtil.arraySize(body));
+        ret.body(ASTObject.array(body));
+        ret.size(ASTObject.size(body));
         return ret;
     }
 

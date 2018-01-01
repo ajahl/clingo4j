@@ -17,11 +17,9 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import java.util.Optional;
-import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.ast.ConditionalLiteral.ConditionalLiteralList;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
-import static org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_body_literal_type.clingo_ast_body_literal_type_aggregate;
 import org.lorislab.clingo4j.api.c.clingo_ast_aggregate;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_conditional_literal;
@@ -40,7 +38,7 @@ public class Aggregate implements ASTObject<clingo_ast_aggregate>, HeadLiteralDa
     private final Optional<AggregateGuard> rightGuard;
 
     public Aggregate(clingo_ast_aggregate ag) {
-       this(new ConditionalLiteralList(ag.elements(), ag.size()), ClingoUtil.optional(AggregateGuard::new, ag.left_guard()), ClingoUtil.optional(AggregateGuard::new, ag.right_guard()));
+       this(new ConditionalLiteralList(ag.elements(), ag.size()), ASTObject.optional(AggregateGuard::new, ag.left_guard()), ASTObject.optional(AggregateGuard::new, ag.right_guard()));
     }
     
     public Aggregate(List<ConditionalLiteral> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {
@@ -81,8 +79,8 @@ public class Aggregate implements ASTObject<clingo_ast_aggregate>, HeadLiteralDa
         clingo_ast_aggregate ret = new clingo_ast_aggregate();
         ret.left_guard(ASTObject.optionalPointer(leftGuard));
         ret.right_guard(ASTObject.optionalPointer(rightGuard));
-        ret.elements(ASTObject.array(elements, clingo_ast_conditional_literal.class));
-        ret.size(ClingoUtil.arraySize(elements));
+        ret.elements(ASTObject.array(elements));
+        ret.size(ASTObject.size(elements));
         return ret;
     }
     

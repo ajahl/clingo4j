@@ -16,9 +16,7 @@
 package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
-import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Literal.LiteralData;
-import org.lorislab.clingo4j.api.c.clingo_ast_csp_guard;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.util.ASTObject;
@@ -28,7 +26,7 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  *
  * @author andrej
  */
-public class CSPLiteral implements LiteralData {
+public class CSPLiteral implements ASTObject<clingo_ast_csp_literal>, LiteralData {
 
     private final CSPSum term;
 
@@ -56,12 +54,17 @@ public class CSPLiteral implements LiteralData {
     }
 
     @Override
-    public void updateLiteral(clingo_ast_literal ret) {
+    public clingo_ast_csp_literal create() {
         clingo_ast_csp_literal csp = new clingo_ast_csp_literal();
         csp.term(term.create());
-        csp.guards(ASTObject.array(guards, clingo_ast_csp_guard.class));
-        csp.size(ClingoUtil.arraySize(guards));
-        ret.field1().csp_literal(Pointer.getPointer(csp));
+        csp.guards(ASTObject.array(guards));
+        csp.size(ASTObject.size(guards));
+        return csp;
+    }
+
+    @Override
+    public void updateLiteral(clingo_ast_literal ret) {
+        ret.field1().csp_literal(createPointer());
     }
 
     @Override

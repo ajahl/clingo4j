@@ -19,12 +19,13 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Literal.LiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_comparison;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
+import org.lorislab.clingo4j.util.ASTObject;
 
 /**
  *
  * @author andrej
  */
-public class Comparison implements LiteralData {
+public class Comparison implements ASTObject<clingo_ast_comparison>, LiteralData {
 
     private final ComparisonOperator operator;
     private final Term left;
@@ -54,12 +55,17 @@ public class Comparison implements LiteralData {
     }
 
     @Override
-    public void updateLiteral(clingo_ast_literal ret) {
+    public clingo_ast_comparison create() {
         clingo_ast_comparison com = new clingo_ast_comparison();
         com.comparison(operator.getInt());
         com.left(left.create());
         com.right(right.create());
-        ret.field1().comparison(Pointer.getPointer(com));
+        return com;
+    }
+
+    @Override
+    public void updateLiteral(clingo_ast_literal ret) {
+        ret.field1().comparison(createPointer());
     }
 
     @Override

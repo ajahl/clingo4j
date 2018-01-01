@@ -58,7 +58,7 @@ public class TheoryGuardDefinition implements ASTObject<clingo_ast_theory_guard_
         clingo_ast_theory_guard_definition ret = new clingo_ast_theory_guard_definition();
         ret.term(Pointer.pointerToCString(term));
         ret.operators(ClingoUtil.createStringArray(operators));
-        ret.size(ClingoUtil.arraySize(operators));
+        ret.size(ASTObject.size(operators));
         return ret;
     }
 

@@ -38,7 +38,7 @@ public class TheoryAtomDefinition implements ASTObject<clingo_ast_theory_atom_de
     private final Optional<TheoryGuardDefinition> guard;
 
     public TheoryAtomDefinition(clingo_ast_theory_atom_definition d) {
-        this(new Location(d.location()), EnumValue.valueOfInt(TheoryAtomDefinitionType.class, d.type()), d.name().getCString(), d.arity(), d.elements().getCString(), ClingoUtil.optional(TheoryGuardDefinition::new, d.guard()));
+        this(new Location(d.location()), EnumValue.valueOfInt(TheoryAtomDefinitionType.class, d.type()), d.name().getCString(), d.arity(), d.elements().getCString(), ASTObject.optional(TheoryGuardDefinition::new, d.guard()));
     }
 
     public TheoryAtomDefinition(Location location, TheoryAtomDefinitionType type, String name, int arity, String elements, Optional<TheoryGuardDefinition> guard) {

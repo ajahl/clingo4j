@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_aggregate;
-import org.lorislab.clingo4j.api.c.clingo_ast_head_aggregate_element;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
@@ -37,7 +36,7 @@ public class HeadAggregate implements ASTObject<clingo_ast_head_aggregate>, Head
     private final Optional<AggregateGuard> rightGuard;
 
     public HeadAggregate(clingo_ast_head_aggregate h) {
-        this(EnumValue.valueOfInt(AggregateFunction.class, h.function()), new HeadAggregateElement.HeadAggregateElementList(h.elements(), h.size()), ClingoUtil.optional(AggregateGuard::new, h.left_guard()), ClingoUtil.optional(AggregateGuard::new, h.right_guard()));
+        this(EnumValue.valueOfInt(AggregateFunction.class, h.function()), new HeadAggregateElement.HeadAggregateElementList(h.elements(), h.size()), ASTObject.optional(AggregateGuard::new, h.left_guard()), ASTObject.optional(AggregateGuard::new, h.right_guard()));
     }
 
     public HeadAggregate(AggregateFunction function, List<HeadAggregateElement> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {
@@ -87,8 +86,8 @@ public class HeadAggregate implements ASTObject<clingo_ast_head_aggregate>, Head
         head_aggregate.left_guard(ASTObject.optionalPointer(leftGuard));
         head_aggregate.right_guard(ASTObject.optionalPointer(rightGuard));
         head_aggregate.function(function.getInt());
-        head_aggregate.elements(ASTObject.array(elements, clingo_ast_head_aggregate_element.class));
-        head_aggregate.size(ClingoUtil.arraySize(elements));
+        head_aggregate.elements(ASTObject.array(elements));
+        head_aggregate.size(ASTObject.size(elements));
         return head_aggregate;
     }
 

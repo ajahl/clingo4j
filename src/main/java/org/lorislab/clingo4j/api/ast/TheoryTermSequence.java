@@ -61,8 +61,8 @@ public class TheoryTermSequence implements ASTObject<clingo_ast_theory_term_arra
     @Override
     public clingo_ast_theory_term_array create() {
         clingo_ast_theory_term_array a = new clingo_ast_theory_term_array();
-        a.terms(ASTObject.array(terms, clingo_ast_theory_term.class));
-        a.size(ClingoUtil.arraySize(terms));
+        a.terms(ASTObject.array(terms));
+        a.size(ASTObject.size(terms));
         return a;
     }
 

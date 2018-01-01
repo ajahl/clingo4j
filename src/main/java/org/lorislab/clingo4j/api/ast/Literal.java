@@ -140,7 +140,7 @@ public class Literal implements ASTObject<clingo_ast_literal>, BodyLiteralData, 
         if (list.isEmpty()) {
             return null;
         }
-        int size = ClingoUtil.arraySize(list);
+        int size = ASTObject.size(list);
         Pointer<Integer> tmp = ClingoUtil.createArray(list, Integer.class);
         return new IntegerList(tmp, size);
     }

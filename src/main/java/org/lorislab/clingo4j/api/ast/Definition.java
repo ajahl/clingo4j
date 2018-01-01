@@ -34,7 +34,7 @@ public class Definition implements ASTObject<clingo_ast_definition>, StatementDa
     public Definition(clingo_ast_definition d) {
         this(d.name().getCString(), new Term(d.value()), d.is_default());
     }
-    
+
     public Definition(String name, Term value, boolean isDefault) {
         this.name = name;
         this.value = value;
@@ -81,5 +81,5 @@ public class Definition implements ASTObject<clingo_ast_definition>, StatementDa
     public StatementType getStatementType() {
         return StatementType.CONST;
     }
-    
+
 }

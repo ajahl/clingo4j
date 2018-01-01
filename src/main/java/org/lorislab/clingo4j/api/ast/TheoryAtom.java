@@ -22,7 +22,6 @@ import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom;
-import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom_element;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -37,7 +36,7 @@ public class TheoryAtom implements ASTObject<clingo_ast_theory_atom>, HeadLitera
     private final Optional<TheoryGuard> guard;
 
     public TheoryAtom(clingo_ast_theory_atom a) {
-        this(new Term(a.term()), new TheoryAtomElement.TheoryAtomElementList(a.elements(), a.size()), ClingoUtil.optional(TheoryGuard::new, a.guard()));
+        this(new Term(a.term()), new TheoryAtomElement.TheoryAtomElementList(a.elements(), a.size()), ASTObject.optional(TheoryGuard::new, a.guard()));
     }
 
     public TheoryAtom(Term term, List<TheoryAtomElement> elements, Optional<TheoryGuard> guard) {
@@ -83,8 +82,8 @@ public class TheoryAtom implements ASTObject<clingo_ast_theory_atom>, HeadLitera
         clingo_ast_theory_atom ret = new clingo_ast_theory_atom();
         ret.term(term.create());
         ret.guard(ASTObject.optionalPointer(guard));
-        ret.elements(ASTObject.array(elements, clingo_ast_theory_atom_element.class));
-        ret.size(ClingoUtil.arraySize(elements));
+        ret.elements(ASTObject.array(elements));
+        ret.size(ASTObject.size(elements));
         return ret;
     }
 

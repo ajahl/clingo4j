@@ -19,12 +19,13 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_interval;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
+import org.lorislab.clingo4j.util.ASTObject;
 
 /**
  *
  * @author andrej
  */
-public class Interval implements TermData {
+public class Interval implements ASTObject<clingo_ast_interval>, TermData {
 
     private final Term left;
     
@@ -50,15 +51,20 @@ public class Interval implements TermData {
 
     @Override
     public void updateTerm(clingo_ast_term ret) {
-        clingo_ast_interval i = new clingo_ast_interval();
-        i.left(left.create());
-        i.right(right.create());
-        ret.field1().interval(Pointer.getPointer(i));
+        ret.field1().interval(createPointer());
     }
 
     @Override
     public TermType getTermType() {
         return TermType.INTERVAL;
+    }
+
+    @Override
+    public clingo_ast_interval create() {
+        clingo_ast_interval i = new clingo_ast_interval();
+        i.left(left.create());
+        i.right(right.create());
+        return i;
     }
     
     

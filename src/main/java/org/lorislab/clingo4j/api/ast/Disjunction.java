@@ -17,7 +17,6 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
-import org.lorislab.clingo4j.api.c.clingo_ast_conditional_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_disjunction;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.util.ASTObject;
@@ -51,8 +50,8 @@ public class Disjunction implements ASTObject<clingo_ast_disjunction>, HeadLiter
     @Override
     public clingo_ast_disjunction create() {
         clingo_ast_disjunction disjunction = new clingo_ast_disjunction();
-        disjunction.elements(ASTObject.array(elements, clingo_ast_conditional_literal.class));
-        disjunction.size(ClingoUtil.arraySize(elements));
+        disjunction.elements(ASTObject.array(elements));
+        disjunction.size(ASTObject.size(elements));
         return disjunction;
     }
 

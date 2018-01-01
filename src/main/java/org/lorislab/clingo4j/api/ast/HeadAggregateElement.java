@@ -19,7 +19,6 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_aggregate_element;
-import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
@@ -57,8 +56,8 @@ public class HeadAggregateElement implements ASTObject<clingo_ast_head_aggregate
     @Override
     public clingo_ast_head_aggregate_element create() {
         clingo_ast_head_aggregate_element ret = new clingo_ast_head_aggregate_element();
-        ret.tuple(ASTObject.array(tuple, clingo_ast_term.class));
-        ret.tuple_size(ClingoUtil.arraySize(tuple));
+        ret.tuple(ASTObject.array(tuple));
+        ret.tuple_size(ASTObject.size(tuple));
         ret.conditional_literal(condition.create());
         return ret;
     }

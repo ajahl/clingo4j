@@ -21,7 +21,6 @@ import java.util.Optional;
 import org.lorislab.clingo4j.api.ast.BodyAggregateElement.BodyAggregateElementList;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_aggregate;
-import org.lorislab.clingo4j.api.c.clingo_ast_body_aggregate_element;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
@@ -38,7 +37,7 @@ public class BodyAggregate implements ASTObject<clingo_ast_body_aggregate>, Body
     private final Optional<AggregateGuard> rightGuard;
 
     public BodyAggregate(clingo_ast_body_aggregate a) {
-        this(EnumValue.valueOfInt(AggregateFunction.class, a.function()), new BodyAggregateElementList(a.elements(), a.size()), ClingoUtil.optional(AggregateGuard::new, a.left_guard()), ClingoUtil.optional(AggregateGuard::new, a.right_guard()));
+        this(EnumValue.valueOfInt(AggregateFunction.class, a.function()), new BodyAggregateElementList(a.elements(), a.size()), ASTObject.optional(AggregateGuard::new, a.left_guard()), ASTObject.optional(AggregateGuard::new, a.right_guard()));
     }
 
     public BodyAggregate(AggregateFunction function, List<BodyAggregateElement> elements, Optional<AggregateGuard> leftGuard, Optional<AggregateGuard> rightGuard) {
@@ -83,8 +82,8 @@ public class BodyAggregate implements ASTObject<clingo_ast_body_aggregate>, Body
         ret.left_guard(ASTObject.optionalPointer(leftGuard));
         ret.right_guard(ASTObject.optionalPointer(rightGuard));
         ret.function(function.getInt());
-        ret.size(ClingoUtil.arraySize(elements));
-        ret.elements(ASTObject.array(elements, clingo_ast_body_aggregate_element.class));
+        ret.size(ASTObject.size(elements));
+        ret.elements(ASTObject.array(elements));
         return ret;
     }
 

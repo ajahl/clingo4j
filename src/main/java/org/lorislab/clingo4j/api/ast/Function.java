@@ -27,7 +27,7 @@ import org.lorislab.clingo4j.util.ClingoUtil;
  *
  * @author andrej
  */
-public class Function implements TermData {
+public class Function implements ASTObject<clingo_ast_function>, TermData {
  
     private final String name;
     
@@ -62,16 +62,21 @@ public class Function implements TermData {
 
     @Override
     public void updateTerm(clingo_ast_term ret) {
-        clingo_ast_function fn = new clingo_ast_function();
-        fn.name(Pointer.pointerToCString(name));
-        fn.arguments(ASTObject.array(arguments, clingo_ast_term.class));
-        fn.size(ClingoUtil.arraySize(arguments));
-        ret.field1().function(Pointer.getPointer(fn));
+        ret.field1().function(createPointer());
     }
 
     @Override
     public TermType getTermType() {
         return TermType.FUNCTION;
+    }
+
+    @Override
+    public clingo_ast_function create() {
+        clingo_ast_function fn = new clingo_ast_function();
+        fn.name(Pointer.pointerToCString(name));
+        fn.arguments(ASTObject.array(arguments));
+        fn.size(ASTObject.size(arguments));
+        return fn;
     }
        
     

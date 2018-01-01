@@ -16,9 +16,6 @@
 package org.lorislab.clingo4j.util;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import org.bridj.NativeObject;
 import org.bridj.Pointer;
 
 /**
@@ -28,17 +25,6 @@ import org.bridj.Pointer;
 public final class ClingoUtil {
 
     private ClingoUtil() {
-    }
-    
-    public static <T, R> Optional<R> optional(Function<T, R> fn, Pointer<T> val) {
-        return Optional.ofNullable(create(fn, val));
-    }
-    
-    public static <T, R> R create(Function<T, R> fn, Pointer<T> val) {
-        if (val != null && val.get() != null) {
-            return fn.apply(val.get());
-        }
-        return null;
     }
 
     public static int arraySize(List data) {
