@@ -15,10 +15,7 @@
  */
 package org.lorislab.clingo4j.api;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import org.bridj.Pointer;
 import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
@@ -29,7 +26,7 @@ import org.lorislab.clingo4j.api.c.ClingoLibrary;
  *
  * @author andrej
  */
-public class StatisticsMap extends Statistics implements Iterable<Statistics>, Map<String, Statistics> {
+public class StatisticsMap extends Statistics implements Iterable<Statistics> {
 
     public StatisticsMap(Pointer<ClingoLibrary.clingo_statistic> pointer, long key) {
         super(pointer, key);
@@ -96,70 +93,21 @@ public class StatisticsMap extends Statistics implements Iterable<Statistics>, M
         };
     }
     
-    @Override
     public int size() {
         Pointer<SizeT> size = Pointer.allocateSizeT();
         handleRuntimeError(LIB.clingo_statistics_map_size(pointer, key, size), "Error reading the statistic map size!");
         return size.getInt();
     }
 
-    @Override
     public boolean isEmpty() {
         return size() == 0;
     }
 
-    @Override
     public Statistics get(Object name) {
         Pointer<Byte> tmp = Pointer.pointerToCString((String) name);
         Pointer<Long> subkey = Pointer.allocateLong();
         handleRuntimeError(LIB.clingo_statistics_map_at(pointer, key, tmp, subkey), "Error reading the statistic item in map by" + tmp + " key!");
         return new Statistics(pointer, subkey.getLong());
     }
-
-    @Override
-    public boolean containsKey(Object key) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean containsValue(Object value) {
-        throw new UnsupportedOperationException();
-    }
-    
-    @Override
-    public Statistics put(String key, Statistics value) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Statistics remove(Object key) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void putAll(Map<? extends String, ? extends Statistics> m) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Set<String> keySet() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Collection<Statistics> values() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Set<Entry<String, Statistics>> entrySet() {
-        throw new UnsupportedOperationException();
-    }
-
     
 }

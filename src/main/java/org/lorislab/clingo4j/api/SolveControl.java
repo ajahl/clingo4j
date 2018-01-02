@@ -23,14 +23,14 @@ import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.ast.Literal;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_control;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbolic_atoms;
-import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.PointerObject;
 import org.lorislab.clingo4j.util.IntegerList;
 
 /**
  *
  * @author andrej
  */
-public class SolveControl extends AbstractPointerObject<clingo_solve_control> {
+public class SolveControl extends PointerObject<clingo_solve_control> {
 
     public SolveControl(Pointer<clingo_solve_control> pointer) {
         super(pointer);

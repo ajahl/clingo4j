@@ -19,13 +19,13 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbolic_atoms;
-import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.PointerObject;
 
 /**
  *
  * @author andrej
  */
-public class SymbolicAtom extends AbstractPointerObject<clingo_symbolic_atoms> {
+public class SymbolicAtom extends PointerObject<clingo_symbolic_atoms> {
     
     private final long iterator;
 

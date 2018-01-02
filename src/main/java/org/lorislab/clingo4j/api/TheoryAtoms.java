@@ -24,13 +24,13 @@ import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
-import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.PointerObject;
 
 /**
  *
  * @author andrej
  */
-public class TheoryAtoms extends AbstractPointerObject<clingo_theory_atoms> implements List<TheoryAtom> {
+public class TheoryAtoms extends PointerObject<clingo_theory_atoms> implements List<TheoryAtom> {
 
     public TheoryAtoms(Pointer<clingo_theory_atoms> pointer) {
         super(pointer);

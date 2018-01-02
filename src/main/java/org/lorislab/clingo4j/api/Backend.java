@@ -24,7 +24,7 @@ import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.ast.Literal;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_backend;
 import org.lorislab.clingo4j.api.c.clingo_weighted_literal;
-import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.PointerObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 import org.lorislab.clingo4j.util.IntegerList;
 
@@ -32,7 +32,7 @@ import org.lorislab.clingo4j.util.IntegerList;
  *
  * @author andrej
  */
-public class Backend extends AbstractPointerObject<clingo_backend> {
+public class Backend extends PointerObject<clingo_backend> {
 
     public Backend(Pointer<clingo_backend> pointer) {
         super(pointer);

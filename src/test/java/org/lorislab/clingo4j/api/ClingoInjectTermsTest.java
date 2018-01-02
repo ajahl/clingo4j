@@ -35,7 +35,7 @@ public class ClingoInjectTermsTest {
 
         Clingo.init("src/main/clingo");
 
-        try (Clingo control = new Clingo()) {
+        try (Clingo control = Clingo.create()) {
 
             // define a constant in string form
             Symbol number = Symbol.createNumber(23);

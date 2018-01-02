@@ -22,11 +22,11 @@ import org.bridj.Pointer;
  * @author andrej
  * @param <T>
  */
-public abstract class AbstractPointerObject<T> {
+public abstract class PointerObject<T> {
     
     protected final Pointer<T> pointer;
 
-    public AbstractPointerObject(Pointer<T> pointer) {
+    public PointerObject(Pointer<T> pointer) {
         this.pointer = pointer;
     }
 

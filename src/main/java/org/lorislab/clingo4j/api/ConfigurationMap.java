@@ -15,10 +15,7 @@
  */
 package org.lorislab.clingo4j.api;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import org.bridj.Pointer;
 import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
@@ -29,20 +26,18 @@ import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
  *
  * @author andrej
  */
-public class ConfigurationMap extends Configuration implements Iterable<Configuration>, Map<String, Configuration> {
+public class ConfigurationMap extends Configuration implements Iterable<Configuration> {
     
     public ConfigurationMap(Pointer<clingo_configuration> pointer, int key) {
         super(pointer, key);
     }
     
-    @Override
     public int size() {
         Pointer<SizeT> size = Pointer.allocateSizeT();
         handleRuntimeError(LIB.clingo_configuration_map_size(pointer, key, size), "Error reading the configuration map size!");
         return size.getInt();
     }
 
-    @Override
     public boolean isEmpty() {
         return size() == 0;
     }
@@ -53,7 +48,6 @@ public class ConfigurationMap extends Configuration implements Iterable<Configur
         return name.getCString();
     }
 
-    @Override
     public Configuration get(Object name) {
         Pointer<Byte> tmp = Pointer.pointerToCString((String) name);
         Pointer<Integer> subkey = Pointer.allocateInt();
@@ -116,50 +110,5 @@ public class ConfigurationMap extends Configuration implements Iterable<Configur
             }
         };
     }  
-
-    @Override
-    public boolean containsKey(Object key) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean containsValue(Object value) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Configuration put(String key, Configuration value) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Configuration remove(Object key) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void putAll(Map<? extends String, ? extends Configuration> m) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Set<String> keySet() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Collection<Configuration> values() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Set<Entry<String, Configuration>> entrySet() {
-        throw new UnsupportedOperationException();
-    }
  
 }

@@ -23,7 +23,7 @@ import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
-import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.PointerObject;
 import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.IntegerList;
 
@@ -31,7 +31,7 @@ import org.lorislab.clingo4j.util.IntegerList;
  *
  * @author andrej
  */
-public class TheoryElement extends AbstractPointerObject<clingo_theory_atoms> {
+public class TheoryElement extends PointerObject<clingo_theory_atoms> {
 
     private final int id;
 

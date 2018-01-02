@@ -22,14 +22,14 @@ import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.ast.Literal;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_propagate_control;
-import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.PointerObject;
 import org.lorislab.clingo4j.util.IntegerList;
 
 /**
  *
  * @author andrej
  */
-public class PropagateControl extends AbstractPointerObject<clingo_propagate_control> {
+public class PropagateControl extends PointerObject<clingo_propagate_control> {
 
     public PropagateControl(Pointer<clingo_propagate_control> pointer) {
         super(pointer);

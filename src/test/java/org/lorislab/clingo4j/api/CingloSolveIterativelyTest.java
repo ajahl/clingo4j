@@ -15,7 +15,6 @@
  */
 package org.lorislab.clingo4j.api;
 
-import java.util.Iterator;
 import org.junit.Test;
 
 /**
@@ -45,7 +44,7 @@ public class CingloSolveIterativelyTest {
         
         Clingo.init("src/main/clingo");
         
-        try (Clingo control = new Clingo()) {
+        try (Clingo control = Clingo.create()) {
             
             System.out.println(control.getVersion());
             

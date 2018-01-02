@@ -20,13 +20,13 @@ import static org.lorislab.clingo4j.api.Clingo.LIB;
 import org.lorislab.clingo4j.api.ast.Statement;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_program_builder;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
-import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.PointerObject;
 
 /**
  *
  * @author andrej
  */
-public class ProgramBuilder extends AbstractPointerObject<clingo_program_builder> {
+public class ProgramBuilder extends PointerObject<clingo_program_builder> {
     
     public ProgramBuilder(Pointer<clingo_program_builder> pointer) {
         super(pointer);

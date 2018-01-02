@@ -24,14 +24,14 @@ import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
-import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.PointerObject;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
  * @author andrej
  */
-public class TheoryTerm extends AbstractPointerObject<clingo_theory_atoms> {
+public class TheoryTerm extends PointerObject<clingo_theory_atoms> {
 
     private final int id;
 

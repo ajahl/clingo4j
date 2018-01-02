@@ -24,13 +24,13 @@ import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.api.ast.Signature;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbolic_atoms;
-import org.lorislab.clingo4j.util.AbstractPointerObject;
+import org.lorislab.clingo4j.util.PointerObject;
 
 /**
  *
  * @author andrej
  */
-public class SymbolicAtoms extends AbstractPointerObject<clingo_symbolic_atoms> implements Iterable<SymbolicAtom> {
+public class SymbolicAtoms extends PointerObject<clingo_symbolic_atoms> implements Iterable<SymbolicAtom> {
 
     public SymbolicAtoms(Pointer<clingo_symbolic_atoms> pointer) {
         super(pointer);

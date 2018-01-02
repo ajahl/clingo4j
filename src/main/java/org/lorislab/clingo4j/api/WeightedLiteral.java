@@ -15,10 +15,10 @@
  */
 package org.lorislab.clingo4j.api;
 
-import org.lorislab.clingo4j.util.SpanList;
 import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_weighted_literal;
+import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.ClingoUtil;
 import org.lorislab.clingo4j.util.DefaultList;
 
@@ -26,7 +26,7 @@ import org.lorislab.clingo4j.util.DefaultList;
  *
  * @author andrej
  */
-public class WeightedLiteral {
+public class WeightedLiteral implements ASTObject<clingo_weighted_literal> {
     
     private final clingo_weighted_literal literal;
 
@@ -48,16 +48,17 @@ public class WeightedLiteral {
         return literal.literal();
     }
 
-    public static clingo_weighted_literal get(WeightedLiteral lit) {
-        return lit.literal;
-    }
-    
     public static Pointer<clingo_weighted_literal> toArray(List<WeightedLiteral> list) {
-        return ClingoUtil.createArray(list, clingo_weighted_literal.class, WeightedLiteral::get);
+        return ClingoUtil.createArray(list, clingo_weighted_literal.class, WeightedLiteral::create);
     }
     
     public static List<WeightedLiteral> list(Pointer<clingo_weighted_literal> pointer, long size) {
         return new DefaultList<>(WeightedLiteral::new, pointer, size);
+    }
+
+    @Override
+    public clingo_weighted_literal create() {
+        return literal;
     }
 
 }

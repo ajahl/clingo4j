@@ -19,10 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bridj.Pointer;
 import org.junit.Test;
-import org.lorislab.clingo4j.api.Clingo;
-import org.lorislab.clingo4j.api.ClingoException;
-import org.lorislab.clingo4j.api.Location;
-import org.lorislab.clingo4j.api.Symbol;
 import org.lorislab.clingo4j.api.ast.Definition;
 import org.lorislab.clingo4j.api.ast.Term;
 import org.lorislab.clingo4j.api.c.clingo_ast_definition;
@@ -38,7 +34,7 @@ public class ArrayTest {
     public void test() {
         Clingo.init("src/main/clingo");
 
-        try (Clingo control = new Clingo()) {
+        try (Clingo control = Clingo.create()) {
             Location loc = new Location("<generated>", "<generated>", 1, 1, 1, 1);
             List<Definition> elements = new ArrayList<>(1);
             elements.add(new Definition("e", new Term(loc, Symbol.createNumber(24)), false));

@@ -80,12 +80,13 @@ import org.lorislab.clingo4j.api.c.clingo_weighted_literal;
 import org.lorislab.clingo4j.util.ClingoUtil;
 import org.lorislab.clingo4j.util.EnumValue;
 import org.lorislab.clingo4j.util.IntegerList;
+import org.lorislab.clingo4j.util.PointerObject;
 
 /**
  *
  * @author andrej
  */
-public class Clingo implements AutoCloseable {
+public class Clingo extends PointerObject<clingo_control> implements AutoCloseable {
 
     public static final ClingoLibrary LIB = new ClingoLibrary();
 
@@ -107,14 +108,15 @@ public class Clingo implements AutoCloseable {
 
     }
 
-    private final Pointer<Pointer<clingo_control>> control;
-
-    public Clingo() throws ClingoException {
-        this(MESSAGE_LIMIT, null);
+    public static Clingo create(String... parameters) throws ClingoException {
+        return create(MESSAGE_LIMIT, null, parameters);
     }
 
-    public Clingo(int messageLimit, final ClingoLogger logger, String... parameters) throws ClingoException {
-
+    public static Clingo create() throws ClingoException {
+        return create(MESSAGE_LIMIT, null);
+    }
+    
+    public static Clingo create(int messageLimit, final ClingoLogger logger, String... parameters) throws ClingoException {
         Pointer<ClingoLibrary.clingo_logger_t> p_logger = null;
         if (logger != null) {
             clingo_logger_t log = new clingo_logger_t() {
@@ -130,18 +132,19 @@ public class Clingo implements AutoCloseable {
         }
 
         // create a control object and pass command line arguments
-        control = Pointer.allocatePointer(clingo_control.class);
+        Pointer<Pointer<clingo_control>> control = Pointer.allocatePointer(clingo_control.class);
         handleError(LIB.clingo_control_new(null, 0, p_logger, null, messageLimit, control), "Could not create clingo controller");
+        return new Clingo(control.get());
     }
-
-    public Clingo(String... parameters) throws ClingoException {
-        this(MESSAGE_LIMIT, null, parameters);
+    
+    public Clingo(Pointer<clingo_control> pointer) throws ClingoException {
+        super(pointer);
     }
 
     @Override
     public void close() {
-        if (control != null) {
-            LIB.clingo_control_free(control.get());
+        if (pointer != null) {
+            LIB.clingo_control_free(pointer);
         }
     }
 
@@ -166,7 +169,7 @@ public class Clingo implements AutoCloseable {
         int tmp_size = ClingoUtil.arraySize(parameters);
 
         // add a logic program to the base part
-        handleError(LIB.clingo_control_add(control.get(), tmp_name, tmp_params, tmp_size, tmp_program), "Error add the program to controller");
+        handleError(LIB.clingo_control_add(pointer, tmp_name, tmp_params, tmp_size, tmp_program), "Error add the program to controller");
     }
 
     public void ground(String name) throws ClingoException {
@@ -217,7 +220,7 @@ public class Clingo implements AutoCloseable {
         int partsSize = ClingoUtil.arraySize(parts);
 
         // ground the base part
-        handleError(LIB.clingo_control_ground(control.get(), p_parts, partsSize, p_ground_callback, null), "Error ground the program");
+        handleError(LIB.clingo_control_ground(pointer, p_parts, partsSize, p_ground_callback, null), "Error ground the program");
 
     }
 
@@ -232,7 +235,7 @@ public class Clingo implements AutoCloseable {
 
     public ProgramBuilder builer() throws ClingoException {
         Pointer<Pointer<clingo_program_builder>> tmp = Pointer.allocatePointer(clingo_program_builder.class);;
-        handleError(LIB.clingo_control_program_builder(control.get(), tmp), "Error creating the program builder!");
+        handleError(LIB.clingo_control_program_builder(pointer, tmp), "Error creating the program builder!");
         return new ProgramBuilder(tmp.get());
     }
 
@@ -279,14 +282,14 @@ public class Clingo implements AutoCloseable {
 
         // get a solve handle        
         final Pointer<Pointer<clingo_solve_handle>> handle = Pointer.allocatePointer(ClingoLibrary.clingo_solve_handle.class);
-        handleError(LIB.clingo_control_solve(control.get(), mode, null, 0, p_event, null, handle), "Error execute control solve");
+        handleError(LIB.clingo_control_solve(pointer, mode, null, 0, p_event, null, handle), "Error execute control solve");
         return new SolveHandle(handle.get());
 
     }
 
     public Statistics getStatistics() throws ClingoException {
         Pointer<Pointer<clingo_statistic>> statistics = Pointer.allocatePointer(clingo_statistic.class);
-        handleError(LIB.clingo_control_statistics(control.get(), statistics), "Error reading the statistics!");
+        handleError(LIB.clingo_control_statistics(pointer, statistics), "Error reading the statistics!");
         Pointer<Long> key = Pointer.allocateLong();
         handleError(LIB.clingo_statistics_root(statistics.get(), key), "Error reading the statistics root key!");
         return new Statistics(statistics.get(), key.getLong());
@@ -294,18 +297,18 @@ public class Clingo implements AutoCloseable {
 
     public Configuration getConfiguration() throws ClingoException {
         Pointer<Pointer<clingo_configuration>> config = Pointer.allocatePointer(clingo_configuration.class);
-        handleError(LIB.clingo_control_configuration(control.get(), config), "Error reading the configuration!");
+        handleError(LIB.clingo_control_configuration(pointer, config), "Error reading the configuration!");
         Pointer<Integer> key = Pointer.allocateInt();
         handleError(LIB.clingo_configuration_root(config.get(), key), "Error reading the configuration root key!");
         return new Configuration(config.get(), key.getInt());
     }
 
     public void assignExternal(Symbol atom, TruthValue value) throws ClingoException {
-        handleError(LIB.clingo_control_assign_external(control.get(), atom.getSymbol(), value.getInt()), "Error clingo assign external!");
+        handleError(LIB.clingo_control_assign_external(pointer, atom.getSymbol(), value.getInt()), "Error clingo assign external!");
     }
 
     public void releaseExternal(Symbol atom) throws ClingoException {
-        handleError(LIB.clingo_control_release_external(control.get(), atom.getSymbol()), "Error clingo release external!");
+        handleError(LIB.clingo_control_release_external(pointer, atom.getSymbol()), "Error clingo release external!");
     }
 
     public static void handleError(boolean value, String message) throws ClingoException {
@@ -343,53 +346,53 @@ public class Clingo implements AutoCloseable {
 
     public SymbolicAtoms getSymbolicAtoms() throws ClingoException {
         Pointer<Pointer<clingo_symbolic_atoms>> ret = Pointer.allocatePointer(clingo_symbolic_atoms.class);
-        handleError(LIB.clingo_control_symbolic_atoms(control.get(), ret), "Error reading the symbolic atoms!");
+        handleError(LIB.clingo_control_symbolic_atoms(pointer, ret), "Error reading the symbolic atoms!");
         return new SymbolicAtoms(ret.get());
     }
 
     public TheoryAtoms getTheoryAtoms() throws ClingoException {
         Pointer<Pointer<clingo_theory_atoms>> ret = Pointer.allocatePointer(clingo_theory_atoms.class);
-        handleError(LIB.clingo_control_theory_atoms(control.get(), ret), "Error reading the theory atoms!");
+        handleError(LIB.clingo_control_theory_atoms(pointer, ret), "Error reading the theory atoms!");
         return new TheoryAtoms(ret.get());
     }
 
     public void cleanup() throws ClingoException {
-        handleError(LIB.clingo_control_cleanup(control.get()), "Error clean up control!");
+        handleError(LIB.clingo_control_cleanup(pointer), "Error clean up control!");
     }
 
     public boolean hasConst(String name) throws ClingoException {
         Pointer<Boolean> ret = Pointer.allocateBoolean();
-        handleError(LIB.clingo_control_has_const(control.get(), Pointer.pointerToCString(name), ret), "Error has const " + name);
+        handleError(LIB.clingo_control_has_const(pointer, Pointer.pointerToCString(name), ret), "Error has const " + name);
         return ret.get();
     }
 
     public Symbol getConst(String name) throws ClingoException {
         Pointer<Long> ret = Pointer.allocateLong();
-        handleError(LIB.clingo_control_get_const(control.get(), Pointer.pointerToCString(name), ret), "Error get const " + name);
+        handleError(LIB.clingo_control_get_const(pointer, Pointer.pointerToCString(name), ret), "Error get const " + name);
         return new Symbol(ret);
     }
 
     public void interrupt() {
-        LIB.clingo_control_interrupt(control.get());
+        LIB.clingo_control_interrupt(pointer);
     }
 
     public Pointer<Pointer<?>> claspFacade() throws ClingoException {
         Pointer<Pointer<?>> ret = Pointer.allocatePointer();
-        handleError(LIB.clingo_control_clasp_facade(control.get(), ret), "Error clasp facede!");
+        handleError(LIB.clingo_control_clasp_facade(pointer, ret), "Error clasp facede!");
         return ret;
     }
 
     public void load(String file) throws ClingoException {
-        handleError(LIB.clingo_control_load(control.get(), Pointer.pointerToCString(file)), "Error loading the file " + file);
+        handleError(LIB.clingo_control_load(pointer, Pointer.pointerToCString(file)), "Error loading the file " + file);
     }
 
     public void useEnumerationAssumption(boolean value) throws ClingoException {
-        handleError(LIB.clingo_control_use_enumeration_assumption(control.get(), value), "Error use enumeration assumption!");
+        handleError(LIB.clingo_control_use_enumeration_assumption(pointer, value), "Error use enumeration assumption!");
     }
 
     public Backend getBackend() throws ClingoException {
         Pointer<Pointer<clingo_backend>> ret = Pointer.allocatePointer(clingo_backend.class);
-        handleError(LIB.clingo_control_backend(control.get(), ret), "Error get backend!");
+        handleError(LIB.clingo_control_backend(pointer, ret), "Error get backend!");
         return new Backend(ret.get());
     }
 
@@ -543,7 +546,7 @@ public class Clingo implements AutoCloseable {
                 return true;
             }
         }));
-        handleError(LIB.clingo_control_register_observer(control.get(), Pointer.getPointer(tmp), replace, null), "Error register observer!");
+        handleError(LIB.clingo_control_register_observer(pointer, Pointer.getPointer(tmp), replace, null), "Error register observer!");
     }
 
     void registerPropagator(final Propagator propagator) throws ClingoException {
@@ -583,7 +586,7 @@ public class Clingo implements AutoCloseable {
                 return true;
             }
         }));
-        handleError(LIB.clingo_control_register_propagator(control.get(), Pointer.getPointer(tmp), null, sequential), "Error register propagator!");
+        handleError(LIB.clingo_control_register_propagator(pointer, Pointer.getPointer(tmp), null, sequential), "Error register propagator!");
     }
 
     public static Symbol parseTerm(String term, ClingoLogger logger, int messageLimit) throws ClingoException {
