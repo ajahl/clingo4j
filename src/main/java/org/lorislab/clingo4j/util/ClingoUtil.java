@@ -16,6 +16,7 @@
 package org.lorislab.clingo4j.util;
 
 import java.util.List;
+import java.util.function.Function;
 import org.bridj.Pointer;
 
 /**
@@ -34,32 +35,13 @@ public final class ClingoUtil {
         return 0;
     }
 
-    public interface Convertor<T, E> {
-
-        public T convert(E object);
-
-    }
-
-    public static <T> Pointer<T> createArray(List<T> data, Class<T> clazz) {
-        Pointer<T> result = null;
-        if (data != null && !data.isEmpty()) {
-            result = Pointer.allocateArray(clazz, data.size());
-            Pointer<T> iter = result;
-            for (T item : data) {
-                iter.set(item);
-                iter = iter.next();
-            }
-        }
-        return result;
-    }
-
-    public static <T, E> Pointer<T> createArray(List<E> data, Class<T> clazz, Convertor<T, E> convertor) {
+    public static <T, E> Pointer<T> createArray(List<E> data, Class<T> clazz, Function<E, T> fn) {
         Pointer<T> result = null;
         if (data != null && !data.isEmpty()) {
             result = Pointer.allocateArray(clazz, data.size());
             Pointer<T> iter = result;
             for (E item : data) {
-                iter.set(convertor.convert(item));
+                iter.set(fn.apply(item));
                 iter = iter.next();
             }
         }

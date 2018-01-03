@@ -24,8 +24,6 @@ import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_theory_atoms;
 import org.lorislab.clingo4j.util.PointerObject;
-import org.lorislab.clingo4j.util.DefaultList;
-import org.lorislab.clingo4j.util.IntegerList;
 
 /**
  *
@@ -55,7 +53,7 @@ public class TheoryElement extends PointerObject<clingo_theory_atoms> {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> size = Pointer.allocateSizeT();
         handleError(LIB.clingo_theory_atoms_element_condition(pointer, id, ret, size), "Error reading the theory elements condition!");
-        return new IntegerList(ret.get(), size.getInt());
+        return Pointer.allocateList(ret.get().getIO(), size.getInt());
     }
 
     public int conditionId() throws ClingoException {

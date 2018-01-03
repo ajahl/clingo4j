@@ -17,13 +17,12 @@ package org.lorislab.clingo4j.api;
 
 import org.lorislab.clingo4j.api.enums.ClauseType;
 import java.util.List;
+import org.bridj.NativeList;
 import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
-import org.lorislab.clingo4j.api.ast.Literal;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_propagate_control;
 import org.lorislab.clingo4j.util.PointerObject;
-import org.lorislab.clingo4j.util.IntegerList;
 
 /**
  *
@@ -62,7 +61,7 @@ public class PropagateControl extends PointerObject<clingo_propagate_control> {
     }
 
     public boolean add_clause(List<Integer> clause, ClauseType type) throws ClingoException {
-        IntegerList list = Literal.toLiteralList(clause);
+        NativeList list = PointerObject.toNativeList(clause);
         Pointer<Boolean> ret = Pointer.allocateBoolean();
         handleError(LIB.clingo_propagate_control_add_clause(pointer, list.getPointer(), list.size(), type.getInt(), ret), "Error add the clause to the propagete control!");
         return ret.get();

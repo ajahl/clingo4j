@@ -17,14 +17,13 @@ package org.lorislab.clingo4j.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.bridj.NativeList;
 import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
-import org.lorislab.clingo4j.api.ast.Literal;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_control;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_symbolic_atoms;
 import org.lorislab.clingo4j.util.PointerObject;
-import org.lorislab.clingo4j.util.IntegerList;
 
 /**
  *
@@ -62,7 +61,7 @@ public class SolveControl extends PointerObject<clingo_solve_control> {
 
     public void addClause(List<Integer> clause) throws ClingoException {
         if (clause != null && !clause.isEmpty()) {
-            IntegerList tmp = Literal.toLiteralList(clause);
+            NativeList tmp = PointerObject.toNativeList(clause);
             handleError(LIB.clingo_solve_control_add_clause(pointer, tmp.getPointer(), tmp.size()), "Error solve control add clause");
         }
     }

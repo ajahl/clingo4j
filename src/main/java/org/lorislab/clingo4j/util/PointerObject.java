@@ -15,6 +15,8 @@
  */
 package org.lorislab.clingo4j.util;
 
+import java.util.List;
+import org.bridj.NativeList;
 import org.bridj.Pointer;
 
 /**
@@ -41,4 +43,33 @@ public abstract class PointerObject<T> {
     public boolean isNull() {
         return pointer == null || pointer.get() == null;
     }
+    
+
+    public static NativeList<Integer> toNativeList(List<Integer> list) {
+        if (list == null) {
+            return null;
+        }
+        if (list instanceof NativeList) {
+            return (NativeList<Integer>) list;
+        }
+        if (list.isEmpty()) {
+            return null;
+        }
+        int size = ASTObject.size(list);
+        Pointer<Integer> tmp = array(list, Integer.class);
+        return Pointer.allocateList(tmp.getIO(), size);
+    }    
+    
+    public static <T> Pointer<T> array(List<T> data, Class<T> clazz) {
+        Pointer<T> result = null;
+        if (data != null && !data.isEmpty()) {
+            result = Pointer.allocateArray(clazz, data.size());
+            Pointer<T> iter = result;
+            for (T item : data) {
+                iter.set(item);
+                iter = iter.next();
+            }
+        }
+        return result;
+    }    
 }

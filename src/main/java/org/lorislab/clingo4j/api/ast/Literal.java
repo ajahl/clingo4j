@@ -25,15 +25,11 @@ import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
-import org.lorislab.clingo4j.api.c.clingo_ast_comparison;
-import org.lorislab.clingo4j.api.c.clingo_ast_csp_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
 import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.EnumValue;
-import org.lorislab.clingo4j.util.IntegerList;
 
 /**
  *
@@ -130,21 +126,6 @@ public class Literal implements ASTObject<clingo_ast_literal>, BodyLiteralData, 
     @Override
     public String toString() {
         return "" + sign + data;
-    }
-
-    public static IntegerList toLiteralList(List<Integer> list) {
-        if (list == null) {
-            return null;
-        }
-        if (list instanceof IntegerList) {
-            return (IntegerList) list;
-        }
-        if (list.isEmpty()) {
-            return null;
-        }
-        int size = ASTObject.size(list);
-        Pointer<Integer> tmp = ClingoUtil.createArray(list, Integer.class);
-        return new IntegerList(tmp, size);
     }
 
     public static List<Literal> list(Pointer<clingo_ast_literal> pointer, long size) {
