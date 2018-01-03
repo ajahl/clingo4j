@@ -22,7 +22,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom_definition;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.DefaultList;
+import org.lorislab.clingo4j.util.PointerList;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
@@ -99,7 +99,7 @@ public class TheoryAtomDefinition implements ASTObject<clingo_ast_theory_atom_de
     }
 
     public static List<TheoryAtomDefinition> list(Pointer<clingo_ast_theory_atom_definition> pointer, long size) {
-        return new DefaultList<>(TheoryAtomDefinition::new, pointer, size);
+        return new PointerList<>(TheoryAtomDefinition::new, pointer, size);
     }
 
 }

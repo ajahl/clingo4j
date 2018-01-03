@@ -15,7 +15,7 @@
  */
 package org.lorislab.clingo4j.api;
 
-import org.lorislab.clingo4j.util.SpanList;
+import org.lorislab.clingo4j.util.PointerList;
 import java.util.List;
 import org.bridj.Pointer;
 import org.bridj.SizeT;
@@ -72,7 +72,7 @@ public class TheoryElement extends PointerObject<clingo_theory_atoms> {
     }
 
     public static List<TheoryElement> list(final Pointer<clingo_theory_atoms> atoms, Pointer<Integer> pointer, long size) {    
-        return new SpanList<TheoryElement, Integer>(pointer, size) {
+        return new PointerList<TheoryElement, Integer>(pointer, size) {
             @Override
             protected TheoryElement getItem(Pointer<Integer> p) {
                 return new TheoryElement(atoms, p.getInt());

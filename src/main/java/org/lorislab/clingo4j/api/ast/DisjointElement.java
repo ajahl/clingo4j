@@ -21,7 +21,7 @@ import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_disjoint_element;
 import org.lorislab.clingo4j.util.ASTObject;
 import static org.lorislab.clingo4j.util.ASTObject.print;
-import org.lorislab.clingo4j.util.DefaultList;
+import org.lorislab.clingo4j.util.PointerList;
 
 /**
  *
@@ -79,7 +79,7 @@ public class DisjointElement implements ASTObject<clingo_ast_disjoint_element> {
     }
     
     public static List<DisjointElement> list(Pointer<clingo_ast_disjoint_element> pointer, long size) {
-        return new DefaultList<>(DisjointElement::new, pointer, size);
+        return new PointerList<>(DisjointElement::new, pointer, size);
     }
     
 }

@@ -75,15 +75,24 @@ public interface ASTObject<T extends NativeObject> {
         return null;
     }
 
+    public static List<String> listString(Pointer<Pointer<Byte>> data, long size) {
+        return new PointerList<String, Pointer<Byte>>(data, size) {
+            @Override
+            protected String getItem(Pointer<Pointer<Byte>> p) {
+                return p.get().getCString();
+            }
+        };
+    }
+    
     public static <T extends NativeObject, E extends ASTObject<T>> Pointer<T> array(List<E> data) {
         if (data != null && !data.isEmpty()) {
             E tmp = data.get(0);
-            return ASTObject.array2(data, tmp.getNativeClass());
+            return ASTObject.array(data, tmp.getNativeClass());
         }
         return null;
     }
 
-    public static <T extends NativeObject, E extends ASTObject<T>> Pointer<T> array2(List<E> data, Class<T> clazz) {
+    public static <T extends NativeObject, E extends ASTObject<T>> Pointer<T> array(List<E> data, Class<T> clazz) {
         if (data != null && !data.isEmpty()) {
             NativeList<T> tmp = Pointer.allocateList(clazz, data.size());
             data.forEach(t -> tmp.add(t.create()));
@@ -127,4 +136,11 @@ public interface ASTObject<T extends NativeObject> {
         return print(list, tmp, "; ", ".", true);
     }    
 
+    public static Pointer<Pointer<Byte>> stringArray(List<String> data) {
+        Pointer<Pointer<Byte>> result = null;
+        if (data != null && !data.isEmpty()) {
+            result = Pointer.pointerToCStrings(data.toArray(new String[data.size()]));
+        }
+        return result;
+    }    
 }

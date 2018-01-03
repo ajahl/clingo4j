@@ -28,9 +28,8 @@ import static org.lorislab.clingo4j.api.Clingo.handleError;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
 import org.lorislab.clingo4j.api.ast.enums.TermType;
 import org.lorislab.clingo4j.api.ast.enums.TheoryTermType;
-import org.lorislab.clingo4j.util.ClingoUtil;
-import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.EnumValue;
+import org.lorislab.clingo4j.util.PointerList;
 import org.lorislab.clingo4j.util.Struct;
 
 /**
@@ -190,7 +189,7 @@ public class Symbol extends Struct<Long> implements TermData, TheoryTermData {
     }
     
     public static List<Symbol> list(Pointer<Long> pointer, long size) {
-        return new DefaultList<>(Symbol::new, pointer, size);
+        return new PointerList<>(Symbol::new, pointer, size);
     }
 
 }

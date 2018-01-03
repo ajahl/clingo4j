@@ -20,7 +20,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_aggregate_element;
 import org.lorislab.clingo4j.util.ASTObject;
 import static org.lorislab.clingo4j.util.ASTObject.print;
-import org.lorislab.clingo4j.util.DefaultList;
+import org.lorislab.clingo4j.util.PointerList;
 
 /**
  *
@@ -64,7 +64,7 @@ public class BodyAggregateElement implements ASTObject<clingo_ast_body_aggregate
     }
     
     public static List<BodyAggregateElement> list(Pointer<clingo_ast_body_aggregate_element> pointer, long size) {
-        return new DefaultList<>(BodyAggregateElement::new, pointer, size);
+        return new PointerList<>(BodyAggregateElement::new, pointer, size);
     }
 
 }

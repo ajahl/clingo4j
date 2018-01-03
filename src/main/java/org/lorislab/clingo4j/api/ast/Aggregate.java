@@ -26,7 +26,6 @@ import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.util.ASTObject;
 import static org.lorislab.clingo4j.util.ASTObject.print;
-import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
  *

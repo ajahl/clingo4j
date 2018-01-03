@@ -28,7 +28,7 @@ import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.DefaultList;
+import org.lorislab.clingo4j.util.PointerList;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
@@ -129,7 +129,7 @@ public class Literal implements ASTObject<clingo_ast_literal>, BodyLiteralData, 
     }
 
     public static List<Literal> list(Pointer<clingo_ast_literal> pointer, long size) {
-        return new DefaultList<>(Literal::new, pointer, size);
+        return new PointerList<>(Literal::new, pointer, size);
     }
  
 }

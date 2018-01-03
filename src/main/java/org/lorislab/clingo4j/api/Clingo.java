@@ -77,7 +77,7 @@ import org.lorislab.clingo4j.api.c.clingo_propagator.init_callback;
 import org.lorislab.clingo4j.api.c.clingo_propagator.propagate_callback;
 import org.lorislab.clingo4j.api.c.clingo_propagator.undo_callback;
 import org.lorislab.clingo4j.api.c.clingo_weighted_literal;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.stringArray;
 import org.lorislab.clingo4j.util.EnumValue;
 import org.lorislab.clingo4j.util.PointerObject;
 
@@ -164,7 +164,7 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
         Pointer<Byte> tmp_name = Pointer.pointerToCString(name);
         Pointer<Byte> tmp_program = Pointer.pointerToCString(program);
 
-        Pointer<Pointer<Byte>> tmp_params = ClingoUtil.createStringArray(parameters);
+        Pointer<Pointer<Byte>> tmp_params = stringArray(parameters);
         int tmp_size = size(parameters);
 
         // add a logic program to the base part

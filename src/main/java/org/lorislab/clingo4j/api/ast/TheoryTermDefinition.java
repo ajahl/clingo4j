@@ -21,7 +21,7 @@ import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_definition;
 import org.lorislab.clingo4j.util.ASTObject;
 import static org.lorislab.clingo4j.util.ASTObject.print;
-import org.lorislab.clingo4j.util.DefaultList;
+import org.lorislab.clingo4j.util.PointerList;
 
 /**
  *
@@ -71,7 +71,7 @@ public class TheoryTermDefinition implements ASTObject<clingo_ast_theory_term_de
     }
     
     public static List<TheoryTermDefinition> list(Pointer<clingo_ast_theory_term_definition> pointer, long size) {
-        return new DefaultList<>(TheoryTermDefinition::new, pointer, size);
+        return new PointerList<>(TheoryTermDefinition::new, pointer, size);
     }
     
 }

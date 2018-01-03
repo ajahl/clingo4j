@@ -20,7 +20,7 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_guard;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.DefaultList;
+import org.lorislab.clingo4j.util.PointerList;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
@@ -63,7 +63,7 @@ public class CSPGuard implements ASTObject<clingo_ast_csp_guard> {
     }
     
     public static List<CSPGuard> list(Pointer<clingo_ast_csp_guard> pointer, long size) {
-        return new DefaultList<>(CSPGuard::new, pointer, size);
+        return new PointerList<>(CSPGuard::new, pointer, size);
     }
     
 }

@@ -26,7 +26,7 @@ import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.DefaultList;
+import org.lorislab.clingo4j.util.PointerList;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
@@ -119,7 +119,7 @@ public class Term implements ASTObject<clingo_ast_term>, LiteralData {
     }
 
     public static List<Term> list(Pointer<clingo_ast_term> pointer, long size) {
-        return new DefaultList<>(Term::new, pointer, size);
+        return new PointerList<>(Term::new, pointer, size);
     }
 
 }

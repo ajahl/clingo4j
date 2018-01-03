@@ -23,7 +23,7 @@ import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_conditional_literal;
 import org.lorislab.clingo4j.util.ASTObject;
 import static org.lorislab.clingo4j.util.ASTObject.print;
-import org.lorislab.clingo4j.util.DefaultList;
+import org.lorislab.clingo4j.util.PointerList;
 
 /**
  *
@@ -75,7 +75,7 @@ public class ConditionalLiteral implements ASTObject<clingo_ast_conditional_lite
     }
 
     public static List<ConditionalLiteral> list(Pointer<clingo_ast_conditional_literal> pointer, long size) {
-        return new DefaultList<>(ConditionalLiteral::new, pointer, size);
+        return new PointerList<>(ConditionalLiteral::new, pointer, size);
     }
 
 }

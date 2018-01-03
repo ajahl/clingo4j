@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.function.Function;
 import org.bridj.Pointer;
 
 /**
@@ -27,13 +28,20 @@ import org.bridj.Pointer;
  * @param <T>
  * @param <K>
  */
-public abstract class SpanList<T, K> implements List<T> {
+public class PointerList<T, K> implements List<T> {
 
     private final Pointer<K> pointer;
 
     private final long size;
 
-    public SpanList(Pointer<K> pointer, long size) {
+    private Function<K, T> fn;
+    
+    public PointerList(Function<K, T> fn, Pointer<K> pointer, long size) {
+        this(pointer, size);
+        this.fn = fn;
+    }
+    
+    public PointerList(Pointer<K> pointer, long size) {
         this.pointer = pointer;
         this.size = size;
     }
@@ -41,8 +49,13 @@ public abstract class SpanList<T, K> implements List<T> {
     public Pointer<K> getPointer() {
         return pointer;
     }
-
-    protected abstract T getItem(Pointer<K> p);
+    
+    protected T getItem(Pointer<K> p) {
+        if (fn != null) {
+            return fn.apply(p.get());
+        }
+        return (T) p.get();
+    }
 
     @Override
     public int size() {

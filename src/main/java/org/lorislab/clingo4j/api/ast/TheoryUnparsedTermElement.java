@@ -20,9 +20,8 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term_element;
 import org.lorislab.clingo4j.util.ASTObject;
 import static org.lorislab.clingo4j.util.ASTObject.print;
-import org.lorislab.clingo4j.util.ClingoUtil;
-import org.lorislab.clingo4j.util.DefaultList;
-import org.lorislab.clingo4j.util.StringList;
+import static org.lorislab.clingo4j.util.ASTObject.stringArray;
+import org.lorislab.clingo4j.util.PointerList;
 
 /**
  *
@@ -35,7 +34,7 @@ public class TheoryUnparsedTermElement implements ASTObject<clingo_ast_theory_un
     private final TheoryTerm term;
 
     public TheoryUnparsedTermElement(clingo_ast_theory_unparsed_term_element e) {
-        this(new StringList(e.operators(), e.size()), new TheoryTerm(e.term()));
+        this(ASTObject.listString(e.operators(), e.size()), new TheoryTerm(e.term()));
     }
 
     public TheoryUnparsedTermElement(List<String> operators, TheoryTerm term) {
@@ -61,12 +60,12 @@ public class TheoryUnparsedTermElement implements ASTObject<clingo_ast_theory_un
         clingo_ast_theory_unparsed_term_element ret = new clingo_ast_theory_unparsed_term_element();
         ret.term(term.create());
         ret.size(ASTObject.size(operators));
-        ret.operators(ClingoUtil.createStringArray(operators));
+        ret.operators(stringArray(operators));
         return ret;
     }
 
     public static List<TheoryUnparsedTermElement> list(Pointer<clingo_ast_theory_unparsed_term_element> pointer, long size) {
-        return new DefaultList<>(TheoryUnparsedTermElement::new, pointer, size);
+        return new PointerList<>(TheoryUnparsedTermElement::new, pointer, size);
     }
 
 }

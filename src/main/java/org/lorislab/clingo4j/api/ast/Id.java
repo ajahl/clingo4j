@@ -20,7 +20,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_id;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.DefaultList;
+import org.lorislab.clingo4j.util.PointerList;
 
 /**
  *
@@ -63,7 +63,7 @@ public class Id implements ASTObject<clingo_ast_id> {
     }
 
     public static List<Id> list(Pointer<clingo_ast_id> pointer, long size) {
-        return new DefaultList<>(Id::new, pointer, size);
+        return new PointerList<>(Id::new, pointer, size);
     }
    
 }

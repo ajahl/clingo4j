@@ -20,7 +20,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_aggregate_element;
 import org.lorislab.clingo4j.util.ASTObject;
 import static org.lorislab.clingo4j.util.ASTObject.print;
-import org.lorislab.clingo4j.util.DefaultList;
+import org.lorislab.clingo4j.util.PointerList;
 
 /**
  *
@@ -63,7 +63,7 @@ public class HeadAggregateElement implements ASTObject<clingo_ast_head_aggregate
     }
     
     public static List<HeadAggregateElement> list(Pointer<clingo_ast_head_aggregate_element> pointer, long size) {
-        return new DefaultList<>(HeadAggregateElement::new, pointer, size);
+        return new PointerList<>(HeadAggregateElement::new, pointer, size);
     }
     
 }
