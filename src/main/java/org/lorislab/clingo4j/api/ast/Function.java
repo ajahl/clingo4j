@@ -22,7 +22,7 @@ import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_function;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
@@ -62,7 +62,7 @@ public class Function implements ASTObject<clingo_ast_function>, TermData {
     public String toString() {
         boolean tc = name != null && name.startsWith("0") && arguments != null && arguments.size() == 1;
         boolean ey = (name != null && name.startsWith("0")) || (arguments != null && !arguments.isEmpty());
-        return "" + (external ? "@" : "") + name + ClingoUtil.print(arguments, "(", ",", tc ? ",)" : ")", ey);
+        return "" + (external ? "@" : "") + name + print(arguments, "(", ",", tc ? ",)" : ")", ey);
     }
 
     @Override

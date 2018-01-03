@@ -69,7 +69,7 @@ public class Model extends PointerObject<clingo_model>{
 
     public boolean contains(Symbol atom) throws ClingoException {
         Pointer<Boolean> ret = Pointer.allocateBoolean();
-        handleError(LIB.clingo_model_contains(pointer, atom.getSymbol(), ret), "Error reading model contains symbol atom!");
+        handleError(LIB.clingo_model_contains(pointer, atom.getStructObject(), ret), "Error reading model contains symbol atom!");
         return ret.get();
     }
 

@@ -165,7 +165,7 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
         Pointer<Byte> tmp_program = Pointer.pointerToCString(program);
 
         Pointer<Pointer<Byte>> tmp_params = ClingoUtil.createStringArray(parameters);
-        int tmp_size = ClingoUtil.arraySize(parameters);
+        int tmp_size = size(parameters);
 
         // add a logic program to the base part
         handleError(LIB.clingo_control_add(pointer, tmp_name, tmp_params, tmp_size, tmp_program), "Error add the program to controller");
@@ -195,13 +195,13 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
                     try {
                         callback.groundCallback(loc, name, symbols, (List<Symbol> symbols1) -> {
 
-                            long v_size = ClingoUtil.arraySize(symbols1);
+                            long v_size = size(symbols1);
 
                             if (v_size == 0) {
                                 return;
                             }
 
-                            Pointer<Long> v_symbols = Symbol.toArray(symbols1);
+                            Pointer<Long> v_symbols = Symbol.array(symbols1);
 
                             handleError((csymbol_callback.get().apply(v_symbols, v_size, csymbol_callback_data)), "Error symbol callback apply!");
                         });
@@ -215,8 +215,8 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
             p_ground_callback = Pointer.getPointer(ground_callback);
         }
 
-        Pointer<clingo_part> p_parts = Part.toArray(parts);
-        int partsSize = ClingoUtil.arraySize(parts);
+        Pointer<clingo_part> p_parts = Part.array(parts);
+        int partsSize = size(parts);
 
         // ground the base part
         handleError(LIB.clingo_control_ground(pointer, p_parts, partsSize, p_ground_callback, null), "Error ground the program");
@@ -303,11 +303,11 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
     }
 
     public void assignExternal(Symbol atom, TruthValue value) throws ClingoException {
-        handleError(LIB.clingo_control_assign_external(pointer, atom.getSymbol(), value.getInt()), "Error clingo assign external!");
+        handleError(LIB.clingo_control_assign_external(pointer, atom.getStructObject(), value.getInt()), "Error clingo assign external!");
     }
 
     public void releaseExternal(Symbol atom) throws ClingoException {
-        handleError(LIB.clingo_control_release_external(pointer, atom.getSymbol()), "Error clingo release external!");
+        handleError(LIB.clingo_control_release_external(pointer, atom.getStructObject()), "Error clingo release external!");
     }
 
     public static void handleError(boolean value, String message) throws ClingoException {

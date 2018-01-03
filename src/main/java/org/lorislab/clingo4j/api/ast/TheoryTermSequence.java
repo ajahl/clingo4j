@@ -22,7 +22,7 @@ import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_array;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
@@ -55,7 +55,7 @@ public class TheoryTermSequence implements ASTObject<clingo_ast_theory_term_arra
     public String toString() {
         boolean tc = terms != null && terms.size() == 1 && type == TheoryTermSequenceType.TUPLE;
         StringBuilder sb = new StringBuilder();
-        sb.append(ClingoUtil.print(terms, type.getLeft(), ",", "", true));
+        sb.append(print(terms, type.getLeft(), ",", "", true));
         if (tc) {
             sb.append(",)");
         } else {

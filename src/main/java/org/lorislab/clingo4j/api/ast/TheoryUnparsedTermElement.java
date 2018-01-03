@@ -19,6 +19,7 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term_element;
 import org.lorislab.clingo4j.util.ASTObject;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 import org.lorislab.clingo4j.util.ClingoUtil;
 import org.lorislab.clingo4j.util.DefaultList;
 import org.lorislab.clingo4j.util.StringList;
@@ -52,7 +53,7 @@ public class TheoryUnparsedTermElement implements ASTObject<clingo_ast_theory_un
 
     @Override
     public String toString() {
-        return ClingoUtil.print(operators, " ", " ", " ", false) + term;
+        return print(operators, " ", " ", " ", false) + term;
     }
 
     @Override

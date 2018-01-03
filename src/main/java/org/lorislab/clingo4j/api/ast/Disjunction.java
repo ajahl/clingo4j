@@ -21,7 +21,7 @@ import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_disjunction;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
@@ -45,7 +45,7 @@ public class Disjunction implements ASTObject<clingo_ast_disjunction>, HeadLiter
 
     @Override
     public String toString() {
-        return ClingoUtil.print(elements, "", "; ", "", false);
+        return print(elements, "", "; ", "", false);
     }
 
     @Override

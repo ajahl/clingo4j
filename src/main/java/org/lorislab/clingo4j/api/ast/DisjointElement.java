@@ -20,7 +20,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_disjoint_element;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 import org.lorislab.clingo4j.util.DefaultList;
 
 /**
@@ -63,7 +63,7 @@ public class DisjointElement implements ASTObject<clingo_ast_disjoint_element> {
 
     @Override
     public String toString() {
-        return ClingoUtil.print(tuple, "", ",", "", false) + " : " + term + " : " + ClingoUtil.print(condition, "", ",", "", false);
+        return print(tuple, "", ",", "", false) + " : " + term + " : " + print(condition, "", ",", "", false);
     }
 
     @Override

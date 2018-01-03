@@ -18,49 +18,39 @@ package org.lorislab.clingo4j.api;
 import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_part;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import org.lorislab.clingo4j.util.Struct;
 
 /**
  *
  * @author andrej
  */
-public class Part {
+public class Part extends Struct<clingo_part> {
     
-    private clingo_part part;
-
     public Part(String name) {
-        part = new clingo_part();        
-        part.name(Pointer.pointerToCString(name));
-        part.params(null);
-        part.size(0);        
+        super(new clingo_part());        
+        structObject.name(Pointer.pointerToCString(name));
+        structObject.params(null);
+        structObject.size(0);        
     }
 
     public Part(String name, List<Symbol> symbols) {
         this(name);
         if (symbols != null && !symbols.isEmpty()) {
-            Pointer<Long> tmp = Symbol.toArray(symbols);
-            part.params(tmp);
-            part.size(symbols.size());
+            Pointer<Long> tmp = Symbol.array(symbols);
+            structObject.params(tmp);
+            structObject.size(symbols.size());
         }
-    }
-
-    public clingo_part getPart() {
-        return part;
     }
         
     public String getName() {
-        return part.name().getCString();
+        return structObject.name().getCString();
     }
     
     public List<Symbol> getParameters() {
-        return Symbol.list(part.params(), (int) part.size());
+        return Symbol.list(structObject.params(), (int) structObject.size());
     }
-    
-    private static clingo_part getPartFrom(Part part) {
-        return part.getPart();
-    }    
-    
-    public static Pointer<clingo_part> toArray(List<Part> parts) {
-        return ClingoUtil.createArray(parts, clingo_part.class, Part::getPartFrom);
+
+    public static Pointer<clingo_part> array(List<Part> parts) {
+        return Struct.array(parts, clingo_part.class);
     }
 }

@@ -22,7 +22,7 @@ import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_conditional_literal;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 import org.lorislab.clingo4j.util.DefaultList;
 
 /**
@@ -61,7 +61,7 @@ public class ConditionalLiteral implements ASTObject<clingo_ast_conditional_lite
 
     @Override
     public String toString() {
-        return "" + literal + ClingoUtil.print(condition, " : ", ", ", "", true);
+        return "" + literal + print(condition, " : ", ", ", "", true);
     }
 
     @Override

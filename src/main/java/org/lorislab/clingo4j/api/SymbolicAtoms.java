@@ -52,7 +52,7 @@ public class SymbolicAtoms extends PointerObject<clingo_symbolic_atoms> implemen
 
     public SymbolicAtom find(Symbol atom) throws ClingoException {
         Pointer<Long> iter = Pointer.allocateLong();
-        handleError(LIB.clingo_symbolic_atoms_find(pointer, atom.getSymbol(), iter), "Error reading the symbolic atoms by symbol");
+        handleError(LIB.clingo_symbolic_atoms_find(pointer, atom.getStructObject(), iter), "Error reading the symbolic atoms by symbol");
         SymbolicAtomIterator iterator = new SymbolicAtomIterator(pointer, iter.get(), 0);
         if (iterator.isValidIterator()) {
             return iterator.get();
@@ -62,7 +62,7 @@ public class SymbolicAtoms extends PointerObject<clingo_symbolic_atoms> implemen
 
     public Iterator<SymbolicAtom> iterator(Symbol atom) throws ClingoException {
         Pointer<Long> iter = Pointer.allocateLong();
-        handleError(LIB.clingo_symbolic_atoms_find(pointer, atom.getSymbol(), iter), "Error reading the symbolic atoms by symbol");
+        handleError(LIB.clingo_symbolic_atoms_find(pointer, atom.getStructObject(), iter), "Error reading the symbolic atoms by symbol");
         Pointer<Long> end = Pointer.allocateLong();
         handleError(LIB.clingo_symbolic_atoms_end(pointer, end), "Error reading the symbolic atoms iterator end!");
         return new SymbolicAtomIterator(pointer, iter.get(), end.get());

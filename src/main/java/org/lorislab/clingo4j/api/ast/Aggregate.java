@@ -25,6 +25,7 @@ import org.lorislab.clingo4j.api.c.clingo_ast_aggregate;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.util.ASTObject;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 import org.lorislab.clingo4j.util.ClingoUtil;
 
 /**
@@ -66,7 +67,7 @@ public class Aggregate implements ASTObject<clingo_ast_aggregate>, HeadLiteralDa
             sb.append(leftGuard.get().getTerm()).append(" ").append(leftGuard.get().getOperator()).append(" ");
         }
         sb.append("{ ");
-        sb.append(ClingoUtil.print(elements, "", "; ", "", false));
+        sb.append(print(elements, "", "; ", "", false));
         sb.append(" }");
         if (rightGuard.isPresent()) {
             sb.append(" ").append(rightGuard.get().getOperator()).append(" ").append(rightGuard.get().getTerm());

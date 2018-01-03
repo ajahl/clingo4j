@@ -18,47 +18,39 @@ package org.lorislab.clingo4j.api;
 import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_weighted_literal;
-import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
 import org.lorislab.clingo4j.util.DefaultList;
+import org.lorislab.clingo4j.util.Struct;
 
 /**
  *
  * @author andrej
  */
-public class WeightedLiteral implements ASTObject<clingo_weighted_literal> {
+public class WeightedLiteral extends Struct<clingo_weighted_literal> {
     
-    private final clingo_weighted_literal literal;
-
     public WeightedLiteral(clingo_weighted_literal literal) {
-        this.literal = literal;
+        super(literal);
     }
     
     public WeightedLiteral(int literal, int weight) {
-        this.literal = new clingo_weighted_literal();
-        this.literal.weight(weight);
-        this.literal.literal(literal);
+        super(new clingo_weighted_literal());
+        this.structObject.weight(weight);
+        this.structObject.literal(literal);
     }
 
     public int weight() {
-        return literal.weight();
+        return structObject.weight();
     }
     
     public int literal() {
-        return literal.literal();
+        return structObject.literal();
     }
 
-    public static Pointer<clingo_weighted_literal> toArray(List<WeightedLiteral> list) {
-        return ClingoUtil.createArray(list, clingo_weighted_literal.class, WeightedLiteral::create);
+    public static Pointer<clingo_weighted_literal> array(List<WeightedLiteral> list) {
+        return Struct.array(list, clingo_weighted_literal.class);
     }
     
     public static List<WeightedLiteral> list(Pointer<clingo_weighted_literal> pointer, long size) {
         return new DefaultList<>(WeightedLiteral::new, pointer, size);
-    }
-
-    @Override
-    public clingo_weighted_literal create() {
-        return literal;
     }
 
 }

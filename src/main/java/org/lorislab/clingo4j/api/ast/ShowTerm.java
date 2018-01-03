@@ -21,7 +21,7 @@ import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.api.c.clingo_ast_show_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.printBody;
 
 /**
  *
@@ -57,7 +57,7 @@ public class ShowTerm implements ASTObject<clingo_ast_show_term>, StatementData 
 
     @Override
     public String toString() {
-        return  "#show " + (csp ? "$" : "") + term + ClingoUtil.printBody(body);
+        return  "#show " + (csp ? "$" : "") + term + printBody(body);
     }
 
     @Override

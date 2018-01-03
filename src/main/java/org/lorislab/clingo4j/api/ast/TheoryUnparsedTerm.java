@@ -21,7 +21,7 @@ import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
@@ -49,7 +49,7 @@ public class TheoryUnparsedTerm implements ASTObject<clingo_ast_theory_unparsed_
         if (elements != null && elements.size() > 1) {
             sb.append("(");
         }
-        sb.append(ClingoUtil.print(elements, "", "", "", false));
+        sb.append(print(elements, "", "", "", false));
         if (elements != null && elements.size() > 1) {
             sb.append(")");
         }

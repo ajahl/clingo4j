@@ -21,7 +21,7 @@ import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_pool;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
@@ -48,7 +48,7 @@ public class Pool implements ASTObject<clingo_ast_pool>, TermData {
         if (arguments == null || arguments.isEmpty()) {
             return "(1/0)";
         }
-        return ClingoUtil.print(arguments, "(", ";", ")", true);
+        return print(arguments, "(", ";", ")", true);
     }
 
     @Override

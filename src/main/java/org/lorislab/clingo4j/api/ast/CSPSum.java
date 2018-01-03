@@ -19,7 +19,7 @@ import java.util.List;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_sum_term;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
@@ -53,7 +53,7 @@ public class CSPSum implements ASTObject<clingo_ast_csp_sum_term> {
         if (terms == null || terms.isEmpty()) {
             return "0";
         } else {
-            return ClingoUtil.print(terms, "", "$+", "", false);
+            return print(terms, "", "$+", "", false);
         }
     }
 

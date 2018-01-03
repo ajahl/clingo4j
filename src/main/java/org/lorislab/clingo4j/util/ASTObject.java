@@ -99,4 +99,32 @@ public interface ASTObject<T extends NativeObject> {
         return 0;
     }
     
+    public static String print(List list, String prefix, String separator, String suffix, boolean empty) {
+        StringBuilder sb = new StringBuilder();
+        if (list != null && !list.isEmpty()) {
+            sb.append(prefix);
+            sb.append(list.get(0));
+            for (int i = 1; i < list.size(); i++) {
+                sb.append(separator);
+                sb.append(list.get(i));
+            }
+            sb.append(suffix);
+        } else if (empty) {
+            sb.append(prefix).append(suffix);
+        }
+        return sb.toString();
+    }  
+    
+    public static String printBody(List list) {
+        return printBody(list, " : ");
+    }
+
+    public static String printBody(List list, String pre) {
+        String tmp = "";
+        if (list != null && !list.isEmpty()) {
+            tmp = pre;
+        }
+        return print(list, tmp, "; ", ".", true);
+    }    
+
 }

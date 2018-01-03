@@ -19,7 +19,7 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_aggregate_element;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 import org.lorislab.clingo4j.util.DefaultList;
 
 /**
@@ -50,7 +50,7 @@ public class BodyAggregateElement implements ASTObject<clingo_ast_body_aggregate
 
     @Override
     public String toString() {
-        return ClingoUtil.print(tuple, "", ",", "", false) + " : " + ClingoUtil.print(condition, "", ", ", "", false);
+        return print(tuple, "", ",", "", false) + " : " + print(condition, "", ", ", "", false);
     }
 
     @Override

@@ -21,7 +21,7 @@ import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.api.c.clingo_ast_rule;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.printBody;
 
 /**
  *
@@ -51,7 +51,7 @@ public class Rule implements ASTObject<clingo_ast_rule>, StatementData {
 
     @Override
     public String toString() {
-        return "" + head + ClingoUtil.printBody(body, " :- ");
+        return "" + head + printBody(body, " :- ");
     }
 
     @Override

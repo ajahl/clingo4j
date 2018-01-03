@@ -24,7 +24,7 @@ import org.lorislab.clingo4j.api.ast.HeadLiteral.HeadLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_aggregate;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
@@ -70,7 +70,7 @@ public class HeadAggregate implements ASTObject<clingo_ast_head_aggregate>, Head
         if (leftGuard.isPresent()) {
             sb.append(leftGuard.get().getTerm()).append(" ").append(leftGuard.get().getOperator()).append(" ");
         }
-        sb.append(function).append(" { ").append(ClingoUtil.print(elements, "", ": ", "", false)).append(" }");
+        sb.append(function).append(" { ").append(print(elements, "", ": ", "", false)).append(" }");
         if (rightGuard.isPresent()) {
             sb.append(" ").append(rightGuard.get().getOperator()).append(" ").append(rightGuard.get().getTerm());
         }

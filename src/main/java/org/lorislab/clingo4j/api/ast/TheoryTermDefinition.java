@@ -20,7 +20,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term_definition;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 import org.lorislab.clingo4j.util.DefaultList;
 
 /**
@@ -57,7 +57,7 @@ public class TheoryTermDefinition implements ASTObject<clingo_ast_theory_term_de
 
     @Override
     public String toString() {
-        return name + " {\n" + ClingoUtil.print(operators, "  ", ";\n", "\n", true) + "}";
+        return name + " {\n" + print(operators, "  ", ";\n", "\n", true) + "}";
     }
 
     @Override

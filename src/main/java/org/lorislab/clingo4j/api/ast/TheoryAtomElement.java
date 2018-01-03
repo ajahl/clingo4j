@@ -17,10 +17,9 @@ package org.lorislab.clingo4j.api.ast;
 
 import java.util.List;
 import org.bridj.Pointer;
-import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom_element;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 import org.lorislab.clingo4j.util.DefaultList;
 
 /**
@@ -61,7 +60,7 @@ public class TheoryAtomElement implements ASTObject<clingo_ast_theory_atom_eleme
 
     @Override
     public String toString() {
-        return ClingoUtil.print(tuple, "", ",", "", false) + " : " + ClingoUtil.print(condition, "", ",", "", false);
+        return print(tuple, "", ",", "", false) + " : " + print(condition, "", ",", "", false);
     }
 
     public static List<TheoryAtomElement> list(Pointer<clingo_ast_theory_atom_element> pointer, long size) {

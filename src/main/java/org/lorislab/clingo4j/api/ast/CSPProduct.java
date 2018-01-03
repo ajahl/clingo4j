@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
-import org.lorislab.clingo4j.util.SpanList;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_product_term;
 import org.lorislab.clingo4j.util.ASTObject;
 import org.lorislab.clingo4j.util.DefaultList;

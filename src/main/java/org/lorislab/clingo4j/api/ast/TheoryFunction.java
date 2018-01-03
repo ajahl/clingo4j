@@ -22,7 +22,7 @@ import org.lorislab.clingo4j.api.ast.TheoryTerm.TheoryTermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_function;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
@@ -53,7 +53,7 @@ public class TheoryFunction implements ASTObject<clingo_ast_theory_function>, Th
 
     @Override
     public String toString() {
-        return "" + name + ClingoUtil.print(arguments, "(", ",", ")", !(arguments == null || arguments.isEmpty()));
+        return "" + name + print(arguments, "(", ",", ")", !(arguments == null || arguments.isEmpty()));
     }
 
     @Override

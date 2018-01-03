@@ -21,7 +21,7 @@ import org.lorislab.clingo4j.api.ast.BodyLiteral.BodyLiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_disjoint;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
@@ -45,7 +45,7 @@ public class Disjoint implements ASTObject<clingo_ast_disjoint>, BodyLiteralData
 
     @Override
     public String toString() {
-        return "#disjoint { " + ClingoUtil.print(elements, "", "; ", "", false) + " }";
+        return "#disjoint { " + print(elements, "", "; ", "", false) + " }";
     }
 
     @Override

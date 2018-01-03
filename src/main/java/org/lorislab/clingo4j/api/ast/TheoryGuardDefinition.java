@@ -19,7 +19,8 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_guard_definition;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
+import static org.lorislab.clingo4j.util.ClingoUtil.createStringArray;
 import org.lorislab.clingo4j.util.StringList;
 
 /**
@@ -50,14 +51,14 @@ public class TheoryGuardDefinition implements ASTObject<clingo_ast_theory_guard_
 
     @Override
     public String toString() {
-        return "{ " + ClingoUtil.print(operators, "", ", ", "", false) + " }, " + term;
+        return "{ " + print(operators, "", ", ", "", false) + " }, " + term;
     }
 
     @Override
     public clingo_ast_theory_guard_definition create() {
         clingo_ast_theory_guard_definition ret = new clingo_ast_theory_guard_definition();
         ret.term(Pointer.pointerToCString(term));
-        ret.operators(ClingoUtil.createStringArray(operators));
+        ret.operators(createStringArray(operators));
         ret.size(ASTObject.size(operators));
         return ret;
     }

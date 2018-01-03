@@ -21,7 +21,7 @@ import org.lorislab.clingo4j.api.ast.Literal.LiteralData;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_literal;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
@@ -54,7 +54,7 @@ public class CSPLiteral implements ASTObject<clingo_ast_csp_literal>, LiteralDat
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(term);
-        sb.append(ClingoUtil.print(guards, "", "", "", false));
+        sb.append(print(guards, "", "", "", false));
         return sb.toString();
     }
 

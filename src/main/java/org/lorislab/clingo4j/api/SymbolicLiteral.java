@@ -46,7 +46,7 @@ public class SymbolicLiteral {
 
     public clingo_symbolic_literal toSymbolicLiteral() {
         clingo_symbolic_literal ret = new clingo_symbolic_literal();
-        ret.symbol(symbol.getSymbol());
+        ret.symbol(symbol.getStructObject());
         ret.positive(positive);
         return ret;
     }

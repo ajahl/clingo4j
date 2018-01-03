@@ -25,7 +25,7 @@ import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_head_literal;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
@@ -62,7 +62,7 @@ public class TheoryAtom implements ASTObject<clingo_ast_theory_atom>, HeadLitera
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append('&').append(term).append(" { ").append(ClingoUtil.print(elements, "", "; ", "", false)).append(" }");
+        sb.append('&').append(term).append(" { ").append(print(elements, "", "; ", "", false)).append(" }");
         if (guard.isPresent()) {
             sb.append(" ").append(guard.get());
         }

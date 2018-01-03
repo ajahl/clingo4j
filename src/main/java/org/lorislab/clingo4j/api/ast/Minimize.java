@@ -21,7 +21,8 @@ import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.api.c.clingo_ast_minimize;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
+import static org.lorislab.clingo4j.util.ASTObject.printBody;
 
 /**
  *
@@ -63,7 +64,7 @@ public class Minimize implements ASTObject<clingo_ast_minimize>, StatementData {
 
     @Override
     public String toString() {
-        return ClingoUtil.printBody(body, ":~ ") + " [" + weight + "@" + priority + ClingoUtil.print(tuple, ",", ",", "", false) + "]";
+        return printBody(body, ":~ ") + " [" + weight + "@" + priority + print(tuple, ",", ",", "", false) + "]";
     }
 
     @Override

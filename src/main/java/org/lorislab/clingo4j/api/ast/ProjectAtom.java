@@ -21,7 +21,7 @@ import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.api.c.clingo_ast_project;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.printBody;
 
 /**
  *
@@ -51,7 +51,7 @@ public class ProjectAtom implements ASTObject<clingo_ast_project>, StatementData
 
     @Override
     public String toString() {
-        return "#project " + atom + ClingoUtil.printBody(body);
+        return "#project " + atom + printBody(body);
     }
 
     @Override

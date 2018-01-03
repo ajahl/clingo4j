@@ -44,12 +44,12 @@ public class Backend extends PointerObject<clingo_backend> {
 
     public void weightRule(boolean choice, List<Integer> head, int lower, List<WeightedLiteral> body) throws ClingoException {
         NativeList h = PointerObject.toNativeList(head);
-        Pointer<clingo_weighted_literal> t = WeightedLiteral.toArray(body);
+        Pointer<clingo_weighted_literal> t = WeightedLiteral.array(body);
         handleError(LIB.clingo_backend_weight_rule(pointer, choice, h.getPointer(), h.size(), lower, t, body.size()), "Error weight rule to the backend!");
     }
 
     public void minimize(int prio, List<WeightedLiteral> body) throws ClingoException {
-        Pointer<clingo_weighted_literal> t = WeightedLiteral.toArray(body);
+        Pointer<clingo_weighted_literal> t = WeightedLiteral.array(body);
         handleError(LIB.clingo_backend_minimize(pointer, prio, t, body.size()), "Error minimize the backend!");
     }
 

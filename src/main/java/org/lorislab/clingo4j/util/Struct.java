@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 andrej.
+ * Copyright 2018 andrej.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,18 +21,30 @@ import org.bridj.Pointer;
 /**
  *
  * @author andrej
+ * @param <T>
  */
-public final class ClingoUtil {
+public class Struct<T> {
 
-    private ClingoUtil() {
+    protected final T structObject;
+
+    public Struct(T structObject) {
+        this.structObject = structObject;
     }
 
-    public static Pointer<Pointer<Byte>> createStringArray(List<String> data) {
-        Pointer<Pointer<Byte>> result = null;
+    public T getStructObject() {
+        return structObject;
+    }
+
+    public static <T, E extends Struct<T>> Pointer<T> array(List<E> data, Class<T> clazz) {
+        Pointer<T> result = null;
         if (data != null && !data.isEmpty()) {
-            result = Pointer.pointerToCStrings(data.toArray(new String[data.size()]));
+            result = Pointer.allocateArray(clazz, data.size());
+            Pointer<T> iter = result;
+            for (E item : data) {
+                iter.set(item.getStructObject());
+                iter = iter.next();
+            }
         }
         return result;
     }
-
 }

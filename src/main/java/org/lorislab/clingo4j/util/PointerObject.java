@@ -43,7 +43,6 @@ public abstract class PointerObject<T> {
     public boolean isNull() {
         return pointer == null || pointer.get() == null;
     }
-    
 
     public static NativeList<Integer> toNativeList(List<Integer> list) {
         if (list == null) {
@@ -55,7 +54,7 @@ public abstract class PointerObject<T> {
         if (list.isEmpty()) {
             return null;
         }
-        int size = ASTObject.size(list);
+        int size = size(list);
         Pointer<Integer> tmp = array(list, Integer.class);
         return Pointer.allocateList(tmp.getIO(), size);
     }    
@@ -72,4 +71,12 @@ public abstract class PointerObject<T> {
         }
         return result;
     }    
+    
+    protected static int size(List data) {
+        if (data != null) {
+            return data.size();
+        }
+        return 0;
+    }
+    
 }

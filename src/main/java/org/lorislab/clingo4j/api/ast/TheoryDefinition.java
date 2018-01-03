@@ -22,7 +22,7 @@ import org.lorislab.clingo4j.api.ast.Statement.StatementData;
 import org.lorislab.clingo4j.api.c.clingo_ast_statement;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_definition;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.ClingoUtil;
+import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
@@ -69,7 +69,7 @@ public class TheoryDefinition implements ASTObject<clingo_ast_theory_definition>
                     comma = true;
                 }
                 sb.append("  ").append(term.getName()).append(" {\n");
-                sb.append(ClingoUtil.print(term.getOperators(), "    ", ";\n", "\n", true)).append("  }");
+                sb.append(print(term.getOperators(), "    ", ";\n", "\n", true)).append("  }");
             }
         }
 
