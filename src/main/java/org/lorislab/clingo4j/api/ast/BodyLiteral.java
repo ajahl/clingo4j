@@ -23,7 +23,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_body_literal;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.PointerList;
+import static org.lorislab.clingo4j.util.ASTObject.pointerList;
 
 /**
  *
@@ -109,7 +109,7 @@ public class BodyLiteral implements ASTObject<clingo_ast_body_literal> {
     }
 
     public static List<BodyLiteral> list(Pointer<clingo_ast_body_literal> pointer, long size) {
-        return new PointerList<>(BodyLiteral::new, pointer, size);
+        return pointerList(BodyLiteral::new, pointer, size);
     }
 
 }

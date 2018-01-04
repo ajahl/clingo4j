@@ -71,11 +71,14 @@ public class TheoryElement extends PointerObject<clingo_theory_atoms> {
         return string.getCString();
     }
 
-    public static List<TheoryElement> list(final Pointer<clingo_theory_atoms> atoms, Pointer<Integer> pointer, long size) {    
+    public static List<TheoryElement> list(final Pointer<clingo_theory_atoms> atoms, Pointer<Integer> pointer, long size) { 
+        if (pointer == null) {
+            return null;
+        }
         return new PointerList<TheoryElement, Integer>(pointer, size) {
             @Override
-            protected TheoryElement getItem(Pointer<Integer> p) {
-                return new TheoryElement(atoms, p.getInt());
+            protected TheoryElement getItem(Integer p) {
+                return new TheoryElement(atoms, p);
             }
         };
     }

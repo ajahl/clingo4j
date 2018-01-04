@@ -19,8 +19,8 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_atom_element;
 import org.lorislab.clingo4j.util.ASTObject;
+import static org.lorislab.clingo4j.util.ASTObject.pointerList;
 import static org.lorislab.clingo4j.util.ASTObject.print;
-import org.lorislab.clingo4j.util.PointerList;
 
 /**
  *
@@ -64,7 +64,7 @@ public class TheoryAtomElement implements ASTObject<clingo_ast_theory_atom_eleme
     }
 
     public static List<TheoryAtomElement> list(Pointer<clingo_ast_theory_atom_element> pointer, long size) {
-        return new PointerList<>(TheoryAtomElement::new, pointer, size);
+        return pointerList(TheoryAtomElement::new, pointer, size);
     }
 
 }

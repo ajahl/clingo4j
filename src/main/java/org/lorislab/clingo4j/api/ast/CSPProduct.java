@@ -21,7 +21,7 @@ import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.c.clingo_ast_csp_product_term;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.PointerList;
+import static org.lorislab.clingo4j.util.ASTObject.pointerList;
 
 /**
  *
@@ -79,7 +79,7 @@ public class CSPProduct implements ASTObject<clingo_ast_csp_product_term> {
     }
 
     public static List<CSPProduct> list(Pointer<clingo_ast_csp_product_term> pointer, long size) {
-        return new PointerList<>(CSPProduct::new, pointer, size);
+        return pointerList(CSPProduct::new, pointer, size);
     }
 
 }

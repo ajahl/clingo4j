@@ -75,11 +75,21 @@ public interface ASTObject<T extends NativeObject> {
         return null;
     }
 
+    public static <T, K> List<T> pointerList(Function<K, T> fn, Pointer<K> pointer, long size) {
+        if (pointer == null) {
+            return null;
+        }
+        return new PointerList<>(fn, pointer, size);
+    }
+    
     public static List<String> listString(Pointer<Pointer<Byte>> data, long size) {
+        if (data == null) {
+            return null;
+        }
         return new PointerList<String, Pointer<Byte>>(data, size) {
             @Override
-            protected String getItem(Pointer<Pointer<Byte>> p) {
-                return p.get().getCString();
+            protected String getItem(Pointer<Byte> p) {
+                return p.getCString();
             }
         };
     }

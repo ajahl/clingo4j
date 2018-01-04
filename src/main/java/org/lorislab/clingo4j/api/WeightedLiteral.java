@@ -18,7 +18,7 @@ package org.lorislab.clingo4j.api;
 import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_weighted_literal;
-import org.lorislab.clingo4j.util.PointerList;
+import static org.lorislab.clingo4j.util.ASTObject.pointerList;
 import org.lorislab.clingo4j.util.Struct;
 
 /**
@@ -50,7 +50,7 @@ public class WeightedLiteral extends Struct<clingo_weighted_literal> {
     }
     
     public static List<WeightedLiteral> list(Pointer<clingo_weighted_literal> pointer, long size) {
-        return new PointerList<>(WeightedLiteral::new, pointer, size);
+        return pointerList(WeightedLiteral::new, pointer, size);
     }
 
 }

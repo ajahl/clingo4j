@@ -70,10 +70,13 @@ public class TheoryTerm extends PointerObject<clingo_theory_atoms> {
     }
 
     public static List<TheoryTerm> list(final Pointer<clingo_theory_atoms> atoms, Pointer<Integer> pointer, long size) {
+        if (pointer == null) {
+            return null;
+        }
         return new PointerList<TheoryTerm, Integer>(pointer, size) {
             @Override
-            protected TheoryTerm getItem(Pointer<Integer> p) {
-                return new TheoryTerm(atoms, p.getInt());
+            protected TheoryTerm getItem(Integer p) {
+                return new TheoryTerm(atoms, p);
             }
         };
     }

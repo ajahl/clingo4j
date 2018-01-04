@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.function.Function;
+import org.bridj.NativeList;
 import org.bridj.Pointer;
 
 /**
@@ -30,10 +31,8 @@ import org.bridj.Pointer;
  */
 public class PointerList<T, K> implements List<T> {
 
-    private final Pointer<K> pointer;
-
-    private final long size;
-
+    private  final NativeList<K> list;
+    
     private Function<K, T> fn;
     
     public PointerList(Function<K, T> fn, Pointer<K> pointer, long size) {
@@ -42,122 +41,115 @@ public class PointerList<T, K> implements List<T> {
     }
     
     public PointerList(Pointer<K> pointer, long size) {
-        this.pointer = pointer;
-        this.size = size;
+        this(Pointer.allocateList(pointer.getIO(), size));
     }
 
-    public Pointer<K> getPointer() {
-        return pointer;
+    public PointerList(NativeList<K> list) {
+        this.list = list;
     }
     
-    protected T getItem(Pointer<K> p) {
+    public Pointer<K> getPointer() {
+        return (Pointer<K>) list.getPointer();
+    }
+    
+    protected T getItem(K p) {
         if (fn != null) {
-            return fn.apply(p.get());
+            return fn.apply(p);
         }
-        return (T) p.get();
+        return (T) p;
     }
 
     @Override
     public int size() {
-        return (int)  size;
+        return list.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return size > 0;
+        return list.isEmpty();
     }
 
     @Override
     public Iterator<T> iterator() {
+        final Iterator<K> iter = list.iterator();
         return new Iterator<T>() {
-
-            private int index = 0;
 
             @Override
             public boolean hasNext() {
-                return index < size;
+                return iter.hasNext();
             }
 
             @Override
             public T next() {
-                T s = getItem(pointer.next(index));
-                index = index + 1;
-                return s;
+                return getItem(iter.next());
             }
         };
     }
 
     @Override
     public T get(int index) {
-        if (0 <= index && index < size) {
-            return getItem(pointer.next(index));
-        }
-        throw new IndexOutOfBoundsException();
+        K tmp = list.get(index);
+        return getItem(tmp);
     }
 
     @Override
     public Object[] toArray() {
-        return pointer.toArray();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public <T> T[] toArray(T[] a) {
-        return pointer.toArray(a);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int indexOf(Object o) {
-        throw new UnsupportedOperationException();
+        return list.indexOf(o);
     }
 
     @Override
     public int lastIndexOf(Object o) {
-        throw new UnsupportedOperationException();
+        return list.lastIndexOf(o);
     }
 
     @Override
     public ListIterator<T> listIterator() {
+        final ListIterator<K> iter = list.listIterator();
         return new ListIterator<T>() {
-
-            private int index = 0;
 
             @Override
             public boolean hasNext() {
-                return index < size;
+                return iter.hasNext();
             }
 
             @Override
             public T next() {
-                T s = getItem(pointer.next(index));
-                index = index + 1;
-                return s;
+                return getItem(iter.next());
             }
 
             @Override
             public boolean hasPrevious() {
-                return 0 < index;
+                return iter.hasPrevious();
             }
 
             @Override
             public T previous() {
-                T s = getItem(pointer.next(index));
-                index = index - 1;
-                return s;
+                return getItem(iter.previous());
             }
 
             @Override
             public int nextIndex() {
-                return index + 1;
+                return iter.nextIndex();
             }
 
             @Override
             public int previousIndex() {
-                return index - 1;
+                return iter.previousIndex();
             }
 
             @Override
             public void remove() {
-                throw new UnsupportedOperationException();
+                iter.remove();
             }
 
             @Override
@@ -232,7 +224,7 @@ public class PointerList<T, K> implements List<T> {
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException();
+        list.clear();
     }
 
     @Override
@@ -247,17 +239,65 @@ public class PointerList<T, K> implements List<T> {
 
     @Override
     public T remove(int index) {
-        throw new UnsupportedOperationException();
+        K tmp = list.remove(index);
+        return getItem(tmp);
     }
 
     @Override
     public ListIterator<T> listIterator(int index) {
-        throw new UnsupportedOperationException();
+        final ListIterator<K> iter = list.listIterator(index);
+        return new ListIterator<T>() {
+
+            @Override
+            public boolean hasNext() {
+                return iter.hasNext();
+            }
+
+            @Override
+            public T next() {
+                return getItem(iter.next());
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return iter.hasPrevious();
+            }
+
+            @Override
+            public T previous() {
+                return getItem(iter.previous());
+            }
+
+            @Override
+            public int nextIndex() {
+                return iter.nextIndex();
+            }
+
+            @Override
+            public int previousIndex() {
+                return iter.previousIndex();
+            }
+
+            @Override
+            public void remove() {
+                iter.remove();
+            }
+
+            @Override
+            public void set(T e) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void add(T e) {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     @Override
     public List<T> subList(int fromIndex, int toIndex) {
-        throw new UnsupportedOperationException();
+        return new PointerList<>((NativeList<K>)list.subList(fromIndex, toIndex));
     }
 
 }

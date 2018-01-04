@@ -23,7 +23,7 @@ import org.lorislab.clingo4j.api.Location;
 import org.lorislab.clingo4j.api.Symbol;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_term;
 import org.lorislab.clingo4j.util.ASTObject;
-import org.lorislab.clingo4j.util.PointerList;
+import static org.lorislab.clingo4j.util.ASTObject.pointerList;
 import org.lorislab.clingo4j.util.EnumValue;
 
 /**
@@ -106,7 +106,7 @@ public class TheoryTerm implements ASTObject<clingo_ast_theory_term> {
     }
 
     public static List<TheoryTerm> list(Pointer<clingo_ast_theory_term> pointer, long size) {
-        return new PointerList<>(TheoryTerm::new, pointer, size);
+        return pointerList(TheoryTerm::new, pointer, size);
     }
 
 }

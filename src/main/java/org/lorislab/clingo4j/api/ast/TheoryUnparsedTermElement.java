@@ -19,9 +19,9 @@ import java.util.List;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_ast_theory_unparsed_term_element;
 import org.lorislab.clingo4j.util.ASTObject;
+import static org.lorislab.clingo4j.util.ASTObject.pointerList;
 import static org.lorislab.clingo4j.util.ASTObject.print;
 import static org.lorislab.clingo4j.util.ASTObject.stringArray;
-import org.lorislab.clingo4j.util.PointerList;
 
 /**
  *
@@ -65,7 +65,7 @@ public class TheoryUnparsedTermElement implements ASTObject<clingo_ast_theory_un
     }
 
     public static List<TheoryUnparsedTermElement> list(Pointer<clingo_ast_theory_unparsed_term_element> pointer, long size) {
-        return new PointerList<>(TheoryUnparsedTermElement::new, pointer, size);
+        return pointerList(TheoryUnparsedTermElement::new, pointer, size);
     }
 
 }

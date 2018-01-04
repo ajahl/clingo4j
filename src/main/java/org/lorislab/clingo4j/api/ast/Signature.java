@@ -20,7 +20,7 @@ import org.bridj.Pointer;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.api.ClingoException;
-import org.lorislab.clingo4j.util.PointerList;
+import static org.lorislab.clingo4j.util.ASTObject.pointerList;
 
 /**
  *
@@ -96,7 +96,7 @@ public class Signature {
     
     
     public static List<Signature> list(Pointer<Long> pointer, long size) {
-        return new PointerList<>(Signature::new, pointer, size);
+        return pointerList(Signature::new, pointer, size);
     }
  
 }
