@@ -1,6 +1,8 @@
 
 # Clingo4j 
 
+[![Build Status](https://travis-ci.org/lorislab/clingo4j.svg?branch=master)](https://travis-ci.org/lorislab/clingo4j)
+
 Java API for the [clingo](https://github.com/potassco/clingo)
 
 Clingo4j is distributed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
