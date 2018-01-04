@@ -41,7 +41,7 @@ public class PointerList<T, K> implements List<T> {
     }
     
     public PointerList(Pointer<K> pointer, long size) {
-        this(Pointer.allocateList(pointer.getIO(), size));
+        this(new DefaultNativeList<>(pointer, size, Pointer.ListType.FixedCapacity));
     }
 
     public PointerList(NativeList<K> list) {
