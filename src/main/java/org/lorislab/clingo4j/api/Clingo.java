@@ -114,7 +114,7 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
     public static Clingo create() throws ClingoException {
         return create(MESSAGE_LIMIT, null);
     }
-    
+
     public static Clingo create(int messageLimit, final ClingoLogger logger, String... parameters) throws ClingoException {
         Pointer<ClingoLibrary.clingo_logger_t> p_logger = null;
         if (logger != null) {
@@ -135,7 +135,7 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
         handleError(LIB.clingo_control_new(null, 0, p_logger, null, messageLimit, control), "Could not create clingo controller");
         return new Clingo(control.get());
     }
-    
+
     public Clingo(Pointer<clingo_control> pointer) throws ClingoException {
         super(pointer);
     }
@@ -397,7 +397,6 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
 
     void registerObserver(final GroundProgramObserver observer) throws ClingoException {
         registerObserver(observer, false);
-
     }
 
     void registerObserver(final GroundProgramObserver observer, boolean replace) throws ClingoException {
@@ -408,140 +407,220 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
         tmp.init_program(Pointer.getPointer(new init_program_callback() {
             @Override
             public boolean apply(boolean incremental, Pointer<?> data) {
-                observer.initProgram(incremental);
+                try {
+                    observer.initProgram(incremental);
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.begin_step(Pointer.getPointer(new begin_step_callback() {
             @Override
             public boolean apply(Pointer<?> data) {
-                observer.beginStep();
+                try {
+                    observer.beginStep();
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.end_step(Pointer.getPointer(new end_step_callback() {
             @Override
             public boolean apply(Pointer<?> data) {
-                observer.endStep();
+                try {
+                    observer.endStep();
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.rule(Pointer.getPointer(new rule_callback() {
             @Override
             public boolean apply(boolean choice, Pointer<Integer> head, long head_size, Pointer<Integer> body, long body_size, Pointer<?> data) {
-                observer.rule(choice, Pointer.allocateList(head.getIO(), head_size), Pointer.allocateList(body.getIO(), body_size));
+                try {
+                    observer.rule(choice, Pointer.allocateList(head.getIO(), head_size), Pointer.allocateList(body.getIO(), body_size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.weight_rule(Pointer.getPointer(new weight_rule_callback() {
             @Override
             public boolean apply(boolean choice, Pointer<Integer> head, long head_size, int lower_bound, Pointer<clingo_weighted_literal> body, long body_size, Pointer<?> data) {
-                observer.weightRule(choice, Pointer.allocateList(head.getIO(), head_size), lower_bound, WeightedLiteral.list(body, body_size));
+                try {
+                    observer.weightRule(choice, Pointer.allocateList(head.getIO(), head_size), lower_bound, WeightedLiteral.list(body, body_size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.minimize(Pointer.getPointer(new minimize_callback() {
             @Override
             public boolean apply(int priority, Pointer<clingo_weighted_literal> literals, long size, Pointer<?> data) {
-                observer.minimize(priority, WeightedLiteral.list(literals, size));
+                try {
+                    observer.minimize(priority, WeightedLiteral.list(literals, size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.project(Pointer.getPointer(new project_callback() {
             @Override
             public boolean apply(Pointer<Integer> atoms, long size, Pointer<?> data) {
-                observer.project(Pointer.allocateList(atoms.getIO(), size));
+                try {
+                    observer.project(Pointer.allocateList(atoms.getIO(), size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.output_atom(Pointer.getPointer(new output_atom_callback() {
             @Override
             public boolean apply(long symbol, int atom, Pointer<?> data) {
-                observer.outputAtom(new Symbol(symbol), atom);
+                try {
+                    observer.outputAtom(new Symbol(symbol), atom);
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.output_term(Pointer.getPointer(new output_term_callback() {
             @Override
             public boolean apply(long symbol, Pointer<Integer> condition, long size, Pointer<?> data) {
-                observer.outputTerm(new Symbol(symbol), Pointer.allocateList(condition.getIO(), size));
+                try {
+                    observer.outputTerm(new Symbol(symbol), Pointer.allocateList(condition.getIO(), size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.output_csp(Pointer.getPointer(new output_csp_callback() {
             @Override
             public boolean apply(long symbol, int value, Pointer<Integer> condition, long size, Pointer<?> data) {
-                observer.outputCsp(new Symbol(symbol), value, Pointer.allocateList(condition.getIO(), size));
+                try {
+                    observer.outputCsp(new Symbol(symbol), value, Pointer.allocateList(condition.getIO(), size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.external(Pointer.getPointer(new external_callback() {
             @Override
             public boolean apply(int atom, int type, Pointer<?> data) {
-                observer.external(atom, EnumValue.valueOfInt(ExternalType.class, type));
+                try {
+                    observer.external(atom, EnumValue.valueOfInt(ExternalType.class, type));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.assume(Pointer.getPointer(new assume_callback() {
             @Override
             public boolean apply(Pointer<Integer> literals, long size, Pointer<?> data) {
-                observer.assume(Pointer.allocateList(literals.getIO(), size));
+                try {
+                    observer.assume(Pointer.allocateList(literals.getIO(), size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.heuristic(Pointer.getPointer(new heuristic_callback() {
             @Override
             public boolean apply(int atom, int type, int bias, int priority, Pointer<Integer> condition, long size, Pointer<?> data) {
-                observer.heuristic(atom, EnumValue.valueOfInt(HeuristicType.class, type), bias, priority, Pointer.allocateList(condition.getIO(), size));
+                try {
+                    observer.heuristic(atom, EnumValue.valueOfInt(HeuristicType.class, type), bias, priority, Pointer.allocateList(condition.getIO(), size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.acyc_edge(Pointer.getPointer(new acyc_edge_callback() {
             @Override
             public boolean apply(int node_u, int node_v, Pointer<Integer> condition, long size, Pointer<?> data) {
-                observer.acycEdge(node_u, node_v, Pointer.allocateList(condition.getIO(), size));
+                try {
+                    observer.acycEdge(node_u, node_v, Pointer.allocateList(condition.getIO(), size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.theory_atom(Pointer.getPointer(new theory_atom_callback() {
             @Override
             public boolean apply(int atom_id_or_zero, int term_id, Pointer<Integer> elements, long size, Pointer<?> data) {
-                observer.theoryAtom(atom_id_or_zero, term_id, Pointer.allocateList(elements.getIO(), size));
+                try {
+                    observer.theoryAtom(atom_id_or_zero, term_id, Pointer.allocateList(elements.getIO(), size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.theory_atom_with_guard(Pointer.getPointer(new theory_atom_with_guard_callback() {
             @Override
             public boolean apply(int atom_id_or_zero, int term_id, Pointer<Integer> elements, long size, int operator_id, int right_hand_side_id, Pointer<?> data) {
-                observer.theoryAtomWithGuard(atom_id_or_zero, term_id, Pointer.allocateList(elements.getIO(), size), operator_id, right_hand_side_id);
+                try {
+                    observer.theoryAtomWithGuard(atom_id_or_zero, term_id, Pointer.allocateList(elements.getIO(), size), operator_id, right_hand_side_id);
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.theory_element(Pointer.getPointer(new theory_element_callback() {
             @Override
             public boolean apply(int element_id, Pointer<Integer> terms, long terms_size, Pointer<Integer> condition, long condition_size, Pointer<?> data) {
-                observer.theoryElement(element_id, Pointer.allocateList(terms.getIO(), terms_size), Pointer.allocateList(condition.getIO(), condition_size));
+                try {
+                    observer.theoryElement(element_id, Pointer.allocateList(terms.getIO(), terms_size), Pointer.allocateList(condition.getIO(), condition_size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.theory_term_compound(Pointer.getPointer(new theory_term_compound_callback() {
             @Override
             public boolean apply(int term_id, int name_id_or_type, Pointer<Integer> arguments, long size, Pointer<?> data) {
-                observer.theoryTermCompound(term_id, name_id_or_type, Pointer.allocateList(arguments.getIO(), size));
+                try {
+                    observer.theoryTermCompound(term_id, name_id_or_type, Pointer.allocateList(arguments.getIO(), size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.theory_term_number(Pointer.getPointer(new theory_term_number_callback() {
             @Override
             public boolean apply(int term_id, int number, Pointer<?> data) {
-                observer.theoryTermNumber(term_id, number);
+                try {
+                    observer.theoryTermNumber(term_id, number);
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.theory_term_string(Pointer.getPointer(new theory_term_string_callback() {
             @Override
             public boolean apply(int term_id, Pointer<Byte> name, Pointer<?> data) {
-                observer.theoryTermString(term_id, name.getCString());
+                try {
+                    observer.theoryTermString(term_id, name.getCString());
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
@@ -560,28 +639,44 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
         tmp.init(Pointer.getPointer(new init_callback() {
             @Override
             public boolean apply(Pointer<clingo_propagate_init> init, Pointer<?> data) {
-                propagator.init(new PropagateInit(init));
+                try {
+                    propagator.init(new PropagateInit(init));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.propagate(Pointer.getPointer(new propagate_callback() {
             @Override
             public boolean apply(Pointer<clingo_propagate_control> control, Pointer<Integer> changes, long size, Pointer<?> data) {
-                propagator.propagate(new PropagateControl(control), Pointer.allocateList(changes.getIO(), size));
+                try {
+                    propagator.propagate(new PropagateControl(control), Pointer.allocateList(changes.getIO(), size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.undo(Pointer.getPointer(new undo_callback() {
             @Override
             public boolean apply(Pointer<clingo_propagate_control> control, Pointer<Integer> changes, long size, Pointer<?> data) {
-                propagator.undo(new PropagateControl(control), Pointer.allocateList(changes.getIO(), size));
+                try {
+                    propagator.undo(new PropagateControl(control), Pointer.allocateList(changes.getIO(), size));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
         tmp.check(Pointer.getPointer(new check_callback() {
             @Override
             public boolean apply(Pointer<clingo_propagate_control> control, Pointer<?> data) {
-                propagator.check(new PropagateControl(control));
+                try {
+                    propagator.check(new PropagateControl(control));
+                } catch (Throwable t) {
+                    return false;
+                }
                 return true;
             }
         }));
@@ -635,8 +730,12 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
             clingo_ast_callback_t call = new clingo_ast_callback_t() {
                 @Override
                 public boolean apply(Pointer<clingo_ast_statement> stm, Pointer<?> voidPtr1) {
-                    if (stm != null && stm.get() != null) {
-                        cb.callback(new Statement(stm.get()));
+                    try {
+                        if (stm != null && stm.get() != null) {
+                            cb.callback(new Statement(stm.get()));
+                        }
+                    } catch (Throwable t) {
+                        return false;
                     }
                     return true;
                 }

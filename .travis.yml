@@ -9,5 +9,7 @@ addons:
         sources:
             - ubuntu-toolchain-r-test
         packages:
+            - build-essential
+            - aptitude
             - g++-6
             - libstdc++6
