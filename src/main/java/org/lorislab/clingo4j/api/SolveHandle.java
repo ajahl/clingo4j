@@ -15,6 +15,7 @@
  */
 package org.lorislab.clingo4j.api;
 
+import java.io.Closeable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.bridj.Pointer;
@@ -29,7 +30,7 @@ import org.lorislab.clingo4j.util.PointerObject;
  *
  * @author andrej
  */
-public class SolveHandle extends PointerObject<clingo_solve_handle> implements Iterable<Model> {
+public class SolveHandle extends PointerObject<clingo_solve_handle> implements Iterable<Model>, Closeable {
 
     public SolveHandle(Pointer<clingo_solve_handle> pointer) {
         super(pointer);
@@ -58,8 +59,11 @@ public class SolveHandle extends PointerObject<clingo_solve_handle> implements I
         return null;
     }
 
-    public void close() throws ClingoException {
-        handleError(LIB.clingo_solve_handle_close(pointer), "Error close the handle.");
+    @Override
+    public void close() {
+        if (pointer != null && pointer.getIO() != null) {
+            handleRuntimeError(LIB.clingo_solve_handle_close(pointer), "Error close the handle.");
+        }
     }
 
     @Override

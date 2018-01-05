@@ -15,9 +15,12 @@
  */
 package org.lorislab.clingo4j.api.c;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.bridj.BridJ;
 import org.bridj.Pointer;
 import org.bridj.SizeT;
+import org.junit.Assert;
 import org.junit.Test;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_control;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_model;
@@ -32,6 +35,21 @@ import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_solve_mode;
  */
 public class ControlTest {
 
+        private static final Set<String> RESULTS = new HashSet<String>() {
+        {
+            add("q(10,1)");
+            add("q(1,2)");
+            add("q(6,3)");
+            add("q(4,4)");
+            add("q(2,5)");
+            add("q(8,6)");
+            add("q(3,7)");
+            add("q(9,8)");
+            add("q(7,9)");
+            add("q(5,10)");
+        }
+    };
+        
     static {
         // add the native library directory
         BridJ.addLibraryPath("src/main/clingo");        
@@ -64,7 +82,7 @@ public class ControlTest {
             + "\n"
             + "#show q/2.";
 
-    private static final ClingoLibrary lib = new ClingoLibrary();
+    private static final ClingoLibrary LIB = new ClingoLibrary();
 
     @Test
     public void controlTest() {
@@ -83,24 +101,24 @@ public class ControlTest {
         Pointer<Integer> major = Pointer.allocateInt();
         Pointer<Integer> minor = Pointer.allocateInt();
         Pointer<Integer> revision = Pointer.allocateInt();
-        lib.clingo_version(major, minor, revision);
+        LIB.clingo_version(major, minor, revision);
         System.out.println("Clingo library version: " + major.getInt() + "." + minor.getInt() + "." + revision.getInt());
         
         // create a control object and pass command line arguments
         Pointer<Pointer<clingo_control>> control = Pointer.allocatePointer(clingo_control.class);
-        if (!lib.clingo_control_new(null, 0, null, null, 20, control)) {
+        if (!LIB.clingo_control_new(null, 0, null, null, 20, control)) {
             error(control, "Could not create controller");
         }
 
         long startTime = System.currentTimeMillis();
 
         // add a logic program to the base part
-        if (!lib.clingo_control_add(control.get(), name, null, 0, program)) {
+        if (!LIB.clingo_control_add(control.get(), name, null, 0, program)) {
             error(control, "Error add the program to controller");
         }
 
         // ground the base part
-        if (!lib.clingo_control_ground(control.get(), parts, 1, null, null)) {
+        if (!LIB.clingo_control_ground(control.get(), parts, 1, null, null)) {
             error(control, "Error ground the program");
         }
 
@@ -111,7 +129,7 @@ public class ControlTest {
         float endTime = (System.currentTimeMillis() - startTime) / 1000f;
         System.out.println("Time:" + String.format(TIME_FORMAT, endTime) + "s");
         
-        lib.clingo_control_free(control.get());
+        LIB.clingo_control_free(control.get());
     }
 
     private static boolean solve(Pointer<Pointer<clingo_control>> ctrl) {
@@ -120,7 +138,7 @@ public class ControlTest {
         Pointer<Pointer<clingo_model>> model = Pointer.allocatePointer(clingo_model.class);
 
         // get a solve handle        
-        if (!lib.clingo_control_solve(ctrl.get(), (int) clingo_solve_mode.clingo_solve_mode_yield.value, null, 0, null, null, handle)) {
+        if (!LIB.clingo_control_solve(ctrl.get(), (int) clingo_solve_mode.clingo_solve_mode_yield.value, null, 0, null, null, handle)) {
             error(ctrl, "Error execute control solve");
         }
 
@@ -128,10 +146,10 @@ public class ControlTest {
         boolean run = true;
         while (run) {
 
-            if (!lib.clingo_solve_handle_resume(handle.get())) {
+            if (!LIB.clingo_solve_handle_resume(handle.get())) {
                 error(ctrl, "Error solve handle resume");
             }
-            if (!lib.clingo_solve_handle_model(handle.get(), model)) {
+            if (!LIB.clingo_solve_handle_model(handle.get(), model)) {
                 error(ctrl, "Error solve handle model");
             }
 
@@ -145,20 +163,23 @@ public class ControlTest {
         }
 
         // close the solve handle
-        if (!lib.clingo_solve_handle_get(handle.get(), result)) {
+        if (!LIB.clingo_solve_handle_get(handle.get(), result)) {
             error(ctrl, "Error solve handle get");
         }
 
-        return lib.clingo_solve_handle_close(handle.get());
+        return LIB.clingo_solve_handle_close(handle.get());
     }
 
     private static void printModel(Pointer<Pointer<clingo_control>> ctrl, Pointer<Pointer<clingo_model>> model) {
+        
+        Set<String> result = new HashSet<>(RESULTS);
+        
         int show = (int) (clingo_show_type.clingo_show_type_shown.value);
 
         Pointer<SizeT> atoms_n = Pointer.allocateSizeT();
 
         // determine the number of (shown) symbols in the model                
-        if (!lib.clingo_model_symbols_size(model.get(), show, atoms_n)) {
+        if (!LIB.clingo_model_symbols_size(model.get(), show, atoms_n)) {
             error(ctrl, "Error create symbol size");
         }
 
@@ -166,7 +187,7 @@ public class ControlTest {
         Pointer<Long> atoms = Pointer.allocateLongs(atoms_n.getLong());
 
         // retrieve the symbols in the model
-        if (!lib.clingo_model_symbols(model.get(), show, atoms, atoms_n.getLong())) {
+        if (!LIB.clingo_model_symbols(model.get(), show, atoms, atoms_n.getLong())) {
             error(ctrl, "Error create symbol symbols");
         }
 
@@ -178,24 +199,27 @@ public class ControlTest {
 
             // determine size of the string representation of the next symbol in the model  
             Pointer<SizeT> size = Pointer.allocateSizeT();
-            lib.clingo_symbol_to_string_size(atom, size);
+            LIB.clingo_symbol_to_string_size(atom, size);
 
             // allocate required memory to hold the symbol's string
             Pointer<Byte> string = Pointer.allocateBytes(size.getLong());
 
             // retrieve the symbol's string          
-            if (!lib.clingo_symbol_to_string(atom, string, size.getLong())) {
+            if (!LIB.clingo_symbol_to_string(atom, string, size.getLong())) {
                 error(ctrl, "Error symbol to string");
             }
-            System.out.print(string.getCString());
+            String st = string.getCString();
+            
+            System.out.print(st);
+            Assert.assertTrue("Atom " + st + " does not exists in the result set", result.remove(st));
             System.out.print(" -> ");
 
             Pointer<Pointer<Long>> arguments = Pointer.allocatePointer(Long.class);
             Pointer<SizeT> arguments_size = Pointer.allocateSizeT();
-            lib.clingo_symbol_arguments(atom, arguments, arguments_size);
+            LIB.clingo_symbol_arguments(atom, arguments, arguments_size);
 
             Pointer<Pointer<Byte>> name = Pointer.allocatePointer(Byte.class);
-            lib.clingo_symbol_name(atom, name);
+            LIB.clingo_symbol_name(atom, name);
             System.out.print("name=" + name.get().getCString());
 
             System.out.print(",args=[");
@@ -204,24 +228,26 @@ public class ControlTest {
                 if (a > 0) {
                     System.out.print(",");
                 }
-                lib.clingo_symbol_number(arguments.get().get(a), t);
+                LIB.clingo_symbol_number(arguments.get().get(a), t);
                 System.out.print(t.get());
             }
             System.out.print("]");
 
             System.out.println();
         }
+        
+        Assert.assertTrue("Result set is not empty!", result.isEmpty());
     }
 
     private static void error(Pointer<Pointer<clingo_control>> ctrl, String details) {
         System.err.println(details);
-        Pointer<Byte> pmsg = lib.clingo_error_message();
+        Pointer<Byte> pmsg = LIB.clingo_error_message();
         String msg = pmsg.getCString();
 
-        lib.clingo_control_free(ctrl.get());
+        LIB.clingo_control_free(ctrl.get());
 
         System.err.println("ERROR: " + msg);
-        System.exit(lib.clingo_error_code());
+        System.exit(LIB.clingo_error_code());
     }
 
 }

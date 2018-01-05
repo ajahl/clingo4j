@@ -17,8 +17,11 @@ package org.lorislab.clingo4j.api;
 
 import org.lorislab.clingo4j.api.callback.GroundCallback;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import org.junit.Assert;
 import org.junit.Test;
 import org.lorislab.clingo4j.api.ast.Definition;
 import org.lorislab.clingo4j.api.ast.Statement;
@@ -30,8 +33,19 @@ import org.lorislab.clingo4j.api.ast.Term;
  */
 public class ClingoInjectTermsTest {
 
+    private static final Set<String> RESULTS = new HashSet<String>() {
+        {
+            add("p(23)");
+            add("p(24)");
+            add("p(42)");
+            add("p(43)");
+        }
+    };
+
     @Test
     public void controlTest() {
+
+        Set<String> result = new HashSet<>(RESULTS);
 
         Clingo.init("src/main/clingo");
 
@@ -45,7 +59,6 @@ public class ClingoInjectTermsTest {
             control.withBuilder((ProgramBuilder builder) -> {
                 Location loc = new Location("<generated>", "<generated>", 1, 1, 1, 1);
                 builder.add(new Statement(loc, new Definition("e", new Term(loc, Symbol.createNumber(24)), false)));
-                System.out.println();
             });
 
             control.add("base", "p(@c()). p(d). p(e).");
@@ -60,17 +73,21 @@ public class ClingoInjectTermsTest {
                 }
             });
 
-            Iterator<Model> iter = control.solve().iterator();
-            while (iter.hasNext()) {
-                Model model = iter.next();
-                System.out.println("Model type: " + model.type());
-                for (Symbol atom : model.symbols()) {
-                    System.out.println(atom);
+            try (SolveHandle handle = control.solve()) {
+                for (Model model : handle) {
+                    System.out.println("Model type: " + model.type());
+                    for (Symbol atom : model.symbols()) {
+                        String tmp = atom.toString();
+                        System.out.println(tmp);
+                        Assert.assertTrue("Atom " + tmp + " does not exists in the result set", result.remove(tmp));
+                    }
                 }
             }
 
         } catch (ClingoException ex) {
             System.err.println(ex.getMessage());
         }
+
+        Assert.assertTrue("Result set is not empty!", result.isEmpty());
     }
 }

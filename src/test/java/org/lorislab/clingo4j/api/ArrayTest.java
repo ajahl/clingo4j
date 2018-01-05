@@ -18,6 +18,7 @@ package org.lorislab.clingo4j.api;
 import java.util.ArrayList;
 import java.util.List;
 import org.bridj.Pointer;
+import org.junit.Assert;
 import org.junit.Test;
 import org.lorislab.clingo4j.api.ast.Definition;
 import org.lorislab.clingo4j.api.ast.Term;
@@ -35,11 +36,15 @@ public class ArrayTest {
         Clingo.init("src/main/clingo");
 
         try (Clingo control = Clingo.create()) {
+            
             Location loc = new Location("<generated>", "<generated>", 1, 1, 1, 1);
             List<Definition> elements = new ArrayList<>(1);
             elements.add(new Definition("e", new Term(loc, Symbol.createNumber(24)), false));
 
             Pointer<clingo_ast_definition> tmp = ASTObject.array(elements);
+            Assert.assertNotNull("The array pointer is null!", tmp);
+            Assert.assertNotNull("The array IO pointer is null!", tmp.getIO());
+            
         } catch (ClingoException ex) {
             ex.printStackTrace();
         }
