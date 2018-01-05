@@ -31,22 +31,22 @@ public class StatisticsMap extends Statistics implements Iterable<Statistics> {
     public StatisticsMap(Pointer<ClingoLibrary.clingo_statistic> pointer, long key) {
         super(pointer, key);
     }
-    
+
     public String getKey(int index) {
-        Pointer<Byte> name = Pointer.allocateByte();
-        handleRuntimeError(LIB.clingo_statistics_map_subkey_name(pointer, key, index, name.getReference()), "Error reading the statistic key name!");
-        return name.getCString();
+        Pointer<Pointer<Byte>> name = Pointer.allocatePointer(Byte.class);
+        handleRuntimeError(LIB.clingo_statistics_map_subkey_name(pointer, key, index, name), "Error reading the statistic key name!");
+        return name.get().getCString();
     }
-    
+
     public Statistics get(int index) {
         String name = getKey(index);
         return get(name);
     }
 
     public Iterator<String> keyIterator() {
-        
+
         final int size = size();
-        
+
         return new Iterator<String>() {
 
             private int index = 0;
@@ -65,9 +65,9 @@ public class StatisticsMap extends Statistics implements Iterable<Statistics> {
                 }
                 return null;
             }
-        };        
+        };
     }
-    
+
     public Iterator<Statistics> iterator() {
 
         final int size = size();
@@ -92,7 +92,7 @@ public class StatisticsMap extends Statistics implements Iterable<Statistics> {
             }
         };
     }
-    
+
     public int size() {
         Pointer<SizeT> size = Pointer.allocateSizeT();
         handleRuntimeError(LIB.clingo_statistics_map_size(pointer, key, size), "Error reading the statistic map size!");
@@ -103,11 +103,41 @@ public class StatisticsMap extends Statistics implements Iterable<Statistics> {
         return size() == 0;
     }
 
-    public Statistics get(Object name) {
-        Pointer<Byte> tmp = Pointer.pointerToCString((String) name);
+    public Statistics get(String name) {
+        Pointer<Byte> tmp = Pointer.pointerToCString(name);
         Pointer<Long> subkey = Pointer.allocateLong();
         handleRuntimeError(LIB.clingo_statistics_map_at(pointer, key, tmp, subkey), "Error reading the statistic item in map by" + tmp + " key!");
         return new Statistics(pointer, subkey.getLong());
     }
-    
+
+    @Override
+    public String toString() {
+        return toString("");
+    }
+
+    protected String toString(String depth) {
+        StringBuilder sb = new StringBuilder();
+
+        int size = size();
+        if (size == 0) {
+            sb.append("{}");
+        } else {
+            sb.append("{\n");
+            for (int i = 0; i < size; i++) {
+                sb.append(depth);
+                if (i > 0) {
+                    sb.append(",");
+                }
+                String name = getKey(i);
+                sb.append(name).append(":").append(toString(get(name), depth + "    "));
+                sb.append("\n");
+            }
+            if (depth.length() >= 4) {
+                depth = depth.substring(0, depth.length() - 4);
+            }
+            sb.append(depth).append("}\n");
+        }
+        return sb.toString();
+    }
+
 }

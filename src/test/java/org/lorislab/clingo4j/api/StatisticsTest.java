@@ -24,7 +24,7 @@ import org.junit.Test;
  *
  * @author andrej
  */
-public class CingloSolveIterativelyTest {
+public class StatisticsTest {
 
     private static final Set<String> RESULTS = new HashSet<String>() {
         {
@@ -58,68 +58,6 @@ public class CingloSolveIterativelyTest {
             + "#show q/2.";
 
     @Test
-    public void controlTest() {
-
-        Set<String> result = new HashSet<>(RESULTS);
-
-        Clingo.init("src/main/clingo");
-
-        try (Clingo control = Clingo.create()) {
-
-            System.out.println(control.getVersion());
-
-            control.add("base", PROGRAM);
-            control.ground("base");
-
-            for (Model model : control.solve()) {
-                System.out.println("Model type: " + model.type());
-                for (Symbol atom : model.symbols()) {
-                    String tmp = atom.toString();
-                    System.out.println(tmp);
-                    Assert.assertTrue("Atom " + tmp + " does not exists in the result set", result.remove(tmp));
-                }
-            }
-
-        } catch (ClingoException ex) {
-            System.err.println(ex.getMessage());
-        }
-
-        Assert.assertTrue("The result set is not empty!", result.isEmpty());
-    }
-
-    @Test
-    public void controlTest2() {
-
-        Set<String> result = new HashSet<>(RESULTS);
-
-        Clingo.init("src/main/clingo");
-
-        try (Clingo control = Clingo.create()) {
-
-            System.out.println(control.getVersion());
-
-            control.add("base", PROGRAM);
-            control.ground("base");
-
-            try (SolveHandle handle = control.solve()) {
-                for (Model model : handle) {
-                    System.out.println("Model type: " + model.type());
-                    for (Symbol atom : model.symbols()) {
-                        String tmp = atom.toString();
-                        System.out.println(tmp);
-                        Assert.assertTrue("Atom " + tmp + " does not exists in the result set", result.remove(tmp));
-                    }
-                }
-            }
-
-        } catch (ClingoException ex) {
-            System.err.println(ex.getMessage());
-        }
-
-        Assert.assertTrue("The result set is not empty!", result.isEmpty());
-    }
-    
-  @Test
     public void statisticsTest() {
 
         Set<String> result = new HashSet<>(RESULTS);
@@ -130,6 +68,9 @@ public class CingloSolveIterativelyTest {
 
             System.out.println(control.getVersion());
 
+            Configuration conf = control.getConfiguration();
+            conf.toMap().get("stats").setValue("1");
+
             control.add("base", PROGRAM);
             control.ground("base");
 
@@ -144,10 +85,14 @@ public class CingloSolveIterativelyTest {
                 }
             }
 
+            Statistics statistics = control.getStatistics();
+            Assert.assertNotNull("The statistics object is null!", statistics);
+            System.out.println(statistics);
+
             Assert.assertTrue("The result set is not empty!", result.isEmpty());
-            
+
         } catch (ClingoException ex) {
             System.err.println(ex.getMessage());
         }
-    }    
+    }
 }

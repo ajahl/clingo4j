@@ -46,9 +46,18 @@ public class Configuration extends PointerObject<clingo_configuration> {
     }
 
     public ConfigurationType getType() throws ClingoException {
-        Pointer<Integer> type = Pointer.allocateInt();
-        handleError(LIB.clingo_configuration_type(pointer, key, type), "Error reading the configuration type!");
-        return EnumValue.valueOfInt(ConfigurationType.class, type.getInt());
+        Pointer<Integer> tmp = Pointer.allocateInt();
+        handleError(LIB.clingo_configuration_type(pointer, key, tmp), "Error reading the configuration type!");
+        if (tmp.getInt() == 3) {
+            return ConfigurationType.VALUE;
+        }
+        if (tmp.getInt() == 5) {
+            return ConfigurationType.VALUE;
+        }
+        if (tmp.getInt() == 6) {
+            return ConfigurationType.MAP;
+        }
+        return EnumValue.valueOfInt(ConfigurationType.class, tmp.getInt());
     }
 
     public boolean isAssigned() throws ClingoException {
@@ -66,14 +75,77 @@ public class Configuration extends PointerObject<clingo_configuration> {
     }
 
     public void setValue(String value) throws ClingoException {
-        Pointer<Byte> p = Pointer.pointerToCString(value);
-        handleError(LIB.clingo_configuration_value_set(pointer, key, p), "Error settings the configuration value " + value + "!");
+        handleError(LIB.clingo_configuration_value_set(pointer, key, Pointer.pointerToCString(value)), "Error settings the configuration value " + value + "!");
     }
 
     public String getDescription() throws ClingoException {
         Pointer<Pointer<Byte>> description = Pointer.allocatePointer(Byte.class);
         handleError(LIB.clingo_configuration_description(pointer, key, description), "Error reading the configuration description!");
-        return description.getCString();
+        return description.get().getCString();
     }
 
+    public String toDescription() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(description(this, null));
+        return sb.toString();        
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(toString(this, null));
+        return sb.toString();
+    }
+
+    protected static String description(Configuration conf, ConfigurationType type) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            if (type == null) {
+                type = conf.getType();
+            }
+            if (null != type) switch (type) {
+                case MAP:
+                    sb.append(conf.toMap().toDescription());
+                    break;
+                case ARRAY:
+                    sb.append(conf.toList().toDescription());
+                    break;
+                case VALUE:
+                    sb.append(conf.getDescription());
+                    break;
+                default:
+                    break;
+            }
+        } catch (ClingoException ex) {
+            Clingo.handleRuntimeError(ex);
+        }
+        return sb.toString();
+    }
+    
+    protected static String toString(Configuration conf, ConfigurationType type) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            if (type == null) {
+                type = conf.getType();
+            }
+            switch (type) {
+                case VALUE:
+                    if (conf.isAssigned()) {
+                        sb.append(conf.getValue());
+                    } else {
+                        sb.append("null");
+                    }
+                    break;
+                case ARRAY:
+                    sb.append(conf.toList());
+                    break;
+                case MAP:
+                    sb.append(conf.toMap());
+                    break;
+            }
+        } catch (ClingoException ex) {
+            Clingo.handleRuntimeError(ex);
+        }
+        return sb.toString();
+    }
 }

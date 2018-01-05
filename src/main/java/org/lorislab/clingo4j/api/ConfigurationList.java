@@ -173,5 +173,32 @@ public class ConfigurationList extends Configuration implements List<Configurati
     public List<Configuration> subList(int fromIndex, int toIndex) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public String toDescription() {
+        StringBuilder sb = new StringBuilder();
+        int size = size();
+        for (int i=0; i<size;  i++)  {
+            if (i>0) {
+                sb.append("\n");
+            }
+            sb.append(description(get(i), null));
+        }
+        return sb.toString();
+    }
     
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        int size = size();
+        for (int i=0; i<size;  i++)  {
+            if (i>0) {
+                sb.append(",");
+            }
+            sb.append(toString(get(i), null));
+        }
+        sb.append("]");
+        return sb.toString();
+    }    
 }

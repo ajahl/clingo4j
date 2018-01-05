@@ -54,7 +54,7 @@ public class StatisticsList extends Statistics implements List<Statistics> {
 
     @Override
     public Iterator<Statistics> iterator() {
-        
+
         final int size = size();
 
         return new Iterator<Statistics>() {
@@ -178,4 +178,32 @@ public class StatisticsList extends Statistics implements List<Statistics> {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public String toString() {
+        return toString("");
+    }
+
+    protected String toString(String depth) {
+        StringBuilder sb = new StringBuilder();
+
+        int size = size();
+        if (size == 0) {
+            sb.append("[]");
+        } else {
+            sb.append("[\n");
+            for (int i = 0; i < size; i++) {
+                sb.append(depth);
+                if (i > 0) {
+                    sb.append(",");
+                }
+                sb.append(toString(get(i), depth + "    "));
+                sb.append("\n");
+            }
+            if (depth.length() >= 4) {
+                depth = depth.substring(0, depth.length() - 4);
+            }
+            sb.append(depth).append("]\n");
+        }
+        return sb.toString();
+    }
 }

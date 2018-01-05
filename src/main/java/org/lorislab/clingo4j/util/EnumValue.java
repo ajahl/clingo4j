@@ -23,20 +23,21 @@ import org.bridj.ValuedEnum;
  * @param <T>
  */
 public interface EnumValue<T extends ValuedEnum> {
-    
+
     public T getValue();
-    
+
     default int getInt() {
         return (int) getValue().value();
     }
 
     public static <T extends Enum & EnumValue> T valueOfInt(Class<T> clazz, int value) {
         T[] items = clazz.getEnumConstants();
-        for (int i=0; i<items.length; i++) {
+        for (int i = 0; i < items.length; i++) {
             if (items[i].getInt() == value) {
                 return items[i];
             }
         }
         return null;
     }
+ 
 }

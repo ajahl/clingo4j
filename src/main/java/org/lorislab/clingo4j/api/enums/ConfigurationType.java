@@ -32,8 +32,8 @@ public enum ConfigurationType implements EnumValue<clingo_configuration_type> {
     ARRAY(clingo_configuration_type_array),
     
     MAP(clingo_configuration_type_map);
-    		
-    private clingo_configuration_type type;
+   
+    private final clingo_configuration_type type;
 
     private ConfigurationType(clingo_configuration_type type) {
         this.type = type;

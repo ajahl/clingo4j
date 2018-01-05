@@ -39,7 +39,7 @@ public class Statistics extends PointerObject<clingo_statistic> {
     public StatisticsList toList() {
         return new StatisticsList(pointer, key);
     }
-    
+
     public StatisticsMap toMap() {
         return new StatisticsMap(pointer, key);
     }
@@ -60,4 +60,33 @@ public class Statistics extends PointerObject<clingo_statistic> {
         return pointer;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(toString(this, "    "));
+        return sb.toString();
+    }
+
+    protected String toString(Statistics statistics, String depth) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            StatisticsType type = statistics.getType();
+            switch (type) {
+                case VALUE:
+                    sb.append(statistics.getValue());
+                    break;
+                case ARRAY:
+                    sb.append(statistics.toList().toString(depth));
+                    break;
+                case MAP:
+                    sb.append(statistics.toMap().toString(depth));
+                    break;
+                case EMPTY:
+                    break;
+            }
+        } catch (ClingoException ex) {
+            Clingo.handleRuntimeError(ex);
+        }
+        return sb.toString();
+    }    
 }
