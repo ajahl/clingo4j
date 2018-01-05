@@ -16,6 +16,7 @@
 package org.lorislab.clingo4j.util;
 
 import java.util.List;
+import org.bridj.NativeList;
 import org.bridj.Pointer;
 
 /**
@@ -36,15 +37,14 @@ public class Struct<T> {
     }
 
     public static <T, E extends Struct<T>> Pointer<T> array(List<E> data, Class<T> clazz) {
-        Pointer<T> result = null;
         if (data != null && !data.isEmpty()) {
-            result = Pointer.allocateArray(clazz, data.size());
-            Pointer<T> iter = result;
-            for (E item : data) {
-                iter.set(item.getStructObject());
-                iter = iter.next();
+            NativeList<T> tmp = Pointer.allocateList(clazz, data.size());
+            int size = data.size();
+            for (int i = 0; i < size; i++) {
+                tmp.add(data.get(i).structObject);
             }
+            return (Pointer<T>) tmp.getPointer();
         }
-        return result;
+        return null;
     }
 }

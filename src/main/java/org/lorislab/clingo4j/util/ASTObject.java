@@ -39,7 +39,8 @@ public interface ASTObject<T extends NativeObject> {
 
     default Class<T> getNativeClass() {
         Type[] genericInterfaces = getClass().getGenericInterfaces();
-        for (Type t : genericInterfaces) {
+        for (int i=0; i<genericInterfaces.length; i++) {
+            Type t = genericInterfaces[i];
             if (t instanceof ParameterizedType) {
                 Type rt = ((ParameterizedType) t).getRawType();
                 if (rt.equals(ASTObject.class)) {
@@ -105,7 +106,9 @@ public interface ASTObject<T extends NativeObject> {
     public static <T extends NativeObject, E extends ASTObject<T>> Pointer<T> array(List<E> data, Class<T> clazz) {
         if (data != null && !data.isEmpty()) {
             NativeList<T> tmp = Pointer.allocateList(clazz, data.size());
-            data.forEach(t -> tmp.add(t.create()));
+            for (int i=0; i<data.size(); i++) {
+                tmp.add(data.get(i).create());
+            }
             return (Pointer<T>) tmp.getPointer();
         }
         return null;

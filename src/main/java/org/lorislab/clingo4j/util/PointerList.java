@@ -41,7 +41,7 @@ public class PointerList<T, K> implements List<T> {
     }
     
     public PointerList(Pointer<K> pointer, long size) {
-        this(new FixedNativeList<>(pointer, size));
+        this(new UnmodifiableNativeList<>(pointer, size));
     }
 
     public PointerList(NativeList<K> list) {
@@ -169,13 +169,13 @@ public class PointerList<T, K> implements List<T> {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         boolean comma = false;
-        for (T my : this) {
+        for (int i=0; i<size(); i++) {
             if (comma) {
                 sb.append(", ");
             } else {
                 sb.append(" ");
             }
-            sb.append(my);
+            sb.append(get(i));
             comma = true;
         }
         sb.append(" }");

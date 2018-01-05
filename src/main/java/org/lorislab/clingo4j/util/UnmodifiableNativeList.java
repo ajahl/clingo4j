@@ -26,7 +26,7 @@ import static org.bridj.Pointer.allocate;
  *
  * @author andrej
  */
-public class FixedNativeList<T> extends AbstractList<T> implements NativeList<T>, RandomAccess {
+public class UnmodifiableNativeList<T> extends AbstractList<T> implements NativeList<T>, RandomAccess {
 
     private volatile Pointer<T> pointer;
     private volatile long size;
@@ -38,7 +38,7 @@ public class FixedNativeList<T> extends AbstractList<T> implements NativeList<T>
      * @param pointer
      * @param size
      */
-    public FixedNativeList(Pointer<T> pointer, long size) {
+    public UnmodifiableNativeList(Pointer<T> pointer, long size) {
         if (pointer == null ) {
             throw new IllegalArgumentException("Cannot build a FixedNativeList for pointer " + pointer + ".");
         }
@@ -65,9 +65,9 @@ public class FixedNativeList<T> extends AbstractList<T> implements NativeList<T>
     }
 
     private long indexOf(Object o, boolean last) {
-        Pointer<T> needle = allocate(pointer.getIO());
-        needle.set((T) o);
-        Pointer<T> occurrence = last ? pointer.findLast(needle) : pointer.find(needle);
+        Pointer<T> tmp = allocate(pointer.getIO());
+        tmp.set((T) o);
+        Pointer<T> occurrence = last ? pointer.findLast(tmp) : pointer.find(tmp);
         if (occurrence == null) {
             return -1;
         }

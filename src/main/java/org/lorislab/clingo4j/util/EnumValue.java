@@ -31,9 +31,10 @@ public interface EnumValue<T extends ValuedEnum> {
     }
 
     public static <T extends Enum & EnumValue> T valueOfInt(Class<T> clazz, int value) {
-        for (T v : clazz.getEnumConstants()) {
-            if (v.getInt() == value) {
-                return v;
+        T[] items = clazz.getEnumConstants();
+        for (int i=0; i<items.length; i++) {
+            if (items[i].getInt() == value) {
+                return items[i];
             }
         }
         return null;

@@ -60,16 +60,15 @@ public abstract class PointerObject<T> {
     }    
     
     public static <T> Pointer<T> array(List<T> data, Class<T> clazz) {
-        Pointer<T> result = null;
         if (data != null && !data.isEmpty()) {
-            result = Pointer.allocateArray(clazz, data.size());
-            Pointer<T> iter = result;
-            for (T item : data) {
-                iter.set(item);
-                iter = iter.next();
+            NativeList<T> tmp = Pointer.allocateList(clazz, data.size());
+            int size = data.size();
+            for (int i=0; i<size; i++) {
+                tmp.add(data.get(i));
             }
+            return (Pointer<T>) tmp.getPointer();
         }
-        return result;
+        return null;
     }    
     
     protected static int size(List data) {
