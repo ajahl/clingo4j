@@ -5,6 +5,8 @@ services:
   
 before_install:
     - docker pull lorislab/clingo4j-tests
+    - docker pull lorislab/clingo4j-tests:centos7
     
 script:
     - docker run lorislab/clingo4j-tests
+    - docker run lorislab/clingo4j-tests:centos7
