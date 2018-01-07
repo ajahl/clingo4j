@@ -29,8 +29,6 @@ import org.lorislab.clingo4j.util.PointerObject;
  */
 public class Configuration extends PointerObject<clingo_configuration> {
 
-    protected static final String DEPTH_SPACE = "    ";
-    
     protected final int key;
 
     public Configuration(Pointer<clingo_configuration> pointer, int key) {
