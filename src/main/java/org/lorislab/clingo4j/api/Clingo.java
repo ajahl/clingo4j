@@ -31,6 +31,8 @@ import java.util.List;
 import org.bridj.BridJ;
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Statement;
+import org.lorislab.clingo4j.api.ast.enums.SolveEventType;
+import org.lorislab.clingo4j.api.ast.enums.SolveMode;
 import org.lorislab.clingo4j.api.c.ClingoLibrary;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_ast_callback_t;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_backend;
@@ -239,17 +241,16 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
     }
 
     public SolveHandle solve() throws ClingoException {
-        return solve(null, false, true);
+        return solve(null, SolveMode.YIELD);
     }
 
-    public SolveHandle solve(SolveEventHandler handler, boolean asynchronous, boolean yield) throws ClingoException {
+    public SolveHandle solve(SolveEventHandler handler, SolveMode ... modes) throws ClingoException {
 
         int mode = 0;
-        if (asynchronous) {
-            mode |= (int) clingo_solve_mode.clingo_solve_mode_async.value;
-        }
-        if (yield) {
-            mode |= (int) clingo_solve_mode.clingo_solve_mode_yield.value;
+        if (modes != null && modes.length > 0) {
+            for (int i=0; i<modes.length; i++) {
+                mode |= modes[i].getInt();
+            }
         }
 
         Pointer<clingo_solve_event_callback_t> p_event = null;
@@ -257,16 +258,14 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
             clingo_solve_event_callback_t event = new clingo_solve_event_callback_t() {
                 @Override
                 public boolean apply(int type, Pointer<?> event, Pointer<?> data, Pointer<Boolean> goon) {
-
-                    switch (type) {
-                        //clingo_solve_event_type_model
-                        case 0:
+                    SolveEventType t = EnumValue.valueOfInt(SolveEventType.class, type);
+                    switch (t) {
+                        case MODEL:
                             Model model = new Model((Pointer<clingo_model>) event);
                             boolean tmp = handler.onModel(model);
                             goon.set(tmp);
                             break;
-                        //clingo_solve_event_type_finish
-                        case 1:
+                        case FINISH:
                             Pointer<Integer> p_event = (Pointer<Integer>) event;
                             handler.onFinish(new SolveResult(p_event.get()));
                             goon.set(true);
