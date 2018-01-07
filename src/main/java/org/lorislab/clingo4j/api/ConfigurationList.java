@@ -30,7 +30,7 @@ import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
  * @author andrej
  */
 public class ConfigurationList extends Configuration implements List<Configuration> {
-    
+
     public ConfigurationList(Pointer<clingo_configuration> pointer, int key) {
         super(pointer, key);
     }
@@ -40,20 +40,20 @@ public class ConfigurationList extends Configuration implements List<Configurati
         Pointer<SizeT> size = Pointer.allocateSizeT();
         handleRuntimeError(LIB.clingo_configuration_array_size(pointer, key, size), "Error reading the configuration array size!");
         return size.getInt();
-    }    
-    
+    }
+
     @Override
     public boolean isEmpty() {
         return size() == 0;
     }
-    
+
     @Override
     public Configuration get(int index) {
         Pointer<Integer> subkey = Pointer.allocateInt();
         handleRuntimeError(LIB.clingo_configuration_array_at(pointer, key, index, subkey), "Error reading the configuration item in array at " + index + " position!");
         return new Configuration(pointer, subkey.getInt());
-    }  
-    
+    }
+
     public Iterator<Configuration> iterator() {
 
         final int size = size();
@@ -78,7 +78,7 @@ public class ConfigurationList extends Configuration implements List<Configurati
             }
         };
     }
-    
+
     @Override
     public boolean contains(Object o) {
         throw new UnsupportedOperationException();
@@ -178,27 +178,31 @@ public class ConfigurationList extends Configuration implements List<Configurati
     public String toDescription() {
         StringBuilder sb = new StringBuilder();
         int size = size();
-        for (int i=0; i<size;  i++)  {
-            if (i>0) {
+        for (int i = 0; i < size; i++) {
+            if (i > 0) {
                 sb.append("\n");
             }
-            sb.append(description(get(i), null));
+            sb.append(description(get(i)));
         }
         return sb.toString();
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("[");
         int size = size();
-        for (int i=0; i<size;  i++)  {
-            if (i>0) {
-                sb.append(",");
+        if (size == 0) {
+            sb.append("[]");
+        } else {
+            sb.append("[");
+            for (int i = 0; i < size; i++) {
+                if (i > 0) {
+                    sb.append(",");
+                }
+                sb.append(toString(get(i)));
             }
-            sb.append(toString(get(i), null));
+            sb.append("]");
         }
-        sb.append("]");
         return sb.toString();
-    }    
+    }
 }

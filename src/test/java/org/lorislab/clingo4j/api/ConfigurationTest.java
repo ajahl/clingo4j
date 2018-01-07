@@ -39,10 +39,29 @@ public class ConfigurationTest {
             conf.toMap().get("stats").setValue("1");
             System.out.println(conf);
             System.out.println();
-            System.out.println(conf.toDescription());
 
         } catch (ClingoException ex) {
             System.err.println(ex.getMessage());
         }
     }
+    
+    @Test
+    public void configurationDescriptionTest() {
+
+        Clingo.init("src/main/clingo");
+
+        try (Clingo control = Clingo.create()) {
+
+            System.out.println(control.getVersion());
+
+            Configuration conf = control.getConfiguration();
+            Assert.assertNotNull("Configuration is null!", conf);
+            
+            conf.toMap().get("stats").setValue("1");
+            System.out.println(conf.toDescription());
+
+        } catch (ClingoException ex) {
+            System.err.println(ex.getMessage());
+        }
+    }    
 }

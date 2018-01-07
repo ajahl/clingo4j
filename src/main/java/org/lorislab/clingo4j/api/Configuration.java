@@ -22,7 +22,6 @@ import static org.lorislab.clingo4j.api.Clingo.LIB;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration;
 import static org.lorislab.clingo4j.api.Clingo.handleError;
 import org.lorislab.clingo4j.util.PointerObject;
-import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
@@ -30,6 +29,8 @@ import org.lorislab.clingo4j.util.EnumValue;
  */
 public class Configuration extends PointerObject<clingo_configuration> {
 
+    protected static final String DEPTH_SPACE = "    ";
+    
     protected final int key;
 
     public Configuration(Pointer<clingo_configuration> pointer, int key) {
@@ -45,19 +46,22 @@ public class Configuration extends PointerObject<clingo_configuration> {
         return new ConfigurationList(pointer, key);
     }
 
-    public ConfigurationType getType() throws ClingoException {
+    public int getType() throws ClingoException {
         Pointer<Integer> tmp = Pointer.allocateInt();
         handleError(LIB.clingo_configuration_type(pointer, key, tmp), "Error reading the configuration type!");
-        if (tmp.getInt() == 3) {
-            return ConfigurationType.VALUE;
-        }
-        if (tmp.getInt() == 5) {
-            return ConfigurationType.VALUE;
-        }
-        if (tmp.getInt() == 6) {
-            return ConfigurationType.MAP;
-        }
-        return EnumValue.valueOfInt(ConfigurationType.class, tmp.getInt());
+        return tmp.getInt();
+    }
+
+    public boolean isValue() throws ClingoException {
+        return (getType() & ConfigurationType.VALUE.getInt()) != 0;
+    }
+
+    public boolean isMap() throws ClingoException {
+        return (getType() & ConfigurationType.MAP.getInt()) != 0;
+    }
+
+    public boolean isList() throws ClingoException {
+        return (getType() & ConfigurationType.ARRAY.getInt()) != 0;
     }
 
     public boolean isAssigned() throws ClingoException {
@@ -69,7 +73,7 @@ public class Configuration extends PointerObject<clingo_configuration> {
     public String getValue() throws ClingoException {
         Pointer<SizeT> size = Pointer.allocateSizeT();
         handleError(LIB.clingo_configuration_value_get_size(pointer, key, size), "Error reading the configuration value size!");
-        Pointer<Byte> value = Pointer.allocateByte();
+        Pointer<Byte> value = Pointer.allocateBytes(size.getInt());
         handleError(LIB.clingo_configuration_value_get(pointer, key, value, size.getInt()), "Error reading the configuration value!");
         return value.getCString();
     }
@@ -86,62 +90,42 @@ public class Configuration extends PointerObject<clingo_configuration> {
 
     public String toDescription() {
         StringBuilder sb = new StringBuilder();
-        sb.append(description(this, null));
-        return sb.toString();        
-    }
-    
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(toString(this, null));
+        sb.append(description(this));
         return sb.toString();
     }
 
-    protected static String description(Configuration conf, ConfigurationType type) {
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(toString(this));
+        return sb.toString();
+    }
+
+    protected static String description(Configuration conf) {
         StringBuilder sb = new StringBuilder();
         try {
-            if (type == null) {
-                type = conf.getType();
-            }
-            if (null != type) switch (type) {
-                case MAP:
-                    sb.append(conf.toMap().toDescription());
-                    break;
-                case ARRAY:
-                    sb.append(conf.toList().toDescription());
-                    break;
-                case VALUE:
-                    sb.append(conf.getDescription());
-                    break;
-                default:
-                    break;
+            if (conf.isValue() && conf.isAssigned()) {
+                sb.append(conf.getDescription());
+            } else if (conf.isMap()) {
+                sb.append(conf.toMap().toDescription());
+            } else if (conf.isList()) {
+                sb.append(conf.toList().toDescription());
             }
         } catch (ClingoException ex) {
             Clingo.handleRuntimeError(ex);
         }
         return sb.toString();
     }
-    
-    protected static String toString(Configuration conf, ConfigurationType type) {
+
+    protected static String toString(Configuration conf) {
         StringBuilder sb = new StringBuilder();
         try {
-            if (type == null) {
-                type = conf.getType();
-            }
-            switch (type) {
-                case VALUE:
-                    if (conf.isAssigned()) {
-                        sb.append(conf.getValue());
-                    } else {
-                        sb.append("null");
-                    }
-                    break;
-                case ARRAY:
-                    sb.append(conf.toList());
-                    break;
-                case MAP:
-                    sb.append(conf.toMap());
-                    break;
+            if (conf.isValue() && conf.isAssigned()) {
+                sb.append('"').append(conf.getValue()).append('"');
+            } else if (conf.isMap()) {
+                sb.append(conf.toMap());
+            } else if (conf.isList()) {
+                sb.append(conf.toList());
             }
         } catch (ClingoException ex) {
             Clingo.handleRuntimeError(ex);

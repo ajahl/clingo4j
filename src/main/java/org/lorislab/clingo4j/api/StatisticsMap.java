@@ -112,30 +112,20 @@ public class StatisticsMap extends Statistics implements Iterable<Statistics> {
 
     @Override
     public String toString() {
-        return toString("");
-    }
-
-    protected String toString(String depth) {
         StringBuilder sb = new StringBuilder();
-
         int size = size();
         if (size == 0) {
             sb.append("{}");
         } else {
-            sb.append("{\n");
+            sb.append("{");
             for (int i = 0; i < size; i++) {
-                sb.append(depth);
                 if (i > 0) {
                     sb.append(",");
                 }
                 String name = getKey(i);
-                sb.append(name).append(":").append(toString(get(name), depth + "    "));
-                sb.append("\n");
+                sb.append('"').append(name).append('"').append(":").append(toString(get(name)));
             }
-            if (depth.length() >= 4) {
-                depth = depth.substring(0, depth.length() - 4);
-            }
-            sb.append(depth).append("}\n");
+            sb.append("}");
         }
         return sb.toString();
     }

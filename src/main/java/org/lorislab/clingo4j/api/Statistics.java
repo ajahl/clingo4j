@@ -63,23 +63,23 @@ public class Statistics extends PointerObject<clingo_statistic> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(toString(this, "    "));
+        sb.append(toString(this));
         return sb.toString();
     }
 
-    protected String toString(Statistics statistics, String depth) {
+    protected static String toString(Statistics statistics) {
         StringBuilder sb = new StringBuilder();
         try {
             StatisticsType type = statistics.getType();
             switch (type) {
                 case VALUE:
-                    sb.append(statistics.getValue());
+                    sb.append('"').append(statistics.getValue()).append('"');
                     break;
                 case ARRAY:
-                    sb.append(statistics.toList().toString(depth));
+                    sb.append(statistics.toList());
                     break;
                 case MAP:
-                    sb.append(statistics.toMap().toString(depth));
+                    sb.append(statistics.toMap());
                     break;
                 case EMPTY:
                     break;
