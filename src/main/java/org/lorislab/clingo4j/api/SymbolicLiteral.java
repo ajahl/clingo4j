@@ -40,7 +40,7 @@ public class SymbolicLiteral {
         return !positive;
     }
 
-    public Symbol symbol() {
+    public Symbol getSymbol() {
         return symbol;
     }
 
@@ -57,7 +57,7 @@ public class SymbolicLiteral {
         if (isNegative()) {
             sb.append("~");
         }
-        sb.append(symbol());
+        sb.append(getSymbol());
         return sb.toString();
     }
 

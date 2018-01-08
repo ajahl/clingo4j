@@ -35,7 +35,7 @@ public class PropagateInit extends PointerObject<clingo_propagate_init> {
         super(pointer);
     }
 
-    public int solverLiteral(int lit) throws ClingoException {
+    public int initSolverLiteral(int lit) throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_propagate_init_solver_literal(pointer, lit, ret), "Error reading the progagete init solver literal!");
         return ret.getInt();
@@ -45,17 +45,17 @@ public class PropagateInit extends PointerObject<clingo_propagate_init> {
         handleError(LIB.clingo_propagate_init_add_watch(pointer, lit), "Error add the progagete init watch!");
     }
 
-    public int numberOfThreads() {
+    public int getNumberOfThreads() {
         return LIB.clingo_propagate_init_number_of_threads(pointer);
     }
 
-    public SymbolicAtoms symbolicAtoms() throws ClingoException {
+    public SymbolicAtoms getSymbolicAtoms() throws ClingoException {
         Pointer<Pointer<clingo_symbolic_atoms>> ret = Pointer.allocatePointer(clingo_symbolic_atoms.class);
         handleError(LIB.clingo_propagate_init_symbolic_atoms(pointer, ret), "Error reading the progagete init symbolic atoms!");
         return new SymbolicAtoms(ret.get());
     }
 
-    public TheoryAtoms theoryAtoms() throws ClingoException {
+    public TheoryAtoms getTheoryAtoms() throws ClingoException {
         Pointer<Pointer<clingo_theory_atoms>> ret = Pointer.allocatePointer(clingo_theory_atoms.class);
         handleError(LIB.clingo_propagate_init_theory_atoms(pointer, ret), "Error reading the progagete init theory atoms!");
         return new TheoryAtoms(ret.get());

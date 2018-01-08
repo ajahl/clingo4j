@@ -15,7 +15,6 @@
  */
 package org.lorislab.clingo4j.util;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -29,7 +28,7 @@ import org.bridj.Pointer;
  * @param <T>
  * @param <K>
  */
-public class PointerList<T, K> implements List<T> {
+public class PointerList<T, K> implements UnmodifiableList<T> {
 
     private  final NativeList<K> list;
     
@@ -93,16 +92,6 @@ public class PointerList<T, K> implements List<T> {
     }
 
     @Override
-    public Object[] toArray() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public int indexOf(Object o) {
         return list.indexOf(o);
     }
@@ -154,12 +143,12 @@ public class PointerList<T, K> implements List<T> {
 
             @Override
             public void set(T e) {
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("This list is unmodifiable");
             }
 
             @Override
             public void add(T e) {
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("This list is unmodifiable");
             }
         };
     }
@@ -180,67 +169,6 @@ public class PointerList<T, K> implements List<T> {
         }
         sb.append(" }");
         return sb.toString();
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean add(T e) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends T> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean addAll(int index, Collection<? extends T> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void clear() {
-        list.clear();
-    }
-
-    @Override
-    public T set(int index, T element) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void add(int index, T element) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public T remove(int index) {
-        K tmp = list.remove(index);
-        return getItem(tmp);
     }
 
     @Override
@@ -285,12 +213,12 @@ public class PointerList<T, K> implements List<T> {
 
             @Override
             public void set(T e) {
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("This list is unmodifiable");
             }
 
             @Override
             public void add(T e) {
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("This list is unmodifiable");
             }
         };
     }

@@ -33,11 +33,11 @@ public class Signature {
     public Signature(long pointer) {
         this.pointer = pointer;
     }
-    
+
     public Signature(String name, int arity, boolean positive) throws ClingoException {
-       Pointer<Long> tmp = Pointer.allocateLong();
-       handleError(LIB.clingo_signature_create(Pointer.pointerToCString(name), arity, positive, tmp), "Error creating the signature!");
-       pointer = tmp.get();
+        Pointer<Long> tmp = Pointer.allocateLong();
+        handleError(LIB.clingo_signature_create(Pointer.pointerToCString(name), arity, positive, tmp), "Error creating the signature!");
+        pointer = tmp.get();
     }
 
     public long getPointer() {
@@ -73,30 +73,29 @@ public class Signature {
     public boolean isEqual(Signature s) {
         return LIB.clingo_signature_is_equal_to(pointer, s.pointer);
     }
-    
+
     public boolean isNotEqual(Signature s) {
         return !isEqual(s);
     }
-    
+
     public boolean isLessThan(Signature s) {
         return LIB.clingo_signature_is_less_than(pointer, s.pointer);
     }
-    
+
     public boolean isLessEqualThan(Signature s) {
         return !LIB.clingo_signature_is_less_than(s.pointer, pointer);
     }
-    
+
     public boolean isMoreThan(Signature s) {
         return LIB.clingo_signature_is_less_than(s.pointer, pointer);
     }
-    
+
     public boolean isMoreEqualThan(Signature s) {
         return !LIB.clingo_signature_is_less_than(pointer, s.pointer);
     }
-    
-    
+
     public static List<Signature> list(Pointer<Long> pointer, long size) {
         return pointerList(Signature::new, pointer, size);
     }
- 
+
 }

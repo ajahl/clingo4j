@@ -23,11 +23,11 @@ import org.lorislab.clingo4j.api.c.clingo_ast_literal;
  *
  * @author Andrej Petras
  */
-public class Boolean implements LiteralData {
+public class BooleanLiteral implements LiteralData {
     
     private final boolean value;
 
-    public Boolean(boolean value) {
+    public BooleanLiteral(boolean value) {
         this.value = value;
     }
 

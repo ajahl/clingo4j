@@ -37,7 +37,7 @@ public class Assignment extends PointerObject<clingo_assignment> {
         return LIB.clingo_assignment_has_conflict(pointer);
     }
 
-    public int decisionLevel() {
+    public int getDecisionLevel() {
         return LIB.clingo_assignment_decision_level(pointer);
     }
 
@@ -45,19 +45,19 @@ public class Assignment extends PointerObject<clingo_assignment> {
         return LIB.clingo_assignment_has_literal(pointer, literal);
     }
 
-    public TruthValue truthValue(int literal) throws ClingoException {
+    public TruthValue getTruthValue(int literal) throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_assignment_truth_value(pointer, literal, ret), "Error reading the assignment truth value!");
         return EnumValue.valueOfInt(TruthValue.class, ret.getInt());
     }
 
-    public int level(int lit) throws ClingoException {
+    public int getLevel(int lit) throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_assignment_level(pointer, lit, ret), "Error reading the assignment level!");
         return ret.getInt();
     }
 
-    public int decision(int level) throws ClingoException {
+    public int getDecision(int level) throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_assignment_decision(pointer, level, ret), "Error reading the assignment decision!");
         return ret.getInt();
@@ -81,11 +81,11 @@ public class Assignment extends PointerObject<clingo_assignment> {
         return ret.get();
     }
 
-    public long size() {
+    public long getSize() {
         return LIB.clingo_assignment_size(pointer);
     }
 
-    public long maxSize() {
+    public long getMaxSize() {
         return LIB.clingo_assignment_max_size(pointer);
     }
 

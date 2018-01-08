@@ -72,8 +72,8 @@ public class CingloSolveIterativelyTest {
             control.ground("base");
 
             for (Model model : control.solve()) {
-                System.out.println("Model type: " + model.type());
-                for (Symbol atom : model.symbols()) {
+                System.out.println("Model type: " + model.getType());
+                for (Symbol atom : model.getSymbols()) {
                     String tmp = atom.toString();
                     System.out.println(tmp);
                     Assert.assertTrue("Atom " + tmp + " does not exists in the result set", result.remove(tmp));
@@ -103,8 +103,8 @@ public class CingloSolveIterativelyTest {
 
             try (SolveHandle handle = control.solve()) {
                 for (Model model : handle) {
-                    System.out.println("Model type: " + model.type());
-                    for (Symbol atom : model.symbols()) {
+                    System.out.println("Model type: " + model.getType());
+                    for (Symbol atom : model.getSymbols()) {
                         String tmp = atom.toString();
                         System.out.println(tmp);
                         Assert.assertTrue("Atom " + tmp + " does not exists in the result set", result.remove(tmp));
@@ -135,8 +135,8 @@ public class CingloSolveIterativelyTest {
 
             try (SolveHandle handle = control.solve()) {
                 for (Model model : handle) {
-                    System.out.println("Model type: " + model.type());
-                    for (Symbol atom : model.symbols()) {
+                    System.out.println("Model type: " + model.getType());
+                    for (Symbol atom : model.getSymbols()) {
                         String tmp = atom.toString();
                         System.out.println(tmp);
                         Assert.assertTrue("Atom " + tmp + " does not exists in the result set", result.remove(tmp));

@@ -41,14 +41,14 @@ public class TheoryAtom extends PointerObject<clingo_theory_atoms> {
         return id;
     }
 
-    public List<TheoryElement> elements() throws ClingoException {
+    public List<TheoryElement> getElements() throws ClingoException {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> n = Pointer.allocateSizeT();
         handleError(LIB.clingo_theory_atoms_atom_elements(pointer, id, ret, n), "Error reading the theory atom elements!");
         return TheoryElement.list(pointer, ret.get(), n.getInt());
     }
 
-    public TheoryTerm term() throws ClingoException {
+    public TheoryTerm getTerm() throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_theory_atoms_atom_term(pointer, id, ret), "Error reading the theory atom term!");
         return new TheoryTerm(pointer, ret.getInt());
@@ -60,13 +60,13 @@ public class TheoryAtom extends PointerObject<clingo_theory_atoms> {
         return ret.get();
     }
 
-    public int literal() throws ClingoException {
+    public int getLiteral() throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_theory_atoms_atom_literal(pointer, id, ret), "Error reading the theory atom literal!");
         return ret.getInt();
     }
 
-    public TheoryAtomGuard guard() throws ClingoException {
+    public TheoryAtomGuard getGuard() throws ClingoException {
         Pointer<Pointer<Byte>> name = Pointer.allocatePointer(Byte.class);
         Pointer<Integer> term = Pointer.allocateInt();
         handleError(LIB.clingo_theory_atoms_atom_guard(pointer, id, name, term), "Error reading the theory atom guard!");

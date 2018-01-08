@@ -37,11 +37,11 @@ public class WeightedLiteral extends Struct<clingo_weighted_literal> {
         this.structObject.literal(literal);
     }
 
-    public int weight() {
+    public int getWeight() {
         return structObject.weight();
     }
     
-    public int literal() {
+    public int getLiteral() {
         return structObject.literal();
     }
 

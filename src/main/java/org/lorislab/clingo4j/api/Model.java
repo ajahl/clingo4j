@@ -38,17 +38,17 @@ public class Model extends PointerObject<clingo_model>{
         super(pointer);
     }
 
-    public ModelType type() throws ClingoException {
+    public ModelType getType() throws ClingoException {
         Pointer<Integer> type = Pointer.allocateInt();
         handleError(LIB.clingo_model_type(pointer, type), "Error reading the model type");
         return EnumValue.valueOfInt(ModelType.class, type.get());
     }
 
-    public List<Symbol> symbols() throws ClingoException {
-        return symbols(ShowType.SHOWN);
+    public List<Symbol> getSymbols() throws ClingoException {
+        return getSymbols(ShowType.SHOWN);
     }
 
-    public List<Symbol> symbols(ShowType type) throws ClingoException {
+    public List<Symbol> getSymbols(ShowType type) throws ClingoException {
         List<Symbol> result = null;
 
         // determine the number of (shown) symbols in the model    
@@ -73,7 +73,7 @@ public class Model extends PointerObject<clingo_model>{
         return ret.get();
     }
 
-    public List<Long> cost() throws ClingoException {
+    public List<Long> getCost() throws ClingoException {
         Pointer<SizeT> n = Pointer.allocateSizeT();
         handleError(LIB.clingo_model_cost_size(pointer, n), "Error reading model cost size!");
         Pointer<Long> ret = Pointer.allocateLongs(n.getLong());
@@ -81,25 +81,25 @@ public class Model extends PointerObject<clingo_model>{
         return ret.asList();
     }
 
-    public long number() throws ClingoException {
+    public long getNumber() throws ClingoException {
         Pointer<Long> ret = Pointer.allocateLong();
         handleError(LIB.clingo_model_number(pointer, ret), "Error reading the model number!");
         return ret.get();
     }
 
-    public boolean optimalityProven() throws ClingoException {
+    public boolean getOptimalityProven() throws ClingoException {
         Pointer<Boolean> ret = Pointer.allocateBoolean();
         handleError(LIB.clingo_model_optimality_proven(pointer, ret), "Error reading the model optimality provden!");
         return ret.get();
     }
 
-    public SolveControl context() throws ClingoException {
+    public SolveControl getContext() throws ClingoException {
         Pointer<Pointer<clingo_solve_control>> ret = Pointer.allocatePointer(clingo_solve_control.class);
         handleError(LIB.clingo_model_context(pointer,  ret), "Error reading the model solve control!");
         return new SolveControl(ret.get());
     }
 
-    public int threadId() throws ClingoException {
+    public int getThreadId() throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_model_thread_id(pointer, ret), "Error reading the model thread id!");
         return ret.get();
@@ -108,7 +108,7 @@ public class Model extends PointerObject<clingo_model>{
     @Override
     public String toString() {
         try {
-            List<Symbol> tmp = symbols();
+            List<Symbol> tmp = Model.this.getSymbols();
             return tmp.toString();
         } catch (ClingoException ex) {
             throw new RuntimeException(ex.getMessage(), ex);

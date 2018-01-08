@@ -50,7 +50,7 @@ public class SolveHandle extends PointerObject<clingo_solve_handle> implements I
         handleError(LIB.clingo_solve_handle_resume(pointer), "Error solve handle resume");
     }
 
-    public Model model() throws ClingoException {
+    public Model getModel() throws ClingoException {
         Pointer<Pointer<ClingoLibrary.clingo_model>> model = Pointer.allocatePointer(ClingoLibrary.clingo_model.class);
         handleError(LIB.clingo_solve_handle_model(pointer, model), "Error solve handle model");
         if (model.get() != null) {
@@ -102,10 +102,10 @@ public class SolveHandle extends PointerObject<clingo_solve_handle> implements I
 
     public Model next() throws ClingoException {
         resume();
-        return model();
+        return getModel();
     }
 
-    public SolveResult get() throws ClingoException {
+    public SolveResult getSolveResult() throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_solve_handle_get(pointer, ret), "Solve handle get solve result!");
         return new SolveResult(ret.getInt());

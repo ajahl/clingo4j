@@ -42,21 +42,21 @@ public class TheoryElement extends PointerObject<clingo_theory_atoms> {
         return id;
     }
 
-    public List<TheoryTerm> tuple() throws ClingoException {
+    public List<TheoryTerm> getTuple() throws ClingoException {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> size = Pointer.allocateSizeT();
         handleError(LIB.clingo_theory_atoms_element_tuple(pointer, id, ret, size), "Error reading theory element tuple!");
         return TheoryTerm.list(pointer, ret.get(), size.getInt());
     }
 
-    public List<Integer> condition() throws ClingoException {
+    public List<Integer> getCondition() throws ClingoException {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> size = Pointer.allocateSizeT();
         handleError(LIB.clingo_theory_atoms_element_condition(pointer, id, ret, size), "Error reading the theory elements condition!");
         return Pointer.allocateList(ret.get().getIO(), size.getInt());
     }
 
-    public int conditionId() throws ClingoException {
+    public int getConditionId() throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_theory_atoms_element_condition_id(pointer, id, ret), "Error reading the theory element condition id!");
         return ret.get();

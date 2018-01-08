@@ -35,7 +35,7 @@ public class SolveControl extends PointerObject<clingo_solve_control> {
         super(pointer);
     }
 
-    public SymbolicAtoms symbolicAtoms() throws ClingoException {
+    public SymbolicAtoms getSymbolicAtoms() throws ClingoException {
         Pointer<Pointer<clingo_symbolic_atoms>> ret = Pointer.allocatePointer(clingo_symbolic_atoms.class);
         handleError(LIB.clingo_solve_control_symbolic_atoms(pointer, ret), "Error readint the solve control symbolic atoms!");
         return new SymbolicAtoms(ret.get());
@@ -46,9 +46,9 @@ public class SolveControl extends PointerObject<clingo_solve_control> {
             return;
         }
         List<Integer> list = new ArrayList<>(clause.size());
-        SymbolicAtoms atoms = symbolicAtoms();
+        SymbolicAtoms atoms = getSymbolicAtoms();
         for (SymbolicLiteral x : clause) {
-            SymbolicAtom aa = atoms.find(x.symbol());
+            SymbolicAtom aa = atoms.find(x.getSymbol());
             if (aa != null) {
                 int lit = aa.getLiteral();
                 list.add(x.isPositive() ? lit : -lit);

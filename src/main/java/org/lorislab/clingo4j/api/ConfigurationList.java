@@ -15,21 +15,19 @@
  */
 package org.lorislab.clingo4j.api;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 import org.bridj.Pointer;
 import org.bridj.SizeT;
 import static org.lorislab.clingo4j.api.Clingo.LIB;
 import org.lorislab.clingo4j.api.c.ClingoLibrary.clingo_configuration;
 import static org.lorislab.clingo4j.api.Clingo.handleRuntimeError;
+import org.lorislab.clingo4j.util.UnmodifiableList;
 
 /**
  *
  * @author Andrej Petras
  */
-public class ConfigurationList extends Configuration implements List<Configuration> {
+public class ConfigurationList extends Configuration implements UnmodifiableList<Configuration> {
 
     public ConfigurationList(Pointer<clingo_configuration> pointer, int key) {
         super(pointer, key);
@@ -40,11 +38,6 @@ public class ConfigurationList extends Configuration implements List<Configurati
         Pointer<SizeT> size = Pointer.allocateSizeT();
         handleRuntimeError(LIB.clingo_configuration_array_size(pointer, key, size), "Error reading the configuration array size!");
         return size.getInt();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size() == 0;
     }
 
     @Override
@@ -77,101 +70,6 @@ public class ConfigurationList extends Configuration implements List<Configurati
                 return null;
             }
         };
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Object[] toArray() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean add(Configuration e) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends Configuration> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean addAll(int index, Collection<? extends Configuration> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Configuration set(int index, Configuration element) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void add(int index, Configuration element) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Configuration remove(int index) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int indexOf(Object o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int lastIndexOf(Object o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public ListIterator<Configuration> listIterator() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public ListIterator<Configuration> listIterator(int index) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<Configuration> subList(int fromIndex, int toIndex) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

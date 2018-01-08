@@ -48,7 +48,7 @@ public class Literal implements ASTObject<clingo_ast_literal>, BodyLiteralData, 
         if (type != null) {
             switch (type) {
                 case BOOLEAN:
-                    data = new Boolean(lit.field1().boolean$());
+                    data = new BooleanLiteral(lit.field1().boolean$());
                     break;
                 case SYMBOLIC:
                     data = new Term(lit.field1().symbol().get());

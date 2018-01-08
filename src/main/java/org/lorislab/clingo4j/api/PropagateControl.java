@@ -34,11 +34,11 @@ public class PropagateControl extends PointerObject<clingo_propagate_control> {
         super(pointer);
     }
 
-    public int threadId() {
+    public int getThreadId() {
         return LIB.clingo_propagate_control_thread_id(pointer);
     }
 
-    public Assignment assignment() {
+    public Assignment getAssignment() {
         return new Assignment(LIB.clingo_propagate_control_assignment(pointer));
     }
 
@@ -48,7 +48,7 @@ public class PropagateControl extends PointerObject<clingo_propagate_control> {
         return ret.getInt();
     }
 
-    public void add_watch(int literal) throws ClingoException {
+    public void addWatch(int literal) throws ClingoException {
         handleError(LIB.clingo_propagate_control_add_watch(pointer, literal), "Error add the watch to the propagete control!");
     }
 
@@ -60,14 +60,14 @@ public class PropagateControl extends PointerObject<clingo_propagate_control> {
         LIB.clingo_propagate_control_remove_watch(pointer, literal);
     }
 
-    public boolean add_clause(List<Integer> clause, ClauseType type) throws ClingoException {
+    public boolean addClause(List<Integer> clause, ClauseType type) throws ClingoException {
         NativeList list = PointerObject.toNativeList(clause);
         Pointer<Boolean> ret = Pointer.allocateBoolean();
         handleError(LIB.clingo_propagate_control_add_clause(pointer, list.getPointer(), list.size(), type.getInt(), ret), "Error add the clause to the propagete control!");
         return ret.get();
     }
 
-    public boolean propagate() throws ClingoException {
+    public boolean getPropagate() throws ClingoException {
         Pointer<Boolean> ret = Pointer.allocateBoolean();
         handleError(LIB.clingo_propagate_control_propagate(pointer, ret), "Error propagete the propagete control!");
         return ret.get();

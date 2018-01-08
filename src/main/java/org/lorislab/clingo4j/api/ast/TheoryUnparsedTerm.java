@@ -71,7 +71,7 @@ public class TheoryUnparsedTerm implements ASTObject<clingo_ast_theory_unparsed_
 
     @Override
     public TheoryTermType getTheoryTermType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return TheoryTermType.UNPARSED_TERM;
     }
     
 }

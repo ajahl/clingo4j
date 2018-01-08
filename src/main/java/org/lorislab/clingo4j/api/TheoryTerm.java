@@ -44,25 +44,25 @@ public class TheoryTerm extends PointerObject<clingo_theory_atoms> {
         return id;
     }
 
-    public TheoryTermType type() throws ClingoException {
+    public TheoryTermType getType() throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_theory_atoms_term_type(pointer, id, ret), "Error reading the theory term type!");
         return EnumValue.valueOfInt(TheoryTermType.class, ret.getInt());
     }
 
-    public int number() throws ClingoException {
+    public int getNumber() throws ClingoException {
         Pointer<Integer> ret = Pointer.allocateInt();
         handleError(LIB.clingo_theory_atoms_term_number(pointer, id, ret), "Error reading theory term number!");
         return ret.get();
     }
 
-    public String name() throws ClingoException {
+    public String getName() throws ClingoException {
         Pointer<Pointer<Byte>> ret = Pointer.allocatePointer(Byte.class);
         handleError(LIB.clingo_theory_atoms_term_name(pointer, id, ret), "Error reading the theory term name!");
         return ret.get().getCString();
     }
 
-    public List<TheoryTerm> arguments() throws ClingoException {
+    public List<TheoryTerm> getArguments() throws ClingoException {
         Pointer<Pointer<Integer>> ret = Pointer.allocatePointer(Integer.class);
         Pointer<SizeT> n = Pointer.allocateSizeT();
         handleError(LIB.clingo_theory_atoms_term_arguments(pointer, id, ret, n), "Error reading the theory teram arguments!");

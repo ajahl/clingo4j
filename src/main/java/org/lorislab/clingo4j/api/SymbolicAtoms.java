@@ -42,7 +42,7 @@ public class SymbolicAtoms extends PointerObject<clingo_symbolic_atoms> implemen
         return ret.getInt();
     }
 
-    public List<Signature> signatures() throws ClingoException {
+    public List<Signature> getSignatures() throws ClingoException {
         Pointer<SizeT> n = Pointer.allocateSizeT();
         handleError(LIB.clingo_symbolic_atoms_signatures_size(pointer, n), "Error reading the symbolic atoms signatures size!");
         Pointer<Long> signatures = Pointer.allocateLongs(n.getLong());

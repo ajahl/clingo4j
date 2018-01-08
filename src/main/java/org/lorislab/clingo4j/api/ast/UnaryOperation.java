@@ -17,7 +17,6 @@ package org.lorislab.clingo4j.api.ast;
 
 import org.lorislab.clingo4j.api.ast.enums.TermType;
 import org.lorislab.clingo4j.api.ast.enums.UnaryOperator;
-import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.ast.Term.TermData;
 import org.lorislab.clingo4j.api.c.clingo_ast_term;
 import org.lorislab.clingo4j.api.c.clingo_ast_unary_operation;
