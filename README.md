@@ -26,8 +26,8 @@ Clingo4j is distributed under the [Apache License 2.0](http://www.apache.org/lic
         
         try (SolveHandle handle = control.solve()) {
             for (Model model : handle)  {
-                System.out.println("Model type: " + model.type());
-                for (Symbol atom : model.symbols()) {
+                System.out.println("Model type: " + model.getType());
+                for (Symbol atom : model.getSymbols()) {
                     System.out.println(atom);
                 }
             }  
