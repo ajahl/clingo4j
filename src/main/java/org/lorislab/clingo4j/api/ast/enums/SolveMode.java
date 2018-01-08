@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 andrej.
+ * Copyright 2018 Andrej Petras.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.lorislab.clingo4j.util.EnumValue;
 
 /**
  *
- * @author andrej
+ * @author Andrej Petras
  */
 public enum SolveMode implements EnumValue<clingo_solve_mode> {
 

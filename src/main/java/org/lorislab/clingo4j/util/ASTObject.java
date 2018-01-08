@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 andrej.
+ * Copyright 2017 Andrej Petras.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.bridj.Pointer;
 
 /**
  *
- * @author andrej
+ * @author Andrej Petras
  * @param <T>
  */
 public interface ASTObject<T extends NativeObject> {

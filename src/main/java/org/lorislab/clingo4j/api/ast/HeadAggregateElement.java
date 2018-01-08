@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 andrej.
+ * Copyright 2017 Andrej Petras.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import static org.lorislab.clingo4j.util.ASTObject.print;
 
 /**
  *
- * @author andrej
+ * @author Andrej Petras
  */
 public class HeadAggregateElement implements ASTObject<clingo_ast_head_aggregate_element> {
 
