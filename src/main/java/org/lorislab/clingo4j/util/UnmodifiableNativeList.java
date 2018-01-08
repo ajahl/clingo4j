@@ -29,6 +29,7 @@ import static org.bridj.Pointer.allocate;
 public class UnmodifiableNativeList<T> extends AbstractList<T> implements NativeList<T>, RandomAccess {
 
     private volatile Pointer<T> pointer;
+    
     private volatile long size;
 
     /**
@@ -64,24 +65,26 @@ public class UnmodifiableNativeList<T> extends AbstractList<T> implements Native
         return pointer.get(i);
     }
 
-    private long indexOf(Object o, boolean last) {
+    @Override
+    public int indexOf(Object o) {
         Pointer<T> tmp = allocate(pointer.getIO());
         tmp.set((T) o);
-        Pointer<T> occurrence = last ? pointer.findLast(tmp) : pointer.find(tmp);
+        Pointer<T> occurrence = pointer.find(tmp);
         if (occurrence == null) {
             return -1;
         }
-        return occurrence.getPeer() - pointer.getPeer();
-    }
-
-    @Override
-    public int indexOf(Object o) {
-        return (int) indexOf(o, false);
+        return (int) (occurrence.getPeer() - pointer.getPeer());        
     }
 
     @Override
     public int lastIndexOf(Object o) {
-        return (int) indexOf(o, true);
+        Pointer<T> tmp = allocate(pointer.getIO());
+        tmp.set((T) o);
+        Pointer<T> occurrence = pointer.findLast(tmp);
+        if (occurrence == null) {
+            return -1;
+        }
+        return (int) (occurrence.getPeer() - pointer.getPeer());        
     }
 
     @Override

@@ -38,13 +38,8 @@ import org.lorislab.clingo4j.util.Struct;
  */
 public class Symbol extends Struct<Long> implements TermData, TheoryTermData {
 
-
     public Symbol(Long symbol) {
         super(symbol);
-    }
-    
-    public Symbol(Pointer<Long> pointer) {
-        super(pointer.get());
     }
 
     public SymbolType getType() {
@@ -99,31 +94,31 @@ public class Symbol extends Struct<Long> implements TermData, TheoryTermData {
     public static Symbol createId(String name, boolean positive) throws ClingoException {
         Pointer<Long> pointer = Pointer.allocateLong();
         handleError(LIB.clingo_symbol_create_id(Pointer.pointerToCString(name), positive, pointer), "Error creating the ID!");
-        return new Symbol(pointer);
+        return new Symbol(pointer.get());
     }
 
     public static Symbol createString(String string) throws ClingoException {
         Pointer<Long> pointer = Pointer.allocateLong();
         handleError(LIB.clingo_symbol_create_string(Pointer.pointerToCString(string), pointer), "Error creating the string!");
-        return new Symbol(pointer);
+        return new Symbol(pointer.get());
     }
 
     public static Symbol createNumber(int number) {
         Pointer<Long> pointer = Pointer.allocateLong();
         LIB.clingo_symbol_create_number(number, pointer);
-        return new Symbol(pointer);
+        return new Symbol(pointer.get());
     }
 
     public static Symbol createInfimum() {
         Pointer<Long> pointer = Pointer.allocateLong();
         LIB.clingo_symbol_create_infimum(pointer);
-        return new Symbol(pointer);
+        return new Symbol(pointer.get());
     }
 
     public static Symbol createSupremum() {
         Pointer<Long> pointer = Pointer.allocateLong();
         LIB.clingo_symbol_create_supremum(pointer);
-        return new Symbol(pointer);
+        return new Symbol(pointer.get());
     }
 
     public static Symbol createFunction(String name, List<Symbol> symbols, boolean positive) throws ClingoException {
@@ -137,7 +132,7 @@ public class Symbol extends Struct<Long> implements TermData, TheoryTermData {
         }
 
         handleError(LIB.clingo_symbol_create_function(Pointer.pointerToCString(name), arguments, size, positive, pointer), "Error creating the function!");
-        return new Symbol(pointer);
+        return new Symbol(pointer.get());
     }
 
     public boolean isEqual(Symbol b) {

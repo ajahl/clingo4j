@@ -41,7 +41,7 @@ public class SymbolicAtom extends PointerObject<clingo_symbolic_atoms> {
     public Symbol getSymbol() throws  ClingoException {
         Pointer<Long> symbol = Pointer.allocateLong();
         handleError(LIB.clingo_symbolic_atoms_symbol(pointer, iterator, symbol), "Error readint the atoms symbol!");
-        return new Symbol(symbol);
+        return new Symbol(symbol.get());
     }
     
     public int getLiteral() throws ClingoException {

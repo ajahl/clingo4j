@@ -72,7 +72,7 @@ public class TheoryOperatorDefinition implements ASTObject<clingo_ast_theory_ope
         clingo_ast_theory_operator_definition ret = new clingo_ast_theory_operator_definition();
         ret.type(type.getInt());
         ret.priority(priority);
-        ret.location(location);
+        ret.location(location.getStructObject());
         ret.name(Pointer.pointerToCString(name));
         return ret;
     }

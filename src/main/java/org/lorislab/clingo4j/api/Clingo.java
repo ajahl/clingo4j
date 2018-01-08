@@ -190,7 +190,7 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
                 public boolean apply(Pointer<clingo_location> clocation, Pointer<Byte> cname, Pointer<Long> carguments, long carguments_size, Pointer<?> cdata, Pointer<ClingoLibrary.clingo_symbol_callback_t> csymbol_callback, Pointer<?> csymbol_callback_data) {
 
                     String name = cname.getCString();
-                    Location loc = new Location(clocation);
+                    Location loc = new Location(clocation.get());
                     List<Symbol> symbols = Symbol.list(carguments, carguments_size);
 
                     boolean result = true;
@@ -367,7 +367,7 @@ public class Clingo extends PointerObject<clingo_control> implements AutoCloseab
     public Symbol getConst(String name) throws ClingoException {
         Pointer<Long> ret = Pointer.allocateLong();
         handleError(LIB.clingo_control_get_const(pointer, Pointer.pointerToCString(name), ret), "Error get const " + name);
-        return new Symbol(ret);
+        return new Symbol(ret.get());
     }
 
     public void interrupt() {

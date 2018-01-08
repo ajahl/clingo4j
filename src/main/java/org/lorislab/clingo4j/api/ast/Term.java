@@ -90,7 +90,7 @@ public class Term implements ASTObject<clingo_ast_term>, LiteralData {
     public clingo_ast_term create() {
         clingo_ast_term ret = new clingo_ast_term();
         ret.type(data.getTermType().getInt());
-        ret.location(location);
+        ret.location(location.getStructObject());
         data.updateTerm(ret);
         return ret;
     }

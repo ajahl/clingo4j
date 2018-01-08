@@ -26,8 +26,12 @@ import org.lorislab.clingo4j.util.Struct;
  */
 public class Part extends Struct<clingo_part> {
     
+    public Part(clingo_part part) {
+        super(part);
+    }
+    
     public Part(String name) {
-        super(new clingo_part());        
+        this(new clingo_part());        
         structObject.name(Pointer.pointerToCString(name));
         structObject.params(null);
         structObject.size(0);        

@@ -91,7 +91,7 @@ public class TheoryAtomDefinition implements ASTObject<clingo_ast_theory_atom_de
         clingo_ast_theory_atom_definition ret = new clingo_ast_theory_atom_definition();
         ret.name(Pointer.pointerToCString(name));
         ret.arity(arity);
-        ret.location(location);
+        ret.location(location.getStructObject());
         ret.type(type.getInt());
         ret.elements(Pointer.pointerToCString(elements));
         ret.guard(ASTObject.optionalPointer(guard));

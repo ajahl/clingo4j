@@ -91,7 +91,7 @@ public class Literal implements ASTObject<clingo_ast_literal>, BodyLiteralData, 
     public clingo_ast_literal create() {
         clingo_ast_literal r = new clingo_ast_literal();
         r.type(data.getLiteralType().getInt());
-        r.location(location);
+        r.location(location.getStructObject());
         data.updateLiteral(r);
         return r;
     }

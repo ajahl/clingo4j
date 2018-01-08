@@ -60,7 +60,7 @@ public class CSPSum implements ASTObject<clingo_ast_csp_sum_term> {
     @Override
     public clingo_ast_csp_sum_term create() {
         clingo_ast_csp_sum_term ret = new clingo_ast_csp_sum_term();
-        ret.location(location);
+        ret.location(location.getStructObject());
         ret.terms(ASTObject.array(terms));
         ret.size(ASTObject.size(terms));
         return ret;

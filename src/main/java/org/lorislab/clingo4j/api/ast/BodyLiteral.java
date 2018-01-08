@@ -90,7 +90,7 @@ public class BodyLiteral implements ASTObject<clingo_ast_body_literal> {
     public clingo_ast_body_literal create() {
         clingo_ast_body_literal ret = new clingo_ast_body_literal();
         ret.type(data.getBodyLiteralType().getInt());
-        ret.location(location);
+        ret.location(location.getStructObject());
         ret.sign(sign.getInt());
         data.updateBodyLiteral(ret);
         return ret;

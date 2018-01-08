@@ -80,7 +80,7 @@ public class TheoryTerm implements ASTObject<clingo_ast_theory_term> {
     public clingo_ast_theory_term create() {
         clingo_ast_theory_term result = new clingo_ast_theory_term();
         result.type(data.getTheoryTermType().getInt());
-        result.location(location);
+        result.location(location.getStructObject());
         data.updateTheoryTerm(result);
         return result;
     }

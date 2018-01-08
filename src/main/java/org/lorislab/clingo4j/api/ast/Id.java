@@ -58,7 +58,7 @@ public class Id implements ASTObject<clingo_ast_id> {
     public clingo_ast_id create() {
         clingo_ast_id tmp = new clingo_ast_id();
         tmp.id(Pointer.pointerToCString(id));
-        tmp.location(location);
+        tmp.location(location.getStructObject());
         return tmp;
     }
 

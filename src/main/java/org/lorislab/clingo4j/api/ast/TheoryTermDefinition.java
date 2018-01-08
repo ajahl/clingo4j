@@ -63,7 +63,7 @@ public class TheoryTermDefinition implements ASTObject<clingo_ast_theory_term_de
     @Override
     public clingo_ast_theory_term_definition create() {
         clingo_ast_theory_term_definition ret = new clingo_ast_theory_term_definition();
-        ret.location(location);
+        ret.location(location.getStructObject());
         ret.name(Pointer.pointerToCString(name));
         ret.operators(ASTObject.array(operators));
         ret.size(ASTObject.size(operators));

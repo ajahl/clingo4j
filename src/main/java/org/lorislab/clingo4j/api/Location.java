@@ -17,53 +17,50 @@ package org.lorislab.clingo4j.api;
 
 import org.bridj.Pointer;
 import org.lorislab.clingo4j.api.c.clingo_location;
+import org.lorislab.clingo4j.util.Struct;
 
 /**
  *
  * @author Andrej Petras
  */
-public class Location extends clingo_location {
+public class Location extends Struct<clingo_location> {
 
     public Location(clingo_location loc) {
-        super(Pointer.getPointer(loc));
-    }
-    
-    public Location(Pointer<clingo_location> location) {
-        super(location);
+        super(loc);
     }
 
-    @SuppressWarnings("OverridableMethodCallInConstructor")
     public Location(String beginFile, String endFile, long beginLine, long endLine, long beginColumn, long endColumn) {
-        begin_file(Pointer.pointerToCString(beginFile));
-        end_file(Pointer.pointerToCString(endFile));
-        begin_line(beginLine);
-        end_line(endLine);
-        begin_column(beginColumn);
-        end_column(endColumn);
+        super(new clingo_location());
+        structObject.begin_file(Pointer.pointerToCString(beginFile));
+        structObject.end_file(Pointer.pointerToCString(endFile));
+        structObject.begin_line(beginLine);
+        structObject.end_line(endLine);
+        structObject.begin_column(beginColumn);
+        structObject.end_column(endColumn);
     }
 
     public long getBeginColumn() {
-        return this.begin_column();
+        return structObject.begin_column();
     }
 
     public String getBeginFile() {
-        return this.begin_file().getCString();
+        return structObject.begin_file().getCString();
     }
 
     public long getBeginLine() {
-        return this.begin_line();
+        return structObject.begin_line();
     }
 
     public long getEndColumn() {
-        return this.end_column();
+        return structObject.end_column();
     }
 
     public String getEndFile() {
-        return this.end_file().getCString();
+        return structObject.end_file().getCString();
     }
 
     public long getEndLine() {
-        return this.end_line();
+        return structObject.end_line();
     }
 
     @Override

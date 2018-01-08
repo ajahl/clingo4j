@@ -77,7 +77,7 @@ public class HeadLiteral implements ASTObject<clingo_ast_head_literal> {
     public clingo_ast_head_literal create() {
         clingo_ast_head_literal ret = new clingo_ast_head_literal();
         ret.type(data.getHeadLiteralType().getInt());
-        ret.location(location);
+        ret.location(location.getStructObject());
         data.updateHeadLiteral(ret);
         return ret;
     }

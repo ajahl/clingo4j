@@ -69,7 +69,7 @@ public class DisjointElement implements ASTObject<clingo_ast_disjoint_element> {
     @Override
     public clingo_ast_disjoint_element create() {
         clingo_ast_disjoint_element ret = new clingo_ast_disjoint_element();
-        ret.location(location);
+        ret.location(location.getStructObject());
         ret.tuple(ASTObject.array(tuple));
         ret.tuple_size(ASTObject.size(tuple));
         ret.term(term.create());

@@ -101,7 +101,7 @@ public class Statement implements ASTObject<clingo_ast_statement> {
     public clingo_ast_statement create() {
         clingo_ast_statement ret = new clingo_ast_statement();
         ret.type(data.getStatementType().getInt());
-        ret.location(location);
+        ret.location(location.getStructObject());
         data.updateStatement(ret);
         return ret;
     }
