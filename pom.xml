@@ -32,7 +32,7 @@
         <dependency>
             <groupId>com.nativelibs4java</groupId>
             <artifactId>bridj</artifactId>
-            <version>0.7.0</version>
+            <version>0.7.1-lorislab-2</version>
             <scope>compile</scope>
             <type>jar</type>
         </dependency>
@@ -43,4 +43,18 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    
+    <!-- Repositories -->
+    <repositories> 
+        <repository>
+            <id>lorislab</id>
+            <url>http://dl.bintray.com/lorislab/maven</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>		            
+    </repositories>    
 </project>
