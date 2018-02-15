@@ -9,11 +9,11 @@ Clingo4j is distributed under the [Apache License 2.0](http://www.apache.org/lic
 
 # Maven
 ```xml
-    <dependecy>
+    <dependency>
         <groupId>org.lorislab.clingo4j</groupId>
         <artifactId>clingo4j</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-    </dependecy>
+    </dependency>
 ```
 # Example
 ```java
